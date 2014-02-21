@@ -1,0 +1,9 @@
+<div class="options">
+    {{#each options}}
+  <div class="option">
+    <input type="checkbox" class="is_correct" {{#if is_correct}}checked{{/if}}/>
+    <input type="text" class="text" value="{{text}}"/>
+  </div>
+  {{/each}}
+</div>
+<button class="button tiny">+</button>

@@ -1,0 +1,1 @@
+../../simple_choice/edit.js
