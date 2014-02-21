@@ -17,7 +17,7 @@ or
 pip install -r requirements.txt
 cd doc
 make html
-your-browser _build/index.html
+your-browser _build/html/index.html
 ```
 
 Let's Start
