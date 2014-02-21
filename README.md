@@ -6,8 +6,12 @@ Requirements
 
 Python 3 required.
 
-How to Make Documentation
+Documentation
 ===
+
+http://stepic-plugins.readthedocs.org
+
+or
 
 ```
 pip install -r requirements.txt
@@ -19,4 +23,4 @@ your-browser _build/index.html
 Let's Start
 ===
 
-[Quick Start](http://github.com/StepicOrg/stepic-plugins/blob/master/docs/for_impatient.rst)
+[Quick Start](http://stepic-plugins.readthedocs.org/en/latest/for_impatient.html)

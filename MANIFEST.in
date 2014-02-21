@@ -1,2 +1,2 @@
-include README.txt
+include README.md
 recursive-include stepic_plugins *.js *.hbs
