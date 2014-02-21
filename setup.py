@@ -7,10 +7,11 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+version = __import__('stepic_plugins').get_version()
 
 setup(
     name='stepic-plugins',
-    version='0.1', # TODO: calculate dynamically
+    version=version,
     packages=find_packages(),
     include_package_data=True,
     author='Stepic Team',
