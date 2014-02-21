@@ -4,7 +4,7 @@ For Impatient
 * use python3
 * ``cd plugins``
 * ``pip install -r requirements.txt``
-* open this(http://jsbin.com/hikik/latest/edit) JS Bin
+* open `this JS Bin <http://jsbin.com/hikik/latest/edit>`_
 * add templates from ``simple_choice/quiz.hbs`` to JS Bin html panel
 * add functions from ``simple_choice/quiz.js`` to JS Bin javascript panel
 * run development server ``python3 server.py plugins.simple_choice.SimpleChoice``
