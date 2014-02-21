@@ -2,4 +2,3 @@ flask
 flask-cors
 
 sphinx
-sphinx-rtd-theme
