@@ -1,4 +1,3 @@
-
 Python 3 required.
 
 How to Make Documentation
