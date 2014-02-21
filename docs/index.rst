@@ -14,6 +14,7 @@ Contents:
    introduction
    guide
    for_impatient
+   quizzes/index
 
 
 
