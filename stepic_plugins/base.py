@@ -1,4 +1,8 @@
+from importlib import import_module
+import os
+
 from . import schema
+from .exceptions import UnknownPluginError
 
 
 class BaseQuiz(object):
@@ -66,3 +70,22 @@ def quiz_wrapper_factory(quiz_class):
             self.quiz.set_supplementary(supplementary)
 
     return QuizWrapper
+
+
+def load_by_name(name):
+    """Dynamically loads plugin class by name"""
+
+    base = os.path.join(os.path.dirname(__file__), 'quizzes')
+    for directory in os.listdir(base):
+        if os.path.isdir(os.path.join(base, directory)):
+            package_name = os.path.basename(directory)
+            qualified_name = 'stepic_plugins.quizzes.' + package_name
+            module = import_module(qualified_name)
+            for att in dir(module):
+                val = getattr(module, att)
+                if isinstance(val, type) and issubclass(val, BaseQuiz):
+                    # noinspection PyUnresolvedReferences
+                    if val.name == name:
+                        return quiz_wrapper_factory(val)
+
+    raise UnknownPluginError(name)

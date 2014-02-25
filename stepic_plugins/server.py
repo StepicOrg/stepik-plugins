@@ -2,11 +2,11 @@
 import functools
 import sys
 import os
-import importlib
 import traceback
 
 from flask import Flask, request, jsonify, make_response, abort
 from flask.ext.cors import cross_origin
+
 
 
 # modified version of http://stackoverflow.com/a/6655098
@@ -23,7 +23,7 @@ if __name__ == "__main__" and __package__ is None:
 
     __package__ = str("stepic_plugins")
 
-from .base import quiz_wrapper_factory
+from .base import quiz_wrapper_factory, load_by_name
 from .exceptions import FormatError
 
 app = Flask(__name__)
@@ -98,9 +98,8 @@ def submit():
 
 
 def main():
-    quiz_package, quiz_class = sys.argv[1].rsplit('.', 1)
-    module = importlib.import_module(quiz_package)
-    STORE.quiz_class = getattr(module, quiz_class)
+    name = sys.argv[1]
+    STORE.quiz_class = load_by_name(name)
     app.run(debug=True)
 
 

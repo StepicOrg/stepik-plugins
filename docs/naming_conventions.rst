@@ -17,6 +17,7 @@ in ``quizzes/foo_bar/__init__.py``::
     from stepic_plugins.base import BaseQuiz
 
     class FooBarQuiz(BaseQuiz):
+        name = 'foo-bar'
         ...
 
 in ``quizzes/foo_bar/edit.js``::

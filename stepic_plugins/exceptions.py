@@ -8,3 +8,7 @@ class FormatError(PluginError):
 
 class QuizSetUpError(PluginError):
     pass
+
+
+class UnknownPluginError(PluginError):
+    pass
