@@ -23,7 +23,7 @@ if __name__ == "__main__" and __package__ is None:
 
     __package__ = str("stepic_plugins")
 
-from .base import quiz_wrapper_factory, load_by_name
+from .base import load_by_name
 from .exceptions import FormatError
 
 app = Flask(__name__)
@@ -63,7 +63,7 @@ def jsbin_view(f):
 def create_quiz():
     global STORE
     if request.method == 'POST':
-        STORE.quiz = quiz_wrapper_factory(STORE.quiz_class)(request.json)
+        STORE.quiz = STORE.quiz_class(request.json)
         STORE.quiz.set_supplementary(STORE.quiz.get_supplementary())
     return 'OK'
 

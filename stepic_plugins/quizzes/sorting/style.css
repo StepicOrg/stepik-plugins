@@ -1,0 +1,11 @@
+.sorting-quiz__items {
+    list-style: none;
+}
+
+.sorting-quiz__item {
+    cursor: move;
+}
+
+.sorting-quiz__item_number {
+    display: none;
+}
