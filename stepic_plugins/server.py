@@ -19,9 +19,9 @@ if __name__ == "__main__" and __package__ is None:
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.insert(1, parent_dir)
     # noinspection PyUnresolvedReferences
-    import plugins
+    import stepic_plugins
 
-    __package__ = str("plugins")
+    __package__ = str("stepic_plugins")
 
 from .base import quiz_wrapper_factory
 from .exceptions import FormatError

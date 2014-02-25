@@ -1,1 +1,1 @@
-../../simple_choice/show.js
+../../quizzes/simple_choice/show.js

@@ -1,1 +1,1 @@
-../../simple_choice/edit.js
+../../quizzes/simple_choice/edit.js

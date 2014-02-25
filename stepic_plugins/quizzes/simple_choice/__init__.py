@@ -1,10 +1,10 @@
 import random
 
-from ..base import BaseQuiz
-from ..exceptions import FormatError
+from stepic_plugins.base import BaseQuiz
+from stepic_plugins.exceptions import FormatError
 
 
-class SimpleChoice(BaseQuiz):
+class SimpleChoiceQuiz(BaseQuiz):
     name = 'simple-choice'
 
     class Schemas:

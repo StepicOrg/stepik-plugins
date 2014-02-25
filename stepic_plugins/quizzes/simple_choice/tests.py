@@ -1,9 +1,9 @@
-from ..base import quiz_wrapper_factory
-from ..exceptions import FormatError
-from ..tests import InitTest, GenerateTest, CleanReplyTest, CheckTest
-from . import SimpleChoice
+from stepic_plugins.base import quiz_wrapper_factory
+from stepic_plugins.exceptions import FormatError
+from stepic_plugins.tests import InitTest, GenerateTest, CleanReplyTest, CheckTest
+from . import SimpleChoiceQuiz
 
-QuizClass = quiz_wrapper_factory(SimpleChoice)
+QuizClass = quiz_wrapper_factory(SimpleChoiceQuiz)
 quiz = QuizClass({
     'options': [
         {'is_correct': True, 'text': 'A'},
