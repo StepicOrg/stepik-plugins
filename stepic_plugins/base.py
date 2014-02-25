@@ -39,6 +39,7 @@ def quiz_wrapper_factory(quiz_class):
     schemas = quiz_class.Schemas
 
     class QuizWrapper(object):
+        wrapped_class = quiz_class
 
         def __init__(self, source):
             source = schema.build(schemas.source, source)
