@@ -3,11 +3,10 @@ import functools
 import sys
 import os
 import traceback
+import argparse
 
 from flask import Flask, request, jsonify, make_response, abort
 from flask.ext.cors import cross_origin
-
-
 
 # modified version of http://stackoverflow.com/a/6655098
 if __name__ == "__main__" and __package__ is None:
@@ -97,11 +96,13 @@ def submit():
     )
 
 
-def main():
-    name = sys.argv[1]
-    STORE.quiz_class = load_by_name(name)
+def start_server(quiz_name):
+    STORE.quiz_class = load_by_name(quiz_name)
     app.run(debug=True)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("quiz_name")
+    args = parser.parse_args()
+    start_server(args.quiz_name)
