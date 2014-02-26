@@ -32,5 +32,7 @@ if __name__ == "__main__":
     patterns = ['*.js', '*.css', '*.hbs']
     for file in os.listdir(quiz_directory):
         if any(fnmatch.fnmatch(file, p) for p in patterns):
-            shutil.copy(os.path.join(quiz_directory, file), static_directory)
-
+            source = os.path.join(quiz_directory, file)
+            link_name = os.path.join(static_directory, file)
+            relative_source = os.path.relpath(source, static_directory)
+            os.symlink(relative_source, link_name)
