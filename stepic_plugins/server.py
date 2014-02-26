@@ -5,7 +5,7 @@ import os
 import traceback
 import argparse
 
-from flask import Flask, request, jsonify, make_response, abort
+from flask import Flask, request, jsonify, make_response
 from flask.ext.cors import cross_origin
 
 # modified version of http://stackoverflow.com/a/6655098
@@ -35,8 +35,11 @@ class Storage(object):
         self.dataset = None
         self.clue = None
 
-
 STORE = Storage()
+
+
+class InconsistentStateError(Exception):
+    pass
 
 
 def jsbin_view(f):
@@ -50,6 +53,8 @@ def jsbin_view(f):
         except FormatError as e:
             traceback.print_exc()
             return make_response("FormatError: " + str(e), 400)
+        except InconsistentStateError as e:
+            return make_response("InconsistentStateError: " + str(e), 400)
         except Exception as e:
             traceback.print_exc()
             return make_response("Exception! Check console output", 500)
@@ -72,7 +77,8 @@ def create_quiz():
 def attempt():
     global STORE
     if not STORE.quiz:
-        abort(404, "Quiz should be crated first")
+        raise InconsistentStateError("Quiz should be created first\n"
+                                     "Have you pressed `Update Quiz` button?")
 
     STORE.dataset, STORE.clue = STORE.quiz.generate()
     return jsonify(
@@ -85,7 +91,8 @@ def attempt():
 def submit():
     global STORE
     if not STORE.dataset:
-        abort(404, "Dataset should be crated first")
+        raise InconsistentStateError("Dataset should be created first\n"
+                                     "Have you pressed `Get Dataset` button?")
 
     reply = request.json
     reply = STORE.quiz.clean_reply(reply, STORE.dataset)
