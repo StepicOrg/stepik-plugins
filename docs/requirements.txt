@@ -1,0 +1,4 @@
+sphinx
+
+#optional eye-candy
+sphinx-rtd-theme
