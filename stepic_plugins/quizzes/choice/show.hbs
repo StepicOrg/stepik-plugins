@@ -1,0 +1,12 @@
+{{#with picker_view as picker_view}}
+  {{#each option in selections}}
+<label>
+    {{view picker_view
+             name="id"
+             checkedBinding="option.is_checked"
+             valueBinding="option.text"
+             disabledBinding="disabled"}}
+             {{unbound option.text}}
+</label>
+{{/each}}
+{{/with}}

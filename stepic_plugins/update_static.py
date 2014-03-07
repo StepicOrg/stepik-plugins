@@ -5,6 +5,11 @@ import os
 import sys
 import shutil
 
+try:
+    import coffeescript
+except ImportError:
+    coffeescript = None
+
 # modified version of http://stackoverflow.com/a/6655098
 if __name__ == "__main__" and __package__ is None:
     # The following assumes the script is in the top level of the package
@@ -29,10 +34,19 @@ if __name__ == "__main__":
     if os.path.exists(static_directory):
         shutil.rmtree(static_directory)
     os.mkdir(static_directory)
-    patterns = ['*.js', '*.css', '*.hbs']
+    coffee = '*.coffee'
+    patterns = ['*.js', '*.css', '*.hbs', coffee]
     for file in os.listdir(quiz_directory):
         if any(fnmatch.fnmatch(file, p) for p in patterns):
             source = os.path.join(quiz_directory, file)
-            link_name = os.path.join(static_directory, file)
-            relative_source = os.path.relpath(source, static_directory)
-            os.symlink(relative_source, link_name)
+            target = os.path.join(static_directory, file)
+
+            if fnmatch.fnmatch(file, coffee):
+                if coffeescript is None:
+                    print('package `CoffeeScript` required', file=sys.stderr)
+                target = os.path.splitext(target)[0] + '.js'
+                with open(target, 'w') as f:
+                    f.write(coffeescript.compile_file(source))
+            else:
+                relative_source = os.path.relpath(source, static_directory)
+                os.symlink(relative_source, target)
