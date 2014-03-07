@@ -1,0 +1,27 @@
+<label>
+    Correct answer(or regular expression pattern)
+    {{input value=source.pattern
+          type="text"
+          required="true"}}
+</label>
+
+<label>
+    {{input checked=source.use_re
+          type="checkbox"
+          required="true"}}
+    Use regular expressions
+</label>
+
+<label>
+    {{input checked=source.match_substring
+          type="checkbox"
+          required="true"}}
+    Match Substring
+</label>
+
+<label>
+    {{input checked=source.case_sensitive
+          type="checkbox"
+          required="true"}}
+    Case sensitive
+</label>

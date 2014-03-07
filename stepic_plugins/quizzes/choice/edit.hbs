@@ -1,0 +1,18 @@
+<label>{{input type="checkbox" name="is_multiple_choice" checked=source.is_multiple_choice}} Checkboxes</label>
+<label>{{input type="checkbox" name="is_always_correct" checked=source.is_always_correct}} Anyone correct</label>
+<label>{{input type="checkbox" name="preserve_order" checked=source.preserve_order}} Preserve order</label>
+<label>Sample Size {{input type="number" name="sample_size" value=source.sample_size}}</label>
+Options:
+{{#with picker_view as picker_view}}
+  {{#each option in source.options}}
+    <label>
+      <button {{action "removeOption" option}} class="choice-quiz__remove-option tiny">-</button>
+      {{input type="checkbox" checked=option.is_correct}}
+      Is correct
+    </label>
+    <label>
+      {{input type="text" value=option.text}}
+    </label>
+  {{/each}}
+{{/with}}
+<button {{action "addOption"}} class="choice-quiz__add-option tiny">+</button>
