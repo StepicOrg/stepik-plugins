@@ -1,0 +1,13 @@
+{{#if is_lang_selectable}}
+  <b>Choose your language:</b>
+  {{#each lang in langs}}
+    <button class="tiny" {{action setLang lang}}>{{lang}}</button>
+  {{/each}}
+{{else}}
+    {{view App.CodeEditorView
+    valueBinding='user_code'
+    required='true'
+    langBinding='user_lang'
+    placeholder="Type your code here..."
+    disabledBinding='disabled'}}
+{{/if}}

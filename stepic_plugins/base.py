@@ -25,14 +25,8 @@ class BaseQuiz(object):
     def generate(self):
         return None
 
-    def extra(self):
+    def async_init(self):
         return None
-
-    def get_supplementary(self):
-        return None
-
-    def set_supplementary(self, supplementary):
-        pass
 
 
 def quiz_wrapper_factory(quiz_class):
@@ -41,9 +35,12 @@ def quiz_wrapper_factory(quiz_class):
     class QuizWrapper(object):
         wrapped_class = quiz_class
 
-        def __init__(self, source):
+        def __init__(self, source, supplementary=None):
             source = schema.build(schemas.source, source)
-            self.quiz = quiz_class(source)
+            if supplementary is None:
+                self.quiz = quiz_class(source)
+            else:
+                self.quiz = quiz_class(source, supplementary)
 
         def clean_reply(self, reply, dataset=None):
             reply = schema.build(schemas.reply, reply)
@@ -64,8 +61,8 @@ def quiz_wrapper_factory(quiz_class):
         def extra(self):
             return self.quiz.extra()
 
-        def get_supplementary(self):
-            return self.quiz.get_supplementary()
+        def async_init(self):
+            return self.quiz.async_init()
 
         def set_supplementary(self, supplementary):
             self.quiz.set_supplementary(supplementary)
