@@ -17,7 +17,7 @@ class BaseQuiz(object):
         assert self.name, '`name` attribute should be overridden in subclass'
 
     def clean_reply(self, reply, dataset):
-        raise NotImplementedError
+        return reply
 
     def check(self, reply, clue):
         raise NotImplementedError
