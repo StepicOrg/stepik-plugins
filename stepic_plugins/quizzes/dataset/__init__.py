@@ -70,7 +70,7 @@ class DatasetQuiz(BaseQuiz):
         except (JailedCodeFailed, ValueError, TypeError) as e:
             if throw:
                 raise JailedCodeFailed(str(e))
-            return False, ''
+            return False
 
     def generate(self):
         seed = random.randrange(10 ** 9)

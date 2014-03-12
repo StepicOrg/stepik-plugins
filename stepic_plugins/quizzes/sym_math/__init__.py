@@ -56,7 +56,7 @@ class MathQuiz(BaseQuiz):
         try:
             safe_exec.safe_exec(code, global_dict)
         except safe_exec.SafeExecException:
-            return 0, ''
+            return False
 
         score = bool(global_dict['matched'])
         hint = ''

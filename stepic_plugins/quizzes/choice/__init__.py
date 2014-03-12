@@ -59,7 +59,7 @@ class ChoiceQuiz(BaseQuiz):
             wrong = sum(x ^ y for x, y in zip(clue, reply))
             score = (wrong == 0)
 
-        return score, ''
+        return score
 
     def generate(self):
         correct = [(i, o) for (i, o) in enumerate(self.options) if o.is_correct]

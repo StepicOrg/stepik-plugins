@@ -46,4 +46,4 @@ class SimpleChoiceQuiz(BaseQuiz):
         return choices
 
     def check(self, reply, clue):
-        return reply == clue, ''
+        return reply == clue

@@ -22,7 +22,7 @@ class SortingQuiz(BaseQuiz):
         return reply.ordering
 
     def check(self, reply, clue):
-        return reply == clue, ''
+        return reply == clue
 
     def generate(self):
         options = list(enumerate(self.options))

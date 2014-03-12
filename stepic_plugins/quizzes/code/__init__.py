@@ -107,7 +107,7 @@ class CodeQuiz(BaseQuiz):
                         test_number=test_number,
                         message=message
                     )
-                    return 0, hint
+                    return False, hint
 
                 reply = result.stdout.decode()
                 result = self.score_one_test(reply, clue)
@@ -116,9 +116,9 @@ class CodeQuiz(BaseQuiz):
                         test_number=test_number,
                         message=result[1] or self.WA_MESSAGE
                     )
-                    return 0, hint
+                    return False, hint
 
-            return 1, ''
+            return True
 
     @property
     def code_templates(self):
@@ -165,7 +165,7 @@ class CodeQuiz(BaseQuiz):
             score, hint = self.run_edyrun('score', data=data)
             return score, hint
         except (JailedCodeFailed, ValueError, TypeError):
-            return 0, ''
+            return False, ''
 
     def get_tests(self):
         tests = self.run_edyrun("generate", seed=random.randrange(10 ** 6))

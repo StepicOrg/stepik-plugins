@@ -73,7 +73,7 @@ class StringQuiz(BaseQuiz):
             score = False
         else:
             score = bool(global_dict['matched'])
-        return score, ''
+        return score
 
     def check_simple(self, text):
         if self.case_sensitive:
@@ -86,5 +86,5 @@ class StringQuiz(BaseQuiz):
             score = pattern in text
         else:
             score = pattern == text
-        return score, ''
+        return score
 

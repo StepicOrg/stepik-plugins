@@ -15,5 +15,5 @@ class FreeAnswerQuiz(BaseQuiz):
     def check(self, reply, clue):
         if self.manual_scoring:
             return None  # will be scored manually later
-        return 1, ''
+        return True
 

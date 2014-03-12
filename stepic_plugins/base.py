@@ -49,7 +49,15 @@ def quiz_wrapper_factory(quiz_class):
             return self.quiz.clean_reply(reply, dataset)
 
         def check(self, reply, clue=None):
-            return self.quiz.check(reply, clue)
+            ret = self.quiz.check(reply, clue)
+            if isinstance(ret, bool):
+                score = ret
+                hint = ''
+            else:
+                score, hint = ret
+            assert isinstance(score, bool), 'Score should be True or False instead of {}'.format(score)
+            assert isinstance(hint, str), 'hint should be a string instead of {}'.format(hint)
+            return score, hint
 
         def generate(self):
             ret = self.quiz.generate()
@@ -58,14 +66,8 @@ def quiz_wrapper_factory(quiz_class):
                 schema.build(schemas.dataset, dataset)
             return ret
 
-        def extra(self):
-            return self.quiz.extra()
-
         def async_init(self):
             return self.quiz.async_init()
-
-        def set_supplementary(self, supplementary):
-            self.quiz.set_supplementary(supplementary)
 
     return QuizWrapper
 
