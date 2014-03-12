@@ -1,4 +1,27 @@
-{{view App.AutoResizeTextView valueBinding="reply.text"
-                              required="true"
-                              placeholder="Type your answer here..."
-                              disabledBinding="disabled"}}
+{{#unless disabled}}
+  <a  {{bind-attr href="dataset_url"}} class="get_dataset" title="dataset file link">Download dataset</a>
+{{/unless}}
+
+{{#if is_dataset_downloaded}}
+    {{view App.AutoResizeTextView
+    required=true
+    valueBinding="reply.text"
+    placeholder="Type your answer here..."
+    disabledBinding="is_input_disabled"}}
+    {{#unless is_input_disabled}}
+        {{file-upload
+        name_attr="file"
+        url="upload_url"
+        text="Or attach a file"
+        classNames="attach-file"
+        done="submit_done"
+        fail="submit_fail"
+        start="upload_start"}}
+    {{/unless}}
+{{else}}
+    {{view App.AutoResizeTextView
+    required=true
+    valueBinding="reply.text"
+    placeholder="Download dataset first"
+    disabled=true}}
+{{/if}}
