@@ -28,6 +28,19 @@ class BaseQuiz(object):
     def async_init(self):
         return None
 
+    @classmethod
+    def Source(cls, source):
+        return schema.build(cls.Schemas.source, source)
+
+    @classmethod
+    def Reply(cls, reply):
+        return schema.build(cls.Schemas.reply, reply)
+
+    @classmethod
+    def Dataset(cls, dataset):
+        assert cls.Schemas.dataset is not None
+        return schema.build(cls.Schemas.dataset, dataset)
+
 
 def quiz_wrapper_factory(quiz_class):
     schemas = quiz_class.Schemas
