@@ -43,22 +43,21 @@ class BaseQuiz(object):
 
 
 def quiz_wrapper_factory(quiz_class):
-    schemas = quiz_class.Schemas
 
     class QuizWrapper(object):
         wrapped_class = quiz_class
 
         def __init__(self, source, supplementary=None):
-            source = schema.build(schemas.source, source)
+            source = quiz_class.Source(source)
             if supplementary is None:
                 self.quiz = quiz_class(source)
             else:
                 self.quiz = quiz_class(source, supplementary)
 
         def clean_reply(self, reply, dataset=None):
-            reply = schema.build(schemas.reply, reply)
+            reply = quiz_class.Reply(reply)
             if dataset:
-                dataset = schema.build(schemas.dataset, dataset)
+                dataset = quiz_class.Dataset(dataset)
             return self.quiz.clean_reply(reply, dataset)
 
         def check(self, reply, clue=None):
@@ -76,7 +75,7 @@ def quiz_wrapper_factory(quiz_class):
             ret = self.quiz.generate()
             if ret:
                 dataset, clue = ret
-                schema.build(schemas.dataset, dataset)
+                quiz_class.Dataset(dataset)
             return ret
 
         def async_init(self):
