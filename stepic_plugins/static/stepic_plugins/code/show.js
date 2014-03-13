@@ -29,7 +29,6 @@
     }).property('user_lang'),
     actions: {
       setLang: function(lang) {
-        console.log('here', lang);
         return this.set('user_lang', lang);
       }
     }
