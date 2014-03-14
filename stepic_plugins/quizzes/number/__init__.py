@@ -34,10 +34,9 @@ class NumberQuiz(BaseQuiz):
     def check(self, reply, clue):
         with decimal.localcontext() as ctx:
             ctx.prec = MAX_DIGITS
-            normalized = reply.replace(',', '.').replace(' ', '')
             try:
                 # ... instead of here
-                decimal_reply = parse_decimal(normalized, 'dummy')
+                decimal_reply = parse_decimal(reply, 'dummy')
             except FormatError:
                 score = False
                 hint = 'Only numbers, please'
@@ -50,6 +49,6 @@ class NumberQuiz(BaseQuiz):
 
 def parse_decimal(s, filed_name):
     try:
-        return decimal.Decimal(s)
+        return decimal.Decimal(s.replace(',', '.').replace(' ', ''))
     except decimal.DecimalException:
         raise FormatError("Field `{}` should be a number".format(filed_name))
