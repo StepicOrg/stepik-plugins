@@ -15,6 +15,8 @@ class SortingQuiz(BaseQuiz):
     def __init__(self, source):
         super().__init__(source)
         self.options = source.options
+        if not self.options:
+            raise FormatError("Empty options")
 
     def clean_reply(self, reply, dataset):
         if sorted(reply.ordering) != list(range(len(dataset.options))):

@@ -61,7 +61,7 @@ class DatasetQuiz(BaseQuiz):
         }
 
     def clean_reply(self, reply, dataset):
-        return reply.text
+        return reply.text.strip()
 
     def check(self, reply, clue, throw=False):
         try:

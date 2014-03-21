@@ -109,7 +109,7 @@ class CodeQuiz(BaseQuiz):
                     )
                     return False, hint
 
-                reply = result.stdout.decode()
+                reply = result.stdout.decode().strip()
                 result = self.score_one_test(reply, clue)
                 if result[0] != 1:
                     hint = self.FAILED_TEST_MESSAGE.format(
