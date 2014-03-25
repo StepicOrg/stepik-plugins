@@ -1,18 +1,63 @@
-<label>{{input type="checkbox" name="is_multiple_choice" checked=source.is_multiple_choice}} Checkboxes</label>
-<label>{{input type="checkbox" name="is_always_correct" checked=source.is_always_correct}} Anyone correct</label>
-<label>{{input type="checkbox" name="preserve_order" checked=source.preserve_order}} Preserve order</label>
-<label>Sample Size {{input type="number" name="sample_size" value=source.sample_size}}</label>
-Options:
-{{#with picker_view as picker_view}}
-  {{#each option in source.options}}
-    <label>
-      <button {{action "removeOption" option}} class="choice-quiz__remove-option tiny">-</button>
-      {{input type="checkbox" checked=option.is_correct}}
-      Is correct
-    </label>
-    <label>
-      {{input type="text" value=option.text}}
-    </label>
-  {{/each}}
-{{/with}}
-<button {{action "addOption"}} class="choice-quiz__add-option tiny">+</button>
+<fieldset>
+    <div class="row">
+
+        <div class="large-4 columns">
+            <label>{{input type="checkbox" name="is_multiple_choice" checked=source.is_multiple_choice}}
+                Checkboxes</label>
+        </div>
+        <div class="large-4 columns">
+            <label>{{input type="checkbox" name="is_always_correct" checked=source.is_always_correct}} Anyone
+                correct</label>
+        </div>
+        <div class="large-4 columns">
+            <label>{{input type="checkbox" name="preserve_order" checked=source.preserve_order}} Preserve order</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="inline"> Sample Size</label>
+        </div>
+        <div class="large-2 columns">
+            {{input type="number" name="sample_size" value=source.sample_size}}
+        </div>
+        <div class="large-8 columns"></div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Options</legend>
+    <div class="row">
+        <div class="large-12 columns">
+            <div class="row">
+                <div class="large-1 columns">
+                    <label>Correct?</label>
+                </div>
+                <div class="large-10 columns">
+                    <label>Option text</label>
+                </div>
+                <div class="large-1 columns">
+                    <label>Remove?</label>
+                </div>
+            </div>
+
+            {{#with picker_view as picker_view}}
+            {{#each option in source.options}}
+
+            <div class="row">
+                <div class="large-1 columns">
+                    {{input type="checkbox" checked=option.is_correct}}
+                </div>
+                <div class="large-10 columns">
+                    {{input type="text" value=option.text}}
+                </div>
+                <div class="large-1 columns">
+                    <button {{action "removeOption" option}} class="choice-quiz__remove-option tiny secondary">-</button>
+                </div>
+            </div>
+            {{/each}}
+        {{/with}}
+        </div>
+    </div>
+
+    <button {{action "addOption"}} class="choice-quiz__add-option">New option</button>
+</fieldset>
