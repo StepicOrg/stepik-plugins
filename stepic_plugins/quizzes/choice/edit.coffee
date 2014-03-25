@@ -8,6 +8,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
   ).property('is_multiple_choice')
 
   get_source: ->
+    @set 'source.sample_size', parseInt(@get('source.sample_size'), 10)
     @get('source')
 
   actions:

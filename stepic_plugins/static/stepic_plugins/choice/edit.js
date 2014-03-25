@@ -1,9 +1,5 @@
 (function() {
   App.ChoiceQuizEditorComponent = Em.Component.extend({
-    init: function() {
-      this._super();
-      return console.log('iniit choiece quiz editor');
-    },
     picker_view: (function() {
       if (this.get('is_multiple_choice')) {
         return Em.Checkbox;
@@ -12,6 +8,7 @@
       }
     }).property('is_multiple_choice'),
     get_source: function() {
+      this.set('source.sample_size', parseInt(this.get('source.sample_size'), 10));
       return this.get('source');
     },
     actions: {
