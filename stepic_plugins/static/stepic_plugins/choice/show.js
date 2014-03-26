@@ -3,7 +3,7 @@
     init: function() {
       var initial_choices, selections;
       this._super();
-      if (!this.get('reply')) {
+      if (!this.get('reply.choices')) {
         initial_choices = this.get('dataset.options').map(function() {
           return false;
         });

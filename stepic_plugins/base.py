@@ -67,7 +67,7 @@ def quiz_wrapper_factory(quiz_class):
                 hint = ''
             else:
                 score, hint = ret
-            assert isinstance(score, bool), 'Score should be True or False instead of {}'.format(score)
+            assert 0 <= score <= 1, 'Score should be True or False instead of {}'.format(score)
             assert isinstance(hint, str), 'hint should be a string instead of {}'.format(hint)
             return score, hint
 
