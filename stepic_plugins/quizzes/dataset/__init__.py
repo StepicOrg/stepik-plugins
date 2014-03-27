@@ -78,9 +78,8 @@ class DatasetQuiz(BaseQuiz):
             dataset, clue = self.run_edyrun('generate', seed=seed,
                                             output_limit=settings.DATASET_QUIZ_SIZE_LIMIT)
 
-            if (isinstance(dataset, dict) and 'file' in dataset and
-                    not isinstance(dataset['file'], (str, bytes))):
-                raise TypeError("dataset has 'file' but it is not one of (str, bytes)")
+            if not (isinstance(dataset, dict) and 'file' in dataset and isinstance(dataset['file'], str)):
+                raise TypeError("Bad dataset")
             return dataset, clue
         except (JailedCodeFailed, ValueError, TypeError) as e:
             raise PluginError(e)
