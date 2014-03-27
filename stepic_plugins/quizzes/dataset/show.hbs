@@ -8,16 +8,6 @@
     valueBinding="reply.text"
     placeholder="Type your answer here..."
     disabledBinding="is_input_disabled"}}
-    {{#unless is_input_disabled}}
-        {{file-upload
-        name_attr="file"
-        url="upload_url"
-        text="Or attach a file"
-        classNames="attach-file"
-        done="submit_done"
-        fail="submit_fail"
-        start="upload_start"}}
-    {{/unless}}
 {{else}}
     {{view App.AutoResizeTextView
     required=true

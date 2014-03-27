@@ -7,10 +7,6 @@ App.DatasetQuizComponent = Em.Component.extend
       @set 'reply',
         text: ''
 
-  is_input_disabled: (->
-    @get('disabled') or not @get('is_dataset_downloaded')
-  ).property('disabled', 'is_dataset_downloaded')
-
   didInsertElement: ->
     @$('.get_dataset').click =>
       @get('controller').send 'download_started'

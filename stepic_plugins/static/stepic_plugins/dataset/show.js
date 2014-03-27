@@ -9,9 +9,6 @@
         });
       }
     },
-    is_input_disabled: (function() {
-      return this.get('disabled') || !this.get('is_dataset_downloaded');
-    }).property('disabled', 'is_dataset_downloaded'),
     didInsertElement: function() {
       var _this = this;
       this.$('.get_dataset').click(function() {
