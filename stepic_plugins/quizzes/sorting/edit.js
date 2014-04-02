@@ -1,4 +1,5 @@
 function editSortingQuiz(target, template, source) {
+  source = source || {options: []}
   target.html(template(source));
   target.find('button').click(function () {
     var row = $('<div class="option"><input type="text" class="text"/></div>');
