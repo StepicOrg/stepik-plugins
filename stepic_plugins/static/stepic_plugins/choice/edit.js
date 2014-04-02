@@ -1,5 +1,17 @@
 (function() {
   App.ChoiceQuizEditorComponent = Em.Component.extend({
+    init: function() {
+      var default_source;
+      this._super();
+      default_source = {
+        is_multiple_choice: false,
+        is_always_correct: false,
+        sample_size: 3,
+        preserve_order: false,
+        options: []
+      };
+      return this.set('source', this.get('source') || default_source);
+    },
     picker_view: (function() {
       if (this.get('is_multiple_choice')) {
         return Em.Checkbox;
