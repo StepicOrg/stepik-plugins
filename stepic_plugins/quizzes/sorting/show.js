@@ -1,4 +1,9 @@
 function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) {
+  if (reply) {
+    dataset.options = _(reply.ordering).map(function(i) {
+      return dataset.options[i];
+    });
+  }
   target.html(template(dataset));
   if (MathJax) {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, target.get()])
