@@ -29,10 +29,13 @@
       }
     }).property('dataset.is_multiple_choice'),
     onSelectionChanged: (function() {
-      return this.set('reply', {
-        choices: this.get('selections').mapBy('is_checked')
+      var choices;
+      choices = this.get('selections').mapBy('is_checked');
+      this.set('reply', {
+        choices: choices
       });
-    }).observes('selections.@each.is_checked')
+      return this.set('is_reply_ready', this.get('dataset.is_multiple_choice') || _.some(choices));
+    }).observes('selections.@each.is_checked').on('init')
   });
 
 }).call(this);

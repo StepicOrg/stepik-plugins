@@ -22,6 +22,8 @@ App.ChoiceQuizComponent = Em.Component.extend
   ).property('dataset.is_multiple_choice')
 
   onSelectionChanged: (->
-    @set 'reply',
-      choices: @get('selections').mapBy('is_checked')
-  ).observes('selections.@each.is_checked')
+    choices = @get('selections').mapBy('is_checked')
+    @set 'reply',  choices: choices
+    @set 'is_reply_ready',
+      @get('dataset.is_multiple_choice') or _.some(choices)
+  ).observes('selections.@each.is_checked').on('init')
