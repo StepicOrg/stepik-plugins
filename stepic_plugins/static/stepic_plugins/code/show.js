@@ -2,6 +2,7 @@
   App.CodeQuizComponent = Em.Component.extend({
     init: function() {
       this._super();
+      console.log(this.get('previous_reply'));
       if (this.get('reply') == null) {
         return this.set('reply', {
           code: '',
@@ -22,9 +23,11 @@
         return this.get('content.code_templates')[this.get('user_lang')];
       }
     }).property('user_lang'),
-    _apply_template: (function() {
+    _set_initial_code: (function() {
+      var initial_code;
       if (!this.get('user_code') && this.get('user_lang')) {
-        return this.set('user_code', this.get('code_template'));
+        initial_code = this.get('previous_reply.language') === this.get('user_lang') ? this.get('previous_reply.code') : this.get('code_template');
+        return this.set('user_code', initial_code);
       }
     }).observes('user_lang'),
     onLangSelected: (function() {
