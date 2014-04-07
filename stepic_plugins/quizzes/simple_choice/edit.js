@@ -1,5 +1,5 @@
 function editSimpleChoiceQuiz(target, template, source) {
-  source = source || {options: []}
+  source = source || {options: []};
   target.html(template(source));
   target.find('button').click(function () {
     var row = $('<div class="option"><input type="checkbox" class="is_correct"/><input type="text" class="text"/></div>');

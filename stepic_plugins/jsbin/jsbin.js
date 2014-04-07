@@ -7,7 +7,7 @@ function editQuiz(target, template, source) {
   };
 }
 
-function showQuiz(target, template, dataset, reply, quiz_info, disabled) {
+function showQuiz(target, template, dataset, reply, disabled, quiz_info) {
   return {
     'submit': function () {
       //WRITE YOUR CODE HERE

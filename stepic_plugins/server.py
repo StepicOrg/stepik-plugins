@@ -67,8 +67,12 @@ def jsbin_view(f):
 def create_quiz():
     global STORE
     if request.method == 'POST':
-        STORE.quiz = STORE.quiz_class(request.json)
-        STORE.quiz.set_supplementary(STORE.quiz.get_supplementary())
+        quiz = STORE.quiz_class(request.json)
+        supplementary = quiz.async_init()
+        if supplementary:
+            STORE.quiz = STORE.quiz_class(request.json, supplementary)
+        else:
+            STORE.quiz = STORE.quiz_class(request.json)
     return 'OK'
 
 

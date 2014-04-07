@@ -92,7 +92,11 @@ def load_by_name(name):
         if os.path.isdir(os.path.join(base, directory)):
             package_name = os.path.basename(directory)
             qualified_name = 'stepic_plugins.quizzes.' + package_name
-            module = import_module(qualified_name)
+            try:
+                module = import_module(qualified_name)
+            except ImportError:
+                pass
+
             for att in dir(module):
                 val = getattr(module, att)
                 if isinstance(val, type) and issubclass(val, BaseQuiz):
