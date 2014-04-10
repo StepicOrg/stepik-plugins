@@ -2,6 +2,8 @@ from stepic_plugins.base import BaseQuiz
 
 
 class FooBarQuiz(BaseQuiz):
+    name = 'foo-bar'
+
     class Schemas:
         source = ...
         reply = ...

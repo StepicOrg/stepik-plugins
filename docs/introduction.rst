@@ -1,8 +1,6 @@
 Introduction
 ************
 
-**NOTE: This is a work in progress, documentation may be outdated**
-
 `Stepic <https://stepic.org>`_ is an educational engine, focused on quizzed and exercises.
 
 Quiz is an interactive component, which can present task to the user,
@@ -29,37 +27,40 @@ Frontend and backend communicate with each other via fixed protocol and custom m
 representing subset of JSON.
 
 
-Files for quiz named `foo` are stored in the directory `plugins/foo`.
+Files for quiz named `foo` are stored in the directory `quizzes/foo`.
 
 The directory contents is like this::
 
-    plugins/foo
+    quizzes/foo
         __init__.py
         tests.py
-        *.hbs
-        *.js
+        show.hbs
+        show.js
+        edit.hbs
+        edit.js
 
 
 Backend Overview
 ================
 
-To implement a quiz backend, define a ``base.BaseQuiz`` subclass in `plugins/foo/__init__.py`.
+To implement a quiz backend, define a ``base.BaseQuiz`` subclass in `quizzes/foo/__init__.py`.
 
 The responsibilities of a backend:
     * specification of the message format to communicate with frontend
     * creation of a quiz instance from quiz source
-    * creation of dataset
-    * evaluation of a submission
+    * creation of datasets
+    * evaluation of submissions
 
 
 Frontend Overview
 =================
 
-To implement a quiz frontend, ???...hm, javascript ??? handlebars, ...???
+To implement a quiz frontend, you need to write handlebars templates and javascript functions
+for editing the quiz and presenting it to user.
 
 The responsibilities of a frontend:
-    * display edit interface, which allow author to edit quiz source.
-    * display view interface, which allow student to view dataset and create a submission
+    * display edit interface, which allow author to edit quiz source(`edit.js`, `edit.hbs`).
+    * display view interface, which allow student to view dataset and create a submission(`show.js`, `show.hbs`).
 
 
 Frontend/Backend Communication Overview
