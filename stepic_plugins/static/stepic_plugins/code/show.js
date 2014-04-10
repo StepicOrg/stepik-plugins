@@ -2,7 +2,6 @@
   App.CodeQuizComponent = Em.Component.extend({
     init: function() {
       this._super();
-      console.log(this.get('previous_reply'));
       if (this.get('reply') == null) {
         return this.set('reply', {
           code: '',
