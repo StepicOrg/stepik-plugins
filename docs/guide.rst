@@ -2,7 +2,7 @@ Plugin API
 **********
 
 This document demonstrates plugin API with the example of simple-choice quiz.
-It should be read alongside with plugin source at `quizzes/simple_choice`.
+It should be read alongside with plugin source at `quizzes/simple_choice`_.
 
 
 Quiz Design
@@ -20,17 +20,17 @@ Directory Structure
 ===================
 
 Directory `quizzes/simple_choice` consists of the following files:
-    * `__init__.py` -- server part of the quiz is defined here.
-    * `tests.py` -- server part tests.
-    * `edit.js`, `edit.hbs` -- this pair of files describes edit interface for teacher.
-    * `show.js`, `show.hbs` -- this pair of files describes interface for student.
+    * `__init__.py`_ -- server part of the quiz is defined here.
+    * `tests.py`_ -- server part tests.
+    * `edit.js`_, `edit.hbs` -- this pair of files describes edit interface for teacher.
+    * `show.js`_, `show.hbs` -- this pair of files describes interface for student.
     * `style.css` -- css styles for frontend.
 
 
 Sever side
 ==========
 
-Server side is written in Python3 and consists of one file -- `__init__.py`.
+Server side is written in Python3 and consists of one file -- `__init__.py`_.
 In this file `SimpleChoiceQuiz` class is defined. It inherits from `BaseQuiz`
 and implements several abstract members.
 
@@ -41,12 +41,12 @@ and implements several abstract members.
 **Schemas** is a specification of a communication format between python backend and javascript frontend.
 It describes three types of objects.
 
-*Source* is the data needed to create quiz instance. It is created and rendered in `edit.js`.
+*Source* is the data needed to create quiz instance. It is created and rendered in `edit.js`_.
 
-*Dataset* is presented to the student for solving. It is created in `__init__.py` and
+*Dataset* is presented to the student for solving. It is created in `__init__.py`_ and
 rendered in `show.js`.
 
-*Reply* is the student's solution to the dataset. It is created in rendered in `show.js`
+*Reply* is the student's solution to the dataset. It is created and rendered in `show.js`_
 
 This object's types are expressed with the help of JSON specification mini language.
 In this language, objects types are specified as python dictionaries,
@@ -118,7 +118,7 @@ To start a server::
 
 This command launches Flask development server listening on 127.0.0.1:5000.
 
-The test client is `this JS Bin <http://jsbin.com/hikik/latest/edit>`_.
+The test client is this `JS Bin`_.
 
 Open it and insert Handlebars templates, and javascript functions instead of placeholders.
 
@@ -135,3 +135,10 @@ It's possible to use coffeescript to create frontend.
 Ember components can be used to create frontend.
 
 Check existing quizzes for examples of this features.
+
+.. _\__init__.py: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/__init__.py
+.. _tests.py: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/tests.py
+.. _edit.js: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/edit.js
+.. _show.js: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/show.js
+.. _quizzes/simple_choice: https://github.com/StepicOrg/stepic-plugins/tree/master/stepic_plugins/quizzes/simple_choice
+.. _JS Bin: http://jsbin.com/hikik/latest/edit

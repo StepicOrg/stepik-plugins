@@ -100,6 +100,6 @@ class SimpleChoiceQuiz(BaseQuiz):
 
     def check(self, reply, clue):
         """Checks reply and return either (score, hint) pair or just score"""
-        # Sore should be True or false. It also may be a number in range [0.0, 1.0].
+        # Score should be True or false. It also may be a number in range [0.0, 1.0].
         # Hint is optional and should be a string.
         return reply == clue
