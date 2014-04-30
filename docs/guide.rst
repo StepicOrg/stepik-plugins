@@ -22,8 +22,8 @@ Directory Structure
 Directory `quizzes/simple_choice` consists of the following files:
     * `__init__.py`_ -- server part of the quiz is defined here.
     * `tests.py`_ -- server part tests.
-    * `edit.js`_, `edit.hbs` -- this pair of files describes edit interface for teacher.
-    * `show.js`_, `show.hbs` -- this pair of files describes interface for student.
+    * `edit.js`_, `edit.hbs`_ -- this pair of files describes edit interface for teacher.
+    * `show.js`_, `show.hbs`_ -- this pair of files describes interface for student.
     * `style.css` -- css styles for frontend.
 
 
@@ -44,7 +44,7 @@ It describes three types of objects.
 *Source* is the data needed to create quiz instance. It is created and rendered in `edit.js`_.
 
 *Dataset* is presented to the student for solving. It is created in `__init__.py`_ and
-rendered in `show.js`.
+rendered in `show.js`_.
 
 *Reply* is the student's solution to the dataset. It is created and rendered in `show.js`_
 
@@ -85,7 +85,7 @@ Reply should be a list of booleans::
 
 **check(self, reply, clue)** checks valid and transformed reply.
 
-Tests for backend can be found in `tests.py`. Note the use of `SimpleChoiceQuiz.{Source, Dataset, Reply}`
+Tests for backend can be found in `tests.py`_. Note the use of `SimpleChoiceQuiz.{Source, Dataset, Reply}`
 to transform raw dictionaries into parsed objects.
 
 Client Side
@@ -139,6 +139,8 @@ Check existing quizzes for examples of this features.
 .. _\__init__.py: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/__init__.py
 .. _tests.py: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/tests.py
 .. _edit.js: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/edit.js
+.. _edit.hbs: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/edit.hbs
 .. _show.js: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/show.js
+.. _show.hbs: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/show.hbs
 .. _quizzes/simple_choice: https://github.com/StepicOrg/stepic-plugins/tree/master/stepic_plugins/quizzes/simple_choice
 .. _JS Bin: http://jsbin.com/hikik/latest/edit
