@@ -1,4 +1,4 @@
-function showFooBarQuiz(target, template, dataset, reply, disabled, quiz_info) {
+function showFooBarQuiz(target, template, dataset, reply, disabled) {
 
   return {
     'submit': function () {
