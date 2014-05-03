@@ -109,7 +109,7 @@ def submit():
 
 def start_server(quiz_name):
     STORE.quiz_class = load_by_name(quiz_name)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
 
 
 if __name__ == "__main__":
