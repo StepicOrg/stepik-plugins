@@ -2,11 +2,12 @@ For Impatient
 *************
 
 * click this image |nitrous| to create server in `Nitrous.IO <http://nitrous.io>`_
+* when server is ready enter IDE via your `dashboard <https://www.nitrous.io/app#/boxes>`_ 
 * start server by running ``workspace/stepic-plugins/stepic_plugins/conf_nitrous.sh``
 * open `this JS Bin <http://jsbin.com/hikik/latest/edit>`_
 * add templates from ``quizzes/simple_choice/{edit, show}.hbs`` to JS Bin html panel
 * add functions from ``quizzes/simple_choice/{edit, show}.js`` to JS Bin javascript panel
-* find out server's public URL from your `dashboard <https://www.nitrous.io/app#/boxes>`_.
+* find out server's public URL from your `dashboard <https://www.nitrous.io/app#/boxes>`_
 * assign ``http://XXXXXX.nitrousbox.com:5000`` to ``localhost`` in JS Bin javascript
 * now you can play with Simple Choice Quiz from JS Bin interface
 * experiment with frontend in JS Bin and with backend in ``quizzes/simple_choice/__init__.py``
