@@ -6,7 +6,7 @@
              checkedBinding="option.is_checked"
              valueBinding="option.text"
              disabledBinding="disabled"}}
-             {{unbound option.text}}
+             {{simple-render text=option.text}}
 </label>
 {{/each}}
 {{/with}}
