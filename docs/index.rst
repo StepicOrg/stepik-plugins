@@ -16,6 +16,7 @@ Contents:
    for_impatient
    naming_conventions
    quizzes/index
+   nitrous.io
 
 
 
