@@ -11,7 +11,7 @@ You can spin up server side for Stepic plugins in Nitrous.IO for free. Just foll
     * ``pip install -r requirements.txt``
     * ``cd stepic_plugins/``
 
-Now server is ready! You can implement your quiz and start server with ``python server.py QUIZ_NAME`` or play around with one of standard quizzes, for example "simple-choice" quiz: ``python server.py simple-choice``.
+Now server is ready! You can implement your quiz and start server with ``python dev-server/server.py QUIZ_NAME`` or play around with one of standard quizzes, for example "simple-choice" quiz: ``python dev-server/server.py simple-choice``.
 
 To use this server from front end find out server's public URL from your `dashboard <https://www.nitrous.io/app#/boxes>`_.
 

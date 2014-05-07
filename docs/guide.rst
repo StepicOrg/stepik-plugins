@@ -111,16 +111,10 @@ for ``editSimpleChoiceQuiz`` and reply for ``showSimpleChoiceQuiz``.
 Launching The Quiz
 ==================
 
-To check the quiz, start development server and a test client.
+To check the quiz, start development server first::
+  $ python3 dev-server/server.py simple-choice
 
-To start a server::
-  $ python3 server.py simple-choice
-
-This command launches Flask development server listening on 127.0.0.1:5000.
-
-The test client is this `JS Bin`_.
-
-Open it and insert Handlebars templates, and javascript functions instead of placeholders.
+And then open 127.0.0.1:5000 in your browser.
 
 
 Advanced Plugins
@@ -143,4 +137,3 @@ Check existing quizzes for examples of this features.
 .. _show.js: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/show.js
 .. _show.hbs: https://github.com/StepicOrg/stepic-plugins/blob/master/stepic_plugins/quizzes/simple_choice/show.hbs
 .. _quizzes/simple_choice: https://github.com/StepicOrg/stepic-plugins/tree/master/stepic_plugins/quizzes/simple_choice
-.. _JS Bin: http://jsbin.com/hikik/latest/edit
