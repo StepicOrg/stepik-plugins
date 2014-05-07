@@ -7,7 +7,7 @@ import argparse
 import inspect
 
 from flask import Flask, request, jsonify, make_response, render_template, abort, Response
-from flask.ext.cors import cross_origin
+
 
 # modified version of http://stackoverflow.com/a/6655098
 if __name__ == "__main__" and __package__ is None:
@@ -46,11 +46,8 @@ class InconsistentStateError(Exception):
 
 
 def jsbin_view(f):
-    @cross_origin(headers=['Content-Type'])
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        if request.method == 'OPTIONS':  # browser 'preflight' POST with OPTIONS
-            return ""
         try:
             return f(*args, **kwargs)
         except FormatError as e:
@@ -91,7 +88,7 @@ def quiz_static(file):
     return Response(body, mimetype=mimetype)
 
 
-@app.route("/quiz/", methods=['POST', 'OPTIONS'])
+@app.route("/quiz/", methods=['POST'])
 @jsbin_view
 def create_quiz():
     global STORE
@@ -105,7 +102,7 @@ def create_quiz():
     return 'OK'
 
 
-@app.route("/quiz/attempt/", methods=['POST', 'OPTIONS'])
+@app.route("/quiz/attempt/", methods=['POST'])
 @jsbin_view
 def attempt():
     global STORE
@@ -119,7 +116,7 @@ def attempt():
     )
 
 
-@app.route("/quiz/submission/", methods=['POST', 'OPTIONS'])
+@app.route("/quiz/submission/", methods=['POST'])
 @jsbin_view
 def submit():
     global STORE
