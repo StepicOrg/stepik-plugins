@@ -27,7 +27,10 @@ def run(command, code, data=None, files=None, output_limit=None, **kwargs):
     result = jail_code_wrapper("python", code=runcode, argv=argv, files=files,
                                stdin=data)
     if result.status != 0:
-        stderr = result.stderr.decode()
+        try:
+            stderr = result.stderr.decode()
+        except ValueError:
+            stderr = "undecodable stderr"
         if result.time_limit_exceeded:
             stderr = "Time limit exceeded\n" + stderr
         msg = "{} failed:\n{}".format(command, stderr)
@@ -37,7 +40,7 @@ def run(command, code, data=None, files=None, output_limit=None, **kwargs):
     try:
         decoded = utils.decode(result.stdout) if result.stdout else None
     except ValueError:
-        raise JailedCodeFailed("failed to decode edyrun stdout:\n{}".format(result.stdout))
+        raise JailedCodeFailed("prints are not allowed, failed to decode stdout:\n{}".format(result.stdout))
 
     return decoded
 
