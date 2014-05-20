@@ -2,68 +2,83 @@
 <html>
 <head>
 <meta name="description" content="Stepic Plugin sandbox" />
-  <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
+  <link rel="stylesheet" href="http://stepic.org/static/css/all.min.css"/>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="../static/js/dev.js"></script>
   <script src="../static/js/main.js"></script>
-  <link rel="stylesheet" href="https://stepic.org/static/classic/css/lib.min.css?v=1392296272"/>
-  <link rel="stylesheet" href="https://stepic.org/static/classic/css/app.min.css?v=1392296272"/>
   <meta charset="utf-8">
   <title>Stepic Plugin</title>
 </head>
 <body>
-<script>
-    QUIZ_NAME = '{{quiz_name}}';
-    QUIZ_NAME_CAMELIZED = '{{quiz_name_camelized}}';
+  <script>
+   QUIZ_NAME = '{{quiz_name}}'
+  </script>
+{% raw %}
+<script type="text/x-handlebars">
+  <div class="log__wrapper" style="position: fixed; width: 300px; margin-left: 20px;">
+    <h2>Log:</h2>
+    <pre style="max-height: 500px; overflow: scroll; border: solid 1px;">
+      {{#each entry in model.log}}
+{{entry}}
+      {{/each}}
+    </pre>
+  </div>
+  <div class="step-player-wrap">
+    <div class="step-player">
+      <div class="bar-wrp">
+        <div class="bar"></div>
+      </div>
+
+      <div class="player-content-wrapper">
+        <div class="step-view">
+          Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. Morbi bibendum neque mauris, ut cursus lectus placerat
+          non. Ut sed imperdiet lorem, eget lacinia sem. Praesent
+          sodales est vitae sem tincidunt luctus. Quisque dignissim
+          bibendum dui, at elementum elit volutpat interdum. Donec at
+          fermentum felis, id ornare erat. Nunc elit nisl, tincidunt
+          id fringilla ac, viverra ut nibh. Praesent hendrerit
+          faucibus metus ac posuere. Duis suscipit metus eu magna
+          gravida vehicula.
+          <hr></hr>
+
+          <div class="attempt-wrapper">
+            {{#if model.has_dataset}}
+              {{quiz-plugin viewName="pluginInstance"
+                            config=model.config
+                            dataset=model.display.dataset
+                            dataset_url=model.display.dataset_url
+                            reply=model.display.reply
+                            previous_reply=model.display.previous_reply
+                            is_reply_ready=model.display.is_reply_ready
+                            content=model.display.content
+                            disabled=model.display.disabled}}
+            {{/if}}
+          </div>
+          <button {{action 'updateSource' target='view'}}>Save Quiz</button>
+          <br></br>
+          <button {{action 'attempt'}}>New Apptempt</button>
+          <button {{action 'submit' target='view'}}>Submit</button>
+          <button class="secondary" {{action 'disable'}}>Disable</button>
+        </div>
+      </div>
+      <div class="bar-wrp footer">
+        <div class="bar bar-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="plugin-editor">
+    <div class="plugin-editor__wrapper">
+      {{quiz-editor viewName='quizEditorInstance'
+                    config=model.config
+                    source=model.editor.source}}
+    </div>
+  </div>
 </script>
+{% endraw %}
 
 <h1 class="text-center">{{quiz_name}}</h1>
 
-<div class="row">
-  <div class="row">
-    <div class="small-6 columns">
-      <div id="edit-quiz">
-
-      </div>
-    </div>
-    <div class="small-6 columns">
-      <label>
-        Update request
-        <textarea id="show-update-request" disabled></textarea>
-      </label>
-      <label>
-        Update response
-        <textarea id="show-update-response" disabled></textarea>
-      </label>
-    </div>
-  </div>
-  <div class="row">
-    <button class='button' id='update-quiz'>Update Quiz</button>
-  </div>
-</div>
-
-<hr>
-
-<div class="row">
-  <div class="row">
-    <div class="small-6 columns">
-      <div id="show-quiz"></div>
-    </div>
-    <div class="small-6 columns">
-      <label>
-        Submit request/Get Dataset response
-        <textarea id="show-submit-request" disabled></textarea>
-      </label>
-      <label>
-        Submit response
-        <textarea id="show-submit-response" disabled></textarea>
-      </label>
-    </div>
-  </div>
-  <div class="row">
-    <button class='button' id='get-dataset'>Get Dataset</button>
-    <button class='button' id='submit-quiz'>Submit</button>
-    <button class='button' id='disable-quiz'>Disable</button>
-  </div>
-</div>
 </body>
 </html>

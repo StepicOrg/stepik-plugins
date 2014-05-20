@@ -7,7 +7,10 @@ import argparse
 import inspect
 
 from flask import Flask, request, jsonify, make_response, render_template, abort, Response
-
+try:
+    import coffeescript
+except ImportError:
+    coffeescript = None
 
 # modified version of http://stackoverflow.com/a/6655098
 if __name__ == "__main__" and __package__ is None:
@@ -36,6 +39,7 @@ class Storage(object):
         self.quiz_class = None
         self.quiz = None
         self.dataset = None
+        self.dataset_created = False
         self.clue = None
 
 STORE = Storage()
@@ -71,19 +75,36 @@ def index():
 
 @app.route("/quiz/static/<file>")
 def quiz_static(file):
-    base_dir = os.path.dirname(inspect.getabsfile(STORE.quiz_class.wrapped_class))
-    mimetype = None
-    if file in ['show.js', 'edit.js']:
-        mimetype = 'application/javascript'
-    elif file in ['show.hbs', 'edit.hbs']:
-        mimetype = 'text/x-handlebars-template'
+    def read_file(file):
+        base_dir = os.path.dirname(inspect.getabsfile(STORE.quiz_class.wrapped_class))
+        path = os.path.join(base_dir, file)
+        return open(path).read() if os.path.isfile(path) else None
+
+    mime_map = [
+        ({'show.js', 'edit.js', 'show.coffee', 'edit.coffee'}, 'application/javascript'),
+        ({'show.hbs', 'edit.hbs'}, 'text/x-handlebars-template'),
+        ({'style.css'}, 'text/css')
+    ]
+    for files, mime in mime_map:
+        if file in files:
+            mimetype = mime
+            break
     else:
+        mimetype = None
+
+    if not mimetype:
         abort(404)
 
-    path = os.path.join(base_dir, file)
-    if not os.path.isfile(path):
+    body = read_file(file)
+    if body is None and file.endswith('.js'):
+        coffee_source = read_file(file.replace('.js', '.coffee'))
+        if coffee_source is not None:
+            if not coffeescript:
+                raise Exception("coffeescript module is required to compile coffeescript")
+            body = coffeescript.compile(coffee_source)
+
+    if body is None:
         return Response("Can't find {} file!".format(file), status=404, mimetype='text/plain')
-    body = open(path).read()
 
     return Response(body, mimetype=mimetype)
 
@@ -110,19 +131,18 @@ def attempt():
         raise InconsistentStateError("Quiz should be created first\n"
                                      "Have you pressed `Update Quiz` button?")
 
-    STORE.dataset, STORE.clue = STORE.quiz.generate()
-    return jsonify(
-        **STORE.dataset
-    )
+    STORE.dataset, STORE.clue = STORE.quiz.generate() or (None, None)
+    STORE.dataset_created = True
+    return jsonify(**STORE.dataset) if STORE.dataset else jsonify({'dataset': ''})
 
 
 @app.route("/quiz/submission/", methods=['POST'])
 @jsbin_view
 def submit():
     global STORE
-    if not STORE.dataset:
+    if not STORE.dataset_created:
         raise InconsistentStateError("Dataset should be created first\n"
-                                     "Have you pressed `Get Dataset` button?")
+                                     "Have you pressed `New Attempt` button?")
 
     reply = request.json
     reply = STORE.quiz.clean_reply(reply, STORE.dataset)

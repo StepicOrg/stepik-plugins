@@ -1,99 +1,85 @@
-var current_dataset = null;
-var shown_quiz = null;
-var edited_quiz = null;
-
-function postQuiz() {
-  var data = JSON.stringify(edited_quiz.submit());
-  $("#show-update-request").text(data);
-
-  $.ajax('quiz/', {
-    'type': 'post',
-    'data': data,
-    'contentType': 'application/json'
-  }).done(function (data) {
-    $("#show-update-response")
-        .text(JSON.stringify(data));
-  }).fail(function (data) {
-    $("#show-update-response")
-        .text("=(\n" + data.responseText);
+require(["app/app"], function(app) {
+  app.App.ApplicationRoute = Ember.Route.extend({
+    model: function() {
+      return App.QuizPluginComponent.loadPlugin(QUIZ_NAME).then(function(config) {
+        window.model  = Ember.Object.create({
+          config: config,
+          display: {
+            dataset: null,
+            dataset_url: null,
+            reply: null,
+            previous_reply: null,
+            is_reply_ready: true,
+            content: null,
+            disabled: false
+          },
+          editor: {
+            source: null
+          },
+          log: [],
+          has_dataset: false
+        });
+        return window.model;
+      });
+    }
   });
-}
 
-function postSubmission() {
-  var data = JSON.stringify(shown_quiz.submit());
-  $("#show-submit-request").text(data);
+  App.ApplicationController = Ember.Controller.extend({
 
-  $.ajax('quiz/submission/', {
-    'type': 'post',
-    'data': data,
-    'contentType': 'application/json'
-  }).done(function (data) {
-    $("#show-submit-response")
-        .text(JSON.stringify(data));
-  }).fail(function (data) {
-    $("#show-submit-response").text("=(\n" + data.responseText);
+    log: function(msg) {
+      console.log(msg);
+      var new_log = [msg].concat(this.get('model.log'));
+      this.set('model.log', new_log);
+    },
+
+    doAjax: function(url, data) {
+      var log = this.log.bind(this);
+      start = "POST to " + url + "\n";
+      return Ember.$.ajax(url, {
+        'type': 'post',
+        'data': JSON.stringify(data),
+        'contentType': 'application/json'
+      }).done(function(data) {
+        log(start + JSON.stringify(data));
+        return data;
+      }).fail(function(data) {
+        log(start + "Failed\n" + data.responseText);
+        return data;
+      });
+    },
+
+    actions: {
+      disable: function() {
+        toggleProperty('model.disabled');
+      },
+      attempt: function() {
+        var that=this;
+        this.doAjax('quiz/attempt/').then(function(data){
+          that.set('model.display.dataset', data);
+          that.set('model.has_dataset', true);
+        });
+      }
+    }
   });
-}
 
-function getDataset() {
-  $.ajax('quiz/attempt/', {
-    'type': 'post'
-  }).done(function (data) {
-    current_dataset = data;
-    $("#show-submit-request").text(JSON.stringify(data));
-    updateShowInterface(null, false);
-  }).fail(function (data) {
-    $("#show-submit-response").text("=(\n" + data.responseText);
+  App.ApplicationView = Ember.View.extend({
+    actions: {
+      submit: function() {
+        this.get('controller').doAjax(
+          'quiz/submission/', this.get('pluginInstance').getReply());
+      },
+      updateSource: function() {
+        this.get('controller').doAjax(
+          'quiz/', this.get('quizEditorInstance').getSource());
+      }
+    }
   });
-}
 
-
-function disableQuiz() {
-  var reply = shown_quiz.submit();
-  updateShowInterface(reply, true);
-
-}
-
-function updateShowInterface(reply, disabled){
-    var target = $("#show-quiz");
-    target.empty();
-
-    shown_quiz = Quiz.show_fn(target, Quiz.show_template, current_dataset, reply, disabled, null);
-}
-
-function updateEditInterface(data) {
-  var target = $('#edit-quiz');
-  target.empty();
-  edited_quiz = Quiz.edit_fn(target, Quiz.edit_template, data);
-}
-
-Quiz = {};
-
-function loadTemplate(name) {
-  return $.get('quiz/static/' + name + '.hbs').then(function(src) {
-    Quiz[name + '_template'] =  Handlebars.compile(src);
+  app.App.QuizPluginComponent.reopenClass({
+    getStaticPrefix: function (name) {
+      return "/quiz/static/"
+    }
   });
-}
 
-function loadFunction(name) {
-  $.getScript('quiz/static/'+name+'.js').then(function(src) {
-    Quiz[name + '_fn'] = window[name + QUIZ_NAME_CAMELIZED + 'Quiz']
-  })
-}
-
-$(function(){
-  $.when(
-    loadFunction('show'),
-    loadFunction('edit'),
-    loadTemplate('show'),
-    loadTemplate('edit')
-  ).then(function(){
-    $('#update-quiz').click(postQuiz);
-    $('#get-dataset').click(getDataset);
-    $('#submit-quiz').click(postSubmission);
-    $('#disable-quiz').click(disableQuiz);
-    updateEditInterface(null);
-  }, function(err){
-    alert(err.responseText)
-  });
-});
+  app.App.advanceReadiness();
+})
