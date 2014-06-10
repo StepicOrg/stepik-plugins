@@ -1,10 +1,13 @@
-<div class="options">
-  {{#each options}}
-    <div class="option">
-      <input type="text" class="text" value="{{this}}"/>
-    </div>
-  {{/each}}
+<div class="edit-title">Sort options</div>
+<div class="edit-text">
+    <div class="sort-options">
+     {{#each options}}
+      <div class="sort-option">
+        <input type="text" class="text" value="{{this}}"/>
+        <span class="remove"></span>
+      </div>
+      {{/each}}
+     </div>
+    <div class="add-option"></div>
 </div>
 
-<button class="button tiny sorting_quiz__add_button">+</button>
-<button class="button secondary small sorting_quiz__clear_button">Clear</button>

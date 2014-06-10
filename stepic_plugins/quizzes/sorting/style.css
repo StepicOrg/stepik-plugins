@@ -3,8 +3,15 @@
 }
 
 .sorting-quiz__item {
+    border-bottom: 1px solid #d3d3d3;
+    border-top: 1px solid #d3d3d3;
+    color: #222222;
     cursor: move;
+    border-collapse: collapse;
+    margin-top: -1px;
+    padding: .4em 1.28571em;
 }
+
 
 .sorting-quiz__item_number {
     display: none;

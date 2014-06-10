@@ -1,27 +1,30 @@
-<label>
-    Correct answer(or regular expression pattern)
-    {{input value=source.pattern
-          type="text"
-          required="true"}}
-</label>
-
-<label>
+<div class="edit-title">Correct answer</div>
+<div class="options">
+    <label class="option">
     {{input checked=source.use_re
           type="checkbox"
           required="true"}}
     Use regular expressions
-</label>
+    </label>
 
-<label>
-    {{input checked=source.match_substring
-          type="checkbox"
-          required="true"}}
-    Match Substring
-</label>
+    <label class="option">
+        {{input checked=source.match_substring
+              type="checkbox"
+              required="true"}}
+        Match Substring
+    </label>
 
-<label>
-    {{input checked=source.case_sensitive
-          type="checkbox"
+    <label class="option">
+        {{input checked=source.case_sensitive
+              type="checkbox"
+              required="true"}}
+        Case sensitive
+    </label>
+</div>
+<div class="edit-text">
+    {{input value=source.pattern
+          type="text"
           required="true"}}
-    Case sensitive
-</label>
+</div>
+
+

@@ -11,7 +11,7 @@
     },
     didInsertElement: function() {
       var _this = this;
-      this.$('.get_dataset').click(function() {
+      $('.get_dataset').click(function() {
         return _this.get('controller').send('download_started');
       });
       return this._super.apply(this, arguments);

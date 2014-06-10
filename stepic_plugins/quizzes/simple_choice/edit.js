@@ -5,16 +5,20 @@ function editSimpleChoiceQuiz(target, template, source) {
   target.html(template(source));
 
   // add ability to add options.
-  target.find('button').click(function () {
-    var row = $('<div class="option"><input type="checkbox" class="is_correct"/><input type="text" class="text"/></div>');
-    target.find('.options').append(row);
+  target.find('.add-option').click(function () {
+    var row = $('<div class="choice-option"><input type="checkbox" class="is_correct"/><input type="text" class="text"/><span class="remove"></span></div>');
+    target.find('.choice-options').append(row);
   });
+
+  target.on('click', '.remove', function() {
+    $(this).parent().remove()
+  })
 
   // return and object with a `submit` method.
   // `submit` returns a source, conforming to SimpleChoiceQuiz.Schemas.source
   return {
     'submit': function () {
-      var options = target.find('.option').map(function () {
+      var options = target.find('.choice-option').map(function () {
         var t = $(this);
         return {
           'is_correct': t.find('.is_correct').prop('checked'),

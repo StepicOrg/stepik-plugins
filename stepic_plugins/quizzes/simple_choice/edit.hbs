@@ -1,9 +1,14 @@
-<div class="options">
-    {{#each options}}
-  <div class="option">
-    <input type="checkbox" class="is_correct" {{#if is_correct}}checked{{/if}}/>
-    <input type="text" class="text" value="{{text}}"/>
-  </div>
-  {{/each}}
+<div class="edit-title">Quiz options</div>
+<div class="edit-text">
+    <div class="choice-options">
+     {{#each options}}
+      <div class="choice-option">
+        <input type="checkbox" class="is_correct" {{#if is_correct}}checked{{/if}}/>
+        <input type="text" class="text" value="{{text}}"/>
+        <span class="remove"></span>
+      </div>
+      {{/each}}
+     </div>
+    <div class="add-option"></div>
 </div>
-<button class="button tiny">+</button>
+

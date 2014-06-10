@@ -1,7 +1,3 @@
-{{#unless disabled}}
-  <a  {{bind-attr href="dataset_url"}} class="get_dataset" title="dataset file link">Download dataset</a>
-{{/unless}}
-
 {{#if is_dataset_downloaded}}
     {{view App.AutoResizeTextView
     required=true
