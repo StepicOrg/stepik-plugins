@@ -23,6 +23,8 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
     @set 'source.sample_size', parseInt(@get('source.sample_size'), 10)
     @get('source')
 
+
+
   actions:
     addOption: ->
       @get('source.options').pushObject(

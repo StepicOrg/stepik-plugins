@@ -28,10 +28,11 @@
     <div class="choice-options">
         {{#with picker_view as picker_view}}
       {{#each option in source.options}}
-      <div class="choice-option">
+      <div class="choice-option" draggable="true">
+          <span class="drag-area"></span>
           {{input type="checkbox" checked=option.is_correct class="is_correct"}}
           {{input type="text" value=option.text class="text"}}
-        <span class="remove" {{action "removeOption"}}></span>
+        <span class="remove" {{action "removeOption" option}}></span>
       </div>
       {{/each}}
       {{/with}}
