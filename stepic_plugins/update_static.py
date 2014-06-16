@@ -23,7 +23,7 @@ if __name__ == "__main__" and __package__ is None:
     import stepic_plugins
     __package__ = str("stepic_plugins")
 
-from .server import load_by_name
+from stepic_plugins.base import load_by_name
 
 if __name__ == "__main__":
     name = sys.argv[1]
