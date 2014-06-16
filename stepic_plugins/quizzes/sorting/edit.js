@@ -14,8 +14,9 @@ function editSortingQuiz(target, template, source) {
   var dragSource = null;
 
   function makeDraggeble() {
-    target.find(".sort-option").on('dragstart',function () {
+    target.find(".sort-option").on('dragstart',function (e) {
       dragSource = this;
+      e.originalEvent.dataTransfer.setData('text/html', $(this).html())
       $(dragSource).addClass('dragged');
     }).on('dragover',function (e) {
       e.preventDefault();

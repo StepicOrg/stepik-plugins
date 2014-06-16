@@ -10,14 +10,17 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) 
   }
 
   var dragSource = null;
-  target.find("li").on('dragstart',function () {
+  target.find("li").on('dragstart',function (e) {
     dragSource = this;
+    e.originalEvent.dataTransfer.setData('text/html', $(this).html())
+    $(dragSource).addClass('dragged');
   }).on('dragover',function (e) {
     e.preventDefault();
   }).on('drop', function () {
     var tmp = dragSource.innerHTML;
     dragSource.innerHTML = this.innerHTML;
     this.innerHTML = tmp;
+    $(dragSource).removeClass('dragged')
   });
 
   return {
