@@ -1,63 +1,44 @@
-<fieldset>
-    <div class="row">
+<div class="edit-title">Quiz options</div>
+<div class="options">
+    <label class="option">
+    {{input
+        type="checkbox"
+        name="is_multiple_choice"
+        checked=source.is_multiple_choice}}
+    Checkboxes
+    </label>
+    <label class="option">
+    {{input
+        type="checkbox"
+        name="is_always_correct"
+        checked=source.is_always_correct}}
+    Any answer is correct
+    </label>
+    <label class="option">
+    {{input
+        type="checkbox"
+        name="preserve_order"
+        checked=source.preserve_order}}
+    Preserve order
+    </label>
+    <label class="option option_right">Sample Size {{input type="number" name="sample_size" value=source.sample_size}}</label>
+</div>
+<div class="edit-title">Mark correct answer/answers</div>
+<div class="edit-text">
+    <div class="choice-options">
+        {{#with picker_view as picker_view}}
+      {{#each option in source.options}}
+      <div class="choice-option" draggable="true">
+          <span class="drag-area"></span>
+          {{input type="checkbox" checked=option.is_correct class="is_correct"}}
+          {{input type="text" value=option.text class="text"}}
+        <span class="remove" {{action "removeOption" option}}></span>
+      </div>
+      {{/each}}
+      {{/with}}
+     </div>
+    <div class="add-option" {{action "addOption"}}></div>
+</div>
 
-        <div class="large-4 columns">
-            <label>{{input type="checkbox" name="is_multiple_choice" checked=source.is_multiple_choice}}
-                Checkboxes</label>
-        </div>
-        <div class="large-4 columns">
-            <label>{{input type="checkbox" name="is_always_correct" checked=source.is_always_correct}} Any answer is 
-                correct (i.e. poll, survey)</label>
-        </div>
-        <div class="large-4 columns">
-            <label>{{input type="checkbox" name="preserve_order" checked=source.preserve_order}} Preserve order</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="inline"> Sample Size</label>
-        </div>
-        <div class="large-2 columns">
-            {{input type="number" name="sample_size" value=source.sample_size}}
-        </div>
-        <div class="large-8 columns"></div>
-    </div>
-</fieldset>
 
-<fieldset>
-    <legend>Options</legend>
-    <div class="row">
-        <div class="large-12 columns">
-            <div class="row">
-                <div class="large-1 columns">
-                    <label>Correct?</label>
-                </div>
-                <div class="large-10 columns">
-                    <label>Option text</label>
-                </div>
-                <div class="large-1 columns">
-                    <label>Remove?</label>
-                </div>
-            </div>
 
-            {{#with picker_view as picker_view}}
-            {{#each option in source.options}}
-
-            <div class="row">
-                <div class="large-1 columns">
-                    {{input type="checkbox" checked=option.is_correct}}
-                </div>
-                <div class="large-10 columns">
-                    {{input type="text" value=option.text}}
-                </div>
-                <div class="large-1 columns">
-                    <button {{action "removeOption" option}} class="choice-quiz__remove-option tiny secondary">-</button>
-                </div>
-            </div>
-            {{/each}}
-        {{/with}}
-        </div>
-    </div>
-
-    <button {{action "addOption"}} class="choice-quiz__add-option">New option</button>
-</fieldset>

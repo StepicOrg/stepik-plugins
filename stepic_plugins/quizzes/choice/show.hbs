@@ -1,12 +1,15 @@
 {{#with picker_view as picker_view}}
   {{#each option in selections}}
-<label>
+<label class="option">
     {{view picker_view
              name="id"
              checkedBinding="option.is_checked"
              valueBinding="option.text"
-             disabledBinding="disabled"}}
-             {{simple-render text=option.text}}
+             disabledBinding="disabled"
+             class="option__input"}}
+    {{simple-render
+             text=option.text
+             class="option__text"}}
 </label>
 {{/each}}
 {{/with}}
