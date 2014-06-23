@@ -1,4 +1,4 @@
-<div class="edit-title">This is sample code quiz</div>
+<div class="edit-title">Enter your code below. See <a href="/lesson/25">How to Implement Programming Assignments</a> for docs.</div>
 <div class="edit-text">
 {{view App.CodeEditorView
     valueBinding='source.code'
@@ -7,4 +7,25 @@
     placeholder="Type your code here..."}}
 
 {{web-console code=source.code}}
+</div>
+<div class="options">
+    <label class="option">
+      <span title="For each (single) test case" class="edit-tooltip">Time Limit (sec):</span>
+      {{input type="number" name="execution_time_limit" value=source.execution_time_limit}}
+    </label>
+    <label class="option">
+      <span title="For each (single) test case" class="edit-tooltip">Memory Limit (MB):</span>
+      {{input type="number" name="execution_memory_limit" value=source.execution_memory_limit}}
+    </label>
+</div>
+<div class="edit-title">
+  Templates and restrictions for programming languages. Leave empty for defaults.<br>
+  See <a href="/lesson/25">How to Implement Programming Assignments</a> for docs.
+</div>
+<div class="edit-text">
+  {{view App.CodeEditorView
+    valueBinding='source.templates_data'
+    required='false'
+    lang='python'
+    placeholder=""}}
 </div>

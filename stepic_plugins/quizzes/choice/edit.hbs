@@ -1,29 +1,4 @@
-<div class="edit-title">Quiz options</div>
-<div class="options">
-    <label class="option">
-    {{input
-        type="checkbox"
-        name="is_multiple_choice"
-        checked=source.is_multiple_choice}}
-    Checkboxes
-    </label>
-    <label class="option">
-    {{input
-        type="checkbox"
-        name="is_always_correct"
-        checked=source.is_always_correct}}
-    Any answer is correct
-    </label>
-    <label class="option">
-    {{input
-        type="checkbox"
-        name="preserve_order"
-        checked=source.preserve_order}}
-    Preserve order
-    </label>
-    <label class="option option_right">Sample Size {{input type="number" name="sample_size" value=source.sample_size}}</label>
-</div>
-<div class="edit-title">Mark correct answer/answers</div>
+<div class="edit-title">Add options. Mark correct ones.</div>
 <div class="edit-text">
     <div class="choice-options">
         {{#with picker_view as picker_view}}
@@ -39,6 +14,34 @@
      </div>
     <div class="add-option" {{action "addOption"}}></div>
 </div>
+<div class="options">
+    <label class="option">
+    {{input
+        type="checkbox"
+        name="is_multiple_choice"
+        checked=source.is_multiple_choice}}
+      <span title="Enable multiple choice. If unchecked: one choice only." class="edit-tooltip">Checkboxes</span>
+    </label>
+    <label class="option">
+    {{input
+        type="checkbox"
+        name="is_always_correct"
+        checked=source.is_always_correct}}
+      <span title="Make a poll" class="edit-tooltip">Any response is correct</span>
+    </label>
+    <label class="option">
+    {{input
+        type="checkbox"
+        name="preserve_order"
+        checked=source.preserve_order}}
+      <span title="Preserve options order as above" class="edit-tooltip">Do not randomize order</span>
+    </label>
+    <label class="option option_right">
+      <span title="Number of options which will be shown to user. Should not be less than number of available options below." class="edit-tooltip">Sample size</span>
+      {{input type="number" name="sample_size" value=source.sample_size}}
+    </label>
+</div>
+
 
 
 
