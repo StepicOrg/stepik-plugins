@@ -1,5 +1,5 @@
 <div class="edit-title">
-  Correct answer (user's response should match this text):
+  Correct answer (user's response should perfectly match this string):
 </div>
 <div class="edit-text">
     {{input value=source.pattern
@@ -11,7 +11,7 @@
         {{input checked=source.match_substring
               type="checkbox"
               required="true"}}
-      <span title="A response will be correct if it contains correct answer, not exactly equal to it." class="edit-tooltip">Allow match as a substring</span>
+      <span title="Correct response may contain your string at any position. For example, 'the best of' is a substring of 'It was the best of times'." class="edit-tooltip">Allow match as a substring</span>
     </label>
 
     <label class="option">
