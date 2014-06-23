@@ -1,4 +1,5 @@
-{{view App.AutoResizeTextView valueBinding="reply.text"
-                              required="true"
-                              placeholder="Type your answer here..."
-                              disabledBinding="disabled"}}
+{{textarea classNames="textarea"
+           value=reply.text
+           required="true"
+           disabledBinding="disabled"
+           placeholder="Type your answer here..."}}
