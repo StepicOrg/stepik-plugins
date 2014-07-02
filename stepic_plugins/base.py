@@ -95,7 +95,7 @@ def load_by_name(name):
             try:
                 module = import_module(qualified_name)
             except ImportError:
-                pass
+                continue
 
             for att in dir(module):
                 val = getattr(module, att)
