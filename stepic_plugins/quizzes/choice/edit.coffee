@@ -59,6 +59,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
         is_correct: false
         text: ''
       )
+      Em.run.next => @setBindings()
 
     removeOption: (option)->
       @set('source.options', @get('source.options').without(option))

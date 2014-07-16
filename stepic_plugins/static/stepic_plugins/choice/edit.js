@@ -58,10 +58,15 @@
     },
     actions: {
       addOption: function() {
-        return this.get('source.options').pushObject({
+        this.get('source.options').pushObject({
           is_correct: false,
           text: ''
         });
+        return Em.run.next((function(_this) {
+          return function() {
+            return _this.setBindings();
+          };
+        })(this));
       },
       removeOption: function(option) {
         return this.set('source.options', this.get('source.options').without(option));
