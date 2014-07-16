@@ -23,8 +23,10 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
     @set 'source.sample_size', parseInt(@get('source.sample_size'), 10)
     @get('source')
 
+  didInsertElement: ->
+    @setBindings()
 
-  setBindings: (->
+  setBindings: ->
     dragSource = null
     component = @
     options = @$('.choice-option')
@@ -47,7 +49,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
         }
       component.set 'source.options', new_options
       Em.run.next -> component.setBindings()
-  ).observes('source.options').on('didInsertElement')
+
 
 
 
@@ -57,8 +59,10 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
         is_correct: false
         text: ''
       )
+      Em.run.next => @setBindings()
 
 
     removeOption: (option)->
       @set('source.options', @get('source.options').without(option))
+      Em.run.next => @setBindings()
 
