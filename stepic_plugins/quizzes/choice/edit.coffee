@@ -24,6 +24,34 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
     @get('source')
 
 
+  didInsertElement: ->
+    @setBindings()
+
+  setBindings: ->
+    dragSource = null
+    component = @
+    options = @$('.choice-option')
+    options.off()
+    .on 'dragstart', (e)->
+      dragSource = @
+      e.originalEvent.dataTransfer.setData 'text/html', @outerHTML
+    .on 'dragover', (e)->
+      e.preventDefault()
+    .on 'drop', (e)->
+      if options.index(dragSource) > options.index(@)
+        $(@).before dragSource
+      else
+        $(@).after dragSource
+      new_options = []
+      component.$('.choice-option').each (i,v)->
+        new_options.push {
+            text: $(v).find('.text').val()
+            is_correct: $(v).find('.is_correct').is(':checked')
+        }
+      component.set 'source.options', new_options
+      Em.run.next -> component.setBindings()
+
+
 
   actions:
     addOption: ->

@@ -23,6 +23,39 @@
       this.set('source.sample_size', parseInt(this.get('source.sample_size'), 10));
       return this.get('source');
     },
+    didInsertElement: function() {
+      return this.setBindings();
+    },
+    setBindings: function() {
+      var component, dragSource, options;
+      dragSource = null;
+      component = this;
+      options = this.$('.choice-option');
+      return options.off().on('dragstart', function(e) {
+        dragSource = this;
+        return e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
+      }).on('dragover', function(e) {
+        return e.preventDefault();
+      }).on('drop', function(e) {
+        var new_options;
+        if (options.index(dragSource) > options.index(this)) {
+          $(this).before(dragSource);
+        } else {
+          $(this).after(dragSource);
+        }
+        new_options = [];
+        component.$('.choice-option').each(function(i, v) {
+          return new_options.push({
+            text: $(v).find('.text').val(),
+            is_correct: $(v).find('.is_correct').is(':checked')
+          });
+        });
+        component.set('source.options', new_options);
+        return Em.run.next(function() {
+          return component.setBindings();
+        });
+      });
+    },
     actions: {
       addOption: function() {
         return this.get('source.options').pushObject({
