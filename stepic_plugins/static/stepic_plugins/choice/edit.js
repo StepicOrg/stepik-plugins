@@ -23,10 +23,7 @@
       this.set('source.sample_size', parseInt(this.get('source.sample_size'), 10));
       return this.get('source');
     },
-    didInsertElement: function() {
-      return this.setBindings();
-    },
-    setBindings: function() {
+    setBindings: (function() {
       var component, dragSource, options;
       dragSource = null;
       component = this;
@@ -55,18 +52,13 @@
           return component.setBindings();
         });
       });
-    },
+    }).observes('source.options').on('didInsertElement'),
     actions: {
       addOption: function() {
-        this.get('source.options').pushObject({
+        return this.get('source.options').pushObject({
           is_correct: false,
           text: ''
         });
-        return Em.run.next((function(_this) {
-          return function() {
-            return _this.setBindings();
-          };
-        })(this));
       },
       removeOption: function(option) {
         return this.set('source.options', this.get('source.options').without(option));
