@@ -122,9 +122,9 @@ Advanced Plugins
 
 Plugin can specify `async_init` method. It is used for time consuming initialization and checking.
 
-Fork of codejail(https://github.com/bioinf/codejail) is used  for untrusted code execution.
+Fork of [CodeJail](https://github.com/bioinf/codejail) is used for untrusted code execution.
 
-It's possible to use coffeescript to create frontend.
+It's possible to use CoffeeScript to create frontend.
 
 Ember components can be used to create frontend.
 
