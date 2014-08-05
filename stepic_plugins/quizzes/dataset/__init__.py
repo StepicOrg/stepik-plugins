@@ -53,7 +53,7 @@ class DatasetQuiz(BaseQuiz):
             raise FormatError(str(e))
 
         return {
-            'static_content': {
+            'options': {
                 'time_limit': 5 * 60,
                 'sample_dataset': sample_dataset,
                 'sample_output': sample_output

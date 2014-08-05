@@ -68,7 +68,7 @@ class CodeQuiz(BaseQuiz):
             raise FormatError(str(e))
         return {
             'tests': tests,
-            'static_content': {
+            'options': {
                 'execution_time_limit': self.execution_time_limit,
                 'execution_memory_limit': self.execution_memory_limit,
                 'code_templates': self.code_templates,

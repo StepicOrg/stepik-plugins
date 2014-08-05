@@ -10,7 +10,7 @@ App.CodeQuizComponent = Em.Component.extend
   user_codeBinding: 'reply.code'
 
   langs: (->
-    _.keys @get('content.code_templates')
+    _.keys @get('content.options.code_templates')
   ).property('content')
 
   is_lang_selectable: (->
@@ -19,7 +19,7 @@ App.CodeQuizComponent = Em.Component.extend
 
   code_template: (->
     if @get('user_lang')
-      @get('content.code_templates')[@get('user_lang')]
+      @get('content.options.code_templates')[@get('user_lang')]
   ).property('user_lang')
 
   _set_initial_code: (->
