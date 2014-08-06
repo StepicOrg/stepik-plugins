@@ -10,21 +10,26 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) 
   }
 
   var dragSource = null;
-  target.find("li").on('dragstart',function (e) {
+  var options = $(target).find('li');
+
+  options.off()
+  .on('dragstart',function(e) {
     dragSource = this;
-    e.originalEvent.dataTransfer.setData('text/html', $(this).html())
-    $(dragSource).addClass('dragged');
-  }).on('dragover',function (e) {
+    e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
+  })
+  .on('dragover',function(e) {
     e.preventDefault();
-  }).on('drop', function () {
-    var tmp = dragSource.innerHTML;
-    dragSource.innerHTML = this.innerHTML;
-    this.innerHTML = tmp;
-    $(dragSource).removeClass('dragged')
+  })
+  .on('drop', function(e) {
+    if(options.index(dragSource) > options.index(this))
+      $(this).before(dragSource);
+    else
+      $(this).after(dragSource);
+    options = $(target).find('li');
   });
 
   return {
-    'submit': function () {
+    'submit': function() {
       var ordering = target.find('.sorting-quiz__item_number')
         .map(function () {
           return parseInt($(this).text(), 10);

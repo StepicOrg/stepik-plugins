@@ -8,23 +8,31 @@ function editSortingQuiz(target, template, source) {
     makeDraggeble();
   });
  target.on('click', '.remove', function() {
-    $(this).parent().remove()
+   $(this).parent().remove();
+   target.find(".sort-option").off();
+   makeDraggeble();
   })
 
-  var dragSource = null;
+
 
   function makeDraggeble() {
-    target.find(".sort-option").on('dragstart',function (e) {
+    var dragSource = null;
+    var options = $(target).find('.sort-option');
+
+    options.off()
+    .on('dragstart',function(e) {
       dragSource = this;
-      e.originalEvent.dataTransfer.setData('text/html', $(this).html())
-      $(dragSource).addClass('dragged');
-    }).on('dragover',function (e) {
+      e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
+    })
+    .on('dragover',function(e) {
       e.preventDefault();
-    }).on('drop', function () {
-      var tmp = dragSource.innerHTML;
-      dragSource.innerHTML = this.innerHTML;
-      this.innerHTML = tmp;
-      $(dragSource).removeClass('dragged')
+    })
+    .on('drop', function(e) {
+      if(options.index(dragSource) > options.index(this))
+        $(this).before(dragSource);
+      else
+        $(this).after(dragSource);
+      options = $(target).find('.sort-option');
     });
   }
 
