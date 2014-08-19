@@ -1,5 +1,6 @@
-{{textarea classNames="textarea"
-           value=reply.text
-           required="true"
-           disabledBinding="disabled"
-           placeholder="Type your answer here..."}}
+{{wysi-textarea 
+	value=reply.text
+	disabledBinding=disabled
+	required="true"
+	toolbar='bottom-right'
+	placeholder="Type your answer here..."}}
