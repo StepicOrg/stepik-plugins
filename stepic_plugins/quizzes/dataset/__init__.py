@@ -13,7 +13,7 @@ class DatasetQuiz(BaseQuiz):
             'code': str
         }
         reply = {
-            'text': str
+            'file': str
         }
         dataset = {
             'file': str
@@ -61,7 +61,7 @@ class DatasetQuiz(BaseQuiz):
         }
 
     def clean_reply(self, reply, dataset):
-        return reply.text.strip()
+        return reply.file.strip()
 
     def check(self, reply, clue, throw=False):
         try:

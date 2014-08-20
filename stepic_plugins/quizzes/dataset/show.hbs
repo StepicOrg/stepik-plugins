@@ -1,13 +1,5 @@
-{{#if is_dataset_downloaded}}
-    {{view App.AutoResizeTextView
-    required=true
-    valueBinding="reply.text"
-    placeholder="Type your answer here..."
-    disabledBinding="is_input_disabled"}}
-{{else}}
-    {{view App.AutoResizeTextView
-    required=true
-    valueBinding="reply.text"
-    placeholder="Download dataset first"
-    disabled=true}}
-{{/if}}
+{{view App.AutoResizeTextView
+       required=true
+       valueBinding="reply.file"
+       placeholder=placeholder
+       disabled=is_textarea_disabled}}
