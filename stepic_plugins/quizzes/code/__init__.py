@@ -32,8 +32,8 @@ class CodeQuiz(BaseQuiz):
     class Schemas:
         source = {
             'code': str,
-            'execution_time_limit': int,
-            'execution_memory_limit': int,
+            'execution_time_limit': str,
+            'execution_memory_limit': str,
             'templates_data': str
         }
 
@@ -52,8 +52,8 @@ class CodeQuiz(BaseQuiz):
     def __init__(self, source, supplementary=None):
         super().__init__(source)
         self.code = source.code
-        self.execution_time_limit = source.execution_time_limit
-        self.execution_memory_limit = source.execution_memory_limit
+        self.execution_time_limit = int(source.execution_time_limit)
+        self.execution_memory_limit = int(source.execution_memory_limit)
         self.templates_data = source.templates_data
         self.tests = supplementary['tests'] if supplementary else None
 

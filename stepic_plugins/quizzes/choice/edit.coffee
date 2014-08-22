@@ -4,7 +4,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
     default_source =
       is_multiple_choice: false
       is_always_correct: false
-      sample_size: 3
+      sample_size: '3'
       preserve_order: false
       options: []
     @set 'source',
@@ -20,7 +20,6 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
   ).property('is_multiple_choice')
 
   get_source: ->
-    @set 'source.sample_size', parseInt(@get('source.sample_size'), 10)
     @get('source')
 
   didInsertElement: ->
