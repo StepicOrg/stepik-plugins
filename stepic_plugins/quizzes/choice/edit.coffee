@@ -20,6 +20,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
   ).property('is_multiple_choice')
 
   get_source: ->
+    @set 'source.sample_size', @get('source.sample_size').toString()
     @get('source')
 
   didInsertElement: ->

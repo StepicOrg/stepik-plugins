@@ -32,4 +32,6 @@ App.CodeQuizEditorComponent = Em.Component.extend
         @get('source') || default_source
 
   get_source: ->
+    @set 'source.execution_time_limit', @get('source.execution_time_limit').toString()
+    @set 'source.execution_memory_limit', @get('source.execution_memory_limit').toString()
     @get('source')

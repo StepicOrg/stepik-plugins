@@ -20,6 +20,7 @@
       }
     }).property('is_multiple_choice'),
     get_source: function() {
+      this.set('source.sample_size', this.get('source.sample_size').toString());
       return this.get('source');
     },
     didInsertElement: function() {
