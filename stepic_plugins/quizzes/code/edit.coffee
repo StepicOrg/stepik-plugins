@@ -25,8 +25,8 @@ App.CodeQuizEditorComponent = Em.Component.extend
           def check(reply, clue):
               return int(reply) == int(clue)
         """
-        execution_time_limit: '5'
-        execution_memory_limit: '256'
+        execution_time_limit: 5
+        execution_memory_limit: 256
         templates_data: ""
       @set 'source',
         @get('source') || default_source

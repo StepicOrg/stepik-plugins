@@ -14,7 +14,7 @@ class ChoiceQuiz(BaseQuiz):
         source = {
             'is_multiple_choice': bool,
             'is_always_correct': bool,
-            'sample_size': str,
+            'sample_size': int,
             'preserve_order': bool,
             'options': [{
                 'is_correct': bool,
@@ -35,7 +35,7 @@ class ChoiceQuiz(BaseQuiz):
         super().__init__(source)
         self.is_multiple_choice = source.is_multiple_choice
         self.is_always_correct = source.is_always_correct
-        self.sample_size = int(source.sample_size)
+        self.sample_size = source.sample_size
         self.preserve_order = source.preserve_order
         self.options = source.options
         for option in self.options:
