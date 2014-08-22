@@ -27,7 +27,7 @@ Directory `quizzes/simple_choice` consists of the following files:
     * `style.css` -- css styles for frontend.
 
 
-Sever side
+Server side
 ==========
 
 Server side is written in Python3 and consists of one file -- `__init__.py`_.
