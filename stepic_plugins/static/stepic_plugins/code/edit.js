@@ -12,10 +12,8 @@
       return this.set('source', this.get('source') || default_source);
     },
     get_source: function() {
-      this.set('source.execution_time_limit', this.get('source.execution_time_limit').toString());
-      this.set('source.execution_memory_limit', this.get('source.execution_memory_limit').toString());
       return this.get('source');
-    },
+    }
   });
 
 }).call(this);
