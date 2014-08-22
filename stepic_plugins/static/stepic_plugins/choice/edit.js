@@ -6,7 +6,7 @@
       default_source = {
         is_multiple_choice: false,
         is_always_correct: false,
-        sample_size: 3,
+        sample_size: "3",
         preserve_order: false,
         options: []
       };
@@ -20,7 +20,6 @@
       }
     }).property('is_multiple_choice'),
     get_source: function() {
-      this.set('source.sample_size', parseInt(this.get('source.sample_size'), 10));
       return this.get('source');
     },
     didInsertElement: function() {
