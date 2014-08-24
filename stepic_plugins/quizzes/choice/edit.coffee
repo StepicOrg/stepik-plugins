@@ -6,7 +6,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
       is_always_correct: false
       sample_size: 3
       preserve_order: false
-      options: []
+      options: [{is_correct: false, text: 'Choice 1'}, {is_correct: true, text: 'Choice 2'}, {is_correct: false, text: 'Choice 3'}]
     @set 'source',
       @get('source') || default_source
 
