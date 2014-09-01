@@ -15,7 +15,7 @@ class Languages(object):
     JAVA = 'java'
     OCTAVE = 'octave'
     ASM = 'asm'
-    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE]
+    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM]
     compiled = [CPP, HASKELL, ASM]
     interpreted = [PYTHON, OCTAVE]
     default_templates = {
