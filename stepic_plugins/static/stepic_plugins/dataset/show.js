@@ -22,9 +22,20 @@
       }
     },
     didInsertElement: function() {
-      $('.get_dataset').click((function(_this) {
+      var markLoaded;
+      markLoaded = (function(_this) {
         return function() {
-          return _this.get('controller').send('download_started');
+          return _this.send('download_started');
+        };
+      })(this);
+      this.$().siblings('.get_dataset').click((function(_this) {
+        return function() {
+          return markLoaded();
+        };
+      })(this));
+      this.$().siblings('.get_dataset').on('contextmenu', (function(_this) {
+        return function() {
+          return setTimeout(markLoaded, 1000);
         };
       })(this));
       return this._super.apply(this, arguments);

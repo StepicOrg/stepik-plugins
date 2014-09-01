@@ -20,9 +20,15 @@ App.DatasetQuizComponent = Em.Component.extend
         file: ''
 
   didInsertElement: ->
+    markLoaded = => @send 'download_started'
     # sic! .get_dataset is outside of component
-    $('.get_dataset').click =>
-      @get('controller').send 'download_started'
+    @$().siblings('.get_dataset').click =>
+      markLoaded()
+    
+    # "dowload as.." case
+    @$().siblings('.get_dataset').on 'contextmenu', =>
+      setTimeout markLoaded, 1000
+
     # @focus()
     @_super.apply(@, arguments)
 
