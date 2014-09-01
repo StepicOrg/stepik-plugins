@@ -14,16 +14,23 @@ class Languages(object):
     HASKELL = 'haskell'
     JAVA = 'java'
     OCTAVE = 'octave'
+    ASM = 'asm'
     all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE]
-    compiled = [CPP, HASKELL]
+    compiled = [CPP, HASKELL, ASM]
     interpreted = [PYTHON, OCTAVE]
     default_templates = {
-        PYTHON: "# put your code here",
+        PYTHON: "# put your python code here",
         CPP: "#include <iostream>\n\nint main() {\n  // put your code here\n  return 0;\n}",
         HASKELL: "main :: IO ()\n-- put your code here",
         JAVA: "class Main {\n  public static void main(String[] args) {\n    // put your code here\n  }\n}",
-        OCTAVE: "# put your code here",
+        OCTAVE: "# put your octave code here",
+        ASM: "# put your asm code here",
     }
+
+
+class Directives(object):
+    HEADER, FOOTER, CODE = 'header', 'footer', 'code'
+    all = [HEADER, FOOTER, CODE]
 
 
 class CodeQuiz(BaseQuiz):
@@ -71,7 +78,7 @@ class CodeQuiz(BaseQuiz):
             'options': {
                 'execution_time_limit': self.execution_time_limit,
                 'execution_memory_limit': self.execution_memory_limit,
-                'code_templates': self.code_templates,
+                'code_templates': { lang: temp[Directives.CODE] for lang, temp in self.code_templates.items() },
                 'sample_dataset': dataset,
                 'sample_output': output
             }
@@ -87,7 +94,7 @@ class CodeQuiz(BaseQuiz):
 
     def check(self, reply, clue, throw=False):
         with Arena() as arena:
-            runner = CodeRunner(arena, reply.code, reply.language, self.limits)
+            runner = CodeRunner(arena, self.concat_code(reply.language, reply.code), reply.language, self.limits)
             if not runner.compilation_success:
                 hint = "{message}\n{stderr}".format(
                     message=self.CE_MESSAGE,
@@ -120,6 +127,15 @@ class CodeQuiz(BaseQuiz):
 
             return True
 
+    def concat_code(self, language, code):
+        return '\n'.join([self.header(language), code, self.footer(language)])
+
+    def footer(self, language):
+        return self.code_templates[language][Directives.FOOTER]
+
+    def header(self, language):
+        return self.code_templates[language][Directives.HEADER]
+
     @property
     def code_templates(self):
         """Extracts language templates from text
@@ -128,7 +144,7 @@ class CodeQuiz(BaseQuiz):
         print("hello world")
 
         ::haskell
-        main = putStrLin "hello, world"
+        main = putStrLn "hello, world"
 
         If empty template specified, then use default template for this language
         If no templates at all, then returns default templates for all supported languages
@@ -139,16 +155,27 @@ class CodeQuiz(BaseQuiz):
         parts = re.split(pattern, self.templates_data, flags=re.MULTILINE)
         parts = parts[1:]
         languages = parts[::2]
-        # remove starting/ending empty lines, common indentation and ensure trailing newline
-        templates = [textwrap.dedent(t).strip() for t in parts[1::2]]
+        templates = parts[1::2]
         assert (len(languages) == len(templates))
         templates = dict(zip(languages, templates)) or {language: '' for language in Languages.all}
         for language, template in templates.items():
-            if template:
-                templates[language] = template + '\n'
-            else:
-                templates[language] = Languages.default_templates[language]
+            templates[language] = self.split_template(template or Languages.default_templates[language])
         return templates
+
+    def split_template(self, template):
+        pattern = r'^::[ \t\r\f\v]*(' + '|'.join(Directives.all) + r')[ \t\r\f\v]*$'
+        parts = re.split(pattern, template, flags=re.MULTILINE)
+        if len(parts) == 1:
+            return {Directives.HEADER: '',
+                    Directives.FOOTER: '',
+                    Directives.CODE: textwrap.dedent(template).strip()}
+
+        parts = parts[1:]
+        directives = parts[::2]
+        parts = [textwrap.dedent(p).strip() for p in parts[1::2]]
+        assert len(directives) == len(parts)
+
+        return dict({d: '' for d in Directives.all}, **dict(zip(directives, parts)))
 
     @property
     def limits(self):
