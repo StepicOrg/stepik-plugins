@@ -14,9 +14,10 @@ class Languages(object):
     HASKELL = 'haskell'
     JAVA = 'java'
     OCTAVE = 'octave'
-    ASM = 'asm'
-    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM]
-    compiled = [CPP, HASKELL, ASM]
+    ASM32 = 'asm32'
+    ASM64 = 'asm64'
+    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64]
+    compiled = [CPP, HASKELL, ASM32, ASM64]
     interpreted = [PYTHON, OCTAVE]
     default_templates = {
         PYTHON: "# put your python code here",
@@ -24,7 +25,8 @@ class Languages(object):
         HASKELL: "main :: IO ()\n-- put your code here",
         JAVA: "class Main {\n  public static void main(String[] args) {\n    // put your code here\n  }\n}",
         OCTAVE: "# put your octave code here",
-        ASM: "# put your asm code here",
+        ASM32: "# put your asm32 code here",
+        ASM64: "# put your asm64 code here"
     }
 
 
