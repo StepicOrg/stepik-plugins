@@ -15,14 +15,6 @@
   </script>
 {% raw %}
 <script type="text/x-handlebars">
-  <div class="log__wrapper" style="position: fixed; width: 300px; margin-left: 20px;">
-    <h2>Log:</h2>
-    <pre style="max-height: 500px; overflow: scroll; border: solid 1px;">
-      {{#each entry in model.log}}
-{{entry}}
-      {{/each}}
-    </pre>
-  </div>
   <div class="step-player-wrap">
     <div class="step-player">
       <div class="bar-wrp">
@@ -72,6 +64,14 @@
       </div>
       <div class="bar-wrp footer">
         <div class="bar bar-footer"></div>
+      </div>
+      <div class="log__wrapper">
+        <h2>Log:</h2>
+          <pre style="max-height: 500px; overflow: scroll; border: solid 1px;">
+            {{#each entry in model.log}}
+        {{entry}}
+          {{/each}}
+        </pre>
       </div>
     </div>
   </div>
