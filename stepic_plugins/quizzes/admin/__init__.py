@@ -43,6 +43,7 @@ class AdminQuiz(BaseQuiz):
         source = {
             'image_id': int,
             'memory': int,
+            'test_scenario': str,
         }
         dataset = {
             'terminal_id': str,
@@ -54,6 +55,7 @@ class AdminQuiz(BaseQuiz):
         super().__init__(source)
         self.image_id = source.image_id
         self.memory = source.memory
+        self.test_scenario = source.test_scenario
 
     def async_init(self):
         r = requests.get(RNR_IMAGE_URL.format(image_id=self.image_id),
@@ -80,18 +82,7 @@ class AdminQuiz(BaseQuiz):
 
     def check(self, reply, clue):
         server_id = clue
-        test_scenario = """
-from zoe.fixtures import s
-
-def test_connection(s):
-    assert s.run('true').succeeded, "Could not connect to server"
-
-def test_false(s):
-    assert True, "Something false happened"
-        """
-        print("# CHECK called with clue:", clue, test_scenario)
-
-        job = self._create_checker_job(server_id, test_scenario)
+        job = self._create_checker_job(server_id, self.test_scenario)
         try:
             job = self._wait_checker_job_ready(job['id'])
         except TimeoutError:
