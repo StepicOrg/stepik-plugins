@@ -18,11 +18,7 @@
   box-shadow: none;
 }
 
-.dark .window {
-  box-shadow: none;
-}
-
-.bar {
+.window .bar {
   position: absolute;
   top: 0;
   left: 0;
