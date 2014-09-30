@@ -54,6 +54,15 @@
                             disabled=model.display.disabled}}
             {{/if}}
           </div>
+
+          <div class="plugin-editor">
+            <div class="plugin-editor__wrapper">
+              {{quiz-editor viewName='quizEditorInstance'
+                            config=model.config
+                            source=model.editor.source}}
+            </div>
+          </div>
+
           <button {{action 'updateSource' target='view'}}>Save Quiz</button>
           <br></br>
           <button {{action 'attempt'}}>New Attempt</button>
@@ -67,13 +76,6 @@
     </div>
   </div>
 
-  <div class="plugin-editor">
-    <div class="plugin-editor__wrapper">
-      {{quiz-editor viewName='quizEditorInstance'
-                    config=model.config
-                    source=model.editor.source}}
-    </div>
-  </div>
 </script>
 {% endraw %}
 
