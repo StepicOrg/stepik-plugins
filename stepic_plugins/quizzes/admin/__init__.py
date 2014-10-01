@@ -73,10 +73,7 @@ class AdminQuiz(BaseQuiz):
         terminal = self._create_terminal(server['id'])
         terminal_config = {
             'terminal_id': terminal['id'],
-            'kaylee_url': 'http://{host}:{port}/sockjs'.format(
-                host=terminal['config']['kaylee_host'],
-                port=terminal['config']['kaylee_port'],
-            ),
+            'kaylee_url': terminal['config']['kaylee_url'],
         }
         return terminal_config, server['id']
 
