@@ -43,6 +43,8 @@ App.AdminQuizComponent = Em.Component.extend
     !!@get 'terminalWindow'
   ).property 'terminalWindow'
 
+  isTerminalControlsDisabled: Em.computed.or 'disabled', 'isTerminalLoading'
+
   destroyComponent: (->
     @send 'closeTerminal'
   ).on('willDestroyElement')
