@@ -5,6 +5,9 @@ from . import schema
 from .exceptions import UnknownPluginError
 
 
+QUIZZES_DIR = os.path.join(os.path.dirname(__file__), 'quizzes')
+
+
 class BaseQuiz(object):
     name = None
 
