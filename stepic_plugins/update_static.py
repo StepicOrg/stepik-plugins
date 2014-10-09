@@ -23,12 +23,13 @@ if __name__ == "__main__" and __package__ is None:
     import stepic_plugins
     __package__ = str("stepic_plugins")
 
-from stepic_plugins.base import load_by_name
+from stepic_plugins.base import QUIZZES_DIR, load_by_name
 
 if __name__ == "__main__":
     name = sys.argv[1]
-    quiz = load_by_name(name)
-    quiz_directory = os.path.dirname(getsourcefile(quiz.wrapped_class))
+    #quiz = load_by_name(name)
+    #quiz_directory = os.path.dirname(getsourcefile(quiz.wrapped_class))
+    quiz_directory = os.path.join(QUIZZES_DIR, name.replace('-', '_'))
     static_directory = os.path.join(os.path.dirname(__file__), 'static', 'stepic_plugins', name)
 
     if os.path.exists(static_directory):

@@ -1,0 +1,18 @@
+<div class="edit-title">Enter your test scenario code below.</div>
+<div class="edit-text">
+{{view App.CodeEditorView
+    valueBinding='source.test_scenario'
+    required='true'
+    lang='python'
+    placeholder="Type your test scenario code here..."}}
+</div>
+<div class="options">
+    <label class="option">
+      <span title="Image that is used to create new virtual machine instance" class="edit-tooltip">Image ID:</span>
+      {{input type="number" name="image_id" value=source.image_id}}
+    </label>
+    <label class="option">
+      <span>Memory Limit (MB):</span>
+      {{input type="number" name="memory" value=source.memory}}
+    </label>
+</div>

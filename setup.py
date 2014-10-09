@@ -18,4 +18,7 @@ setup(
     description='A collection of plugins for Stepic',
     long_description=README,
     url='https://stepic.org',
+    install_requires=[
+        'requests==2.4.1',
+    ],
 )
