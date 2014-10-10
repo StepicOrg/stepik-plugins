@@ -1,10 +1,13 @@
-function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) {
-  if (reply) {
-    dataset.options = _(reply.ordering).map(function(i) {
-      return dataset.options[i];
-    });
+function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info, status) {
+  var new_dataset = _.clone(dataset)
+  if ( reply && (status == "correct") ) {
+    var sorted_options = [], unsorted_options = new_dataset.options;
+    for (var i=0; i< reply.ordering.length; i++) {
+      sorted_options[i] = unsorted_options[reply.ordering[i]];
+    }
+    new_dataset.options = sorted_options
   }
-  target.html(template(dataset));
+  target.html(template(new_dataset));
   if (MathJax) {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, target.get()])
   }
@@ -13,21 +16,22 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) 
   var options = $(target).find('li');
 
   options.off()
-  .on('dragstart',function(e) {
-    dragSource = this;
-    e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
-  })
-  .on('dragover',function(e) {
-    e.preventDefault();
-  })
-  .on('drop', function(e) {
-    if(options.index(dragSource) > options.index(this))
-      $(this).before(dragSource);
-    else
-      $(this).after(dragSource);
-    options = $(target).find('li');
-  });
-
+  if (!status) {
+    options.on('dragstart',function(e) {
+      dragSource = this;
+      e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
+    })
+    .on('dragover',function(e) {
+      e.preventDefault();
+    })
+    .on('drop', function(e) {
+      if(options.index(dragSource) > options.index(this))
+        $(this).before(dragSource);
+      else
+        $(this).after(dragSource);
+      options = $(target).find('li');
+    });
+  }
   return {
     'submit': function() {
       var ordering = target.find('.sorting-quiz__item_number')
