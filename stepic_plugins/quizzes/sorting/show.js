@@ -17,7 +17,7 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info, 
   var options = $(target).find('li');
 
   options.off()
-  if (!status) {
+  if (!disabled) {
     options.on('dragstart',function(e) {
       dragSource = this;
       e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
