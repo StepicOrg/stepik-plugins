@@ -1,6 +1,6 @@
-function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info, status) {
+function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) {
   var new_dataset = _.clone(dataset)
-  if ( reply && (status == "correct" || status == "wrong") ) {
+  if ( reply ) {
     var sorted_options = [], unsorted_options = new_dataset.options;
     for (var i=0; i< reply.ordering.length; i++) {
       sorted_options[i] = unsorted_options[reply.ordering[i]];
@@ -9,9 +9,9 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info, 
   }
   target.html(template(new_dataset));
 
-  if (MathJax) {
+  /*if (MathJax) {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, target.get()])
-  }
+  }*/
 
   var dragSource = null;
   var options = $(target).find('li');
