@@ -1,3 +1,4 @@
+import logging
 import time
 
 import requests
@@ -6,6 +7,8 @@ from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError, PluginError
 from stepic_plugins.quizzes.executable_base import jail_code_wrapper, settings
 
+
+logger = logging.getLogger(__name__)
 
 MAX_MEMORY_LIMIT = 1024
 
@@ -77,6 +80,12 @@ class AdminQuiz(BaseQuiz):
                                    stdin=None)
         if result.status != 0:
             output = result.stdout.decode(errors='replace')
+            errput = result.stderr.decode(errors='replace')
+            if errput:
+                msg = ("Internal error while checking test scenario "
+                       "correctness:\n\n{0}{1}".format(output, errput))
+                logger.error(msg)
+                raise PluginError(msg)
             msg = "Test scenario code contains errors:\n\n{0}".format(output)
             raise FormatError(msg)
 
