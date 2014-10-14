@@ -4,7 +4,7 @@ import requests
 
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError, PluginError
-from stepic_plugins.quizzes.executable_base import settings
+from stepic_plugins.quizzes.executable_base import jail_code_wrapper, settings
 
 
 MAX_MEMORY_LIMIT = 1024
@@ -66,6 +66,19 @@ class AdminQuiz(BaseQuiz):
         if self.memory > MAX_MEMORY_LIMIT:
             raise FormatError("Maximum value for memory limit is {} MB"
                               .format(MAX_MEMORY_LIMIT))
+        # Check pytest scenario (try to collect tests, but don't execute them)
+        test_filename = 'test_scenario.py'
+        pytest_files = [(self.test_scenario, test_filename)]
+        pytest_argv = ['-m', 'pytest', '-s', '--collect-only', test_filename]
+        result = jail_code_wrapper('python',
+                                   code=None,
+                                   files=pytest_files,
+                                   argv=pytest_argv,
+                                   stdin=None)
+        if result.status != 0:
+            output = result.stdout.decode(errors='replace')
+            msg = "Test scenario code contains errors:\n\n{0}".format(output)
+            raise FormatError(msg)
 
     def generate(self):
         server = self._create_server(self.image_id, self.memory)
@@ -103,7 +116,7 @@ class AdminQuiz(BaseQuiz):
             raise PluginError("Failed to create new virtual machine instance")
         return r.json()
 
-    def _wait_server_status(self, server_id, until_status, timeout=60):
+    def _wait_server_status(self, server_id, until_status, timeout=180):
         """Wait for server status to become `until_status`."""
         start_time = time.time()
         while time.time() - start_time < timeout:
