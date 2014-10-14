@@ -6,8 +6,6 @@ App.AdminQuizEditorComponent = Em.Component.extend
       memory: 64
       test_scenario: """
         #This is sample admin quiz
-        from zoe.fixtures import s
-
 
         def test_connection(s):
             assert s.run('true').succeeded, "Could not connect to server"
