@@ -2,7 +2,10 @@ App.AdminQuizEditorComponent = Em.Component.extend
   init: ->
     @_super()
     default_source =
-      image_id: 2
+      images: [
+        # For now only hardcoded options
+        {id: 2, name: "Ubuntu 14.04"}
+      ]
       memory: 64
       test_scenario: """
         #This is sample admin quiz
