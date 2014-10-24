@@ -33,7 +33,7 @@
 .maximized .bar {
 }
 
-.title {
+.window .bar .title {
   position: absolute;
   right: 5px;
   top: 2px;
