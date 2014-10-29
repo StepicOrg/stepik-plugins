@@ -1,17 +1,33 @@
 <div class="options">
-    <label class="option">
-      <span title="Image that is used to create new virtual machine instance" class="edit-tooltip">Image:</span>
-      {{view Ember.Select
-        content=source.images
-        optionValuePath="content.id"
-        optionLabelPath="content.name"
-        value=source.image_id}}
-    </label>
-    <label class="option">
-      <span>Memory Limit (MB):</span>
-      {{input type="number" name="memory" value=source.memory}}
-    </label>
+  <label class="option">
+    <span title="Image that is used to create new virtual machine instance" class="edit-tooltip">Image:</span>
+    {{view Ember.Select
+      content=source.images
+      optionValuePath="content.id"
+      optionLabelPath="content.name"
+      value=source.image_id}}
+  </label>
+  <label class="option">
+    <span>Memory Limit (MB):</span>
+    {{input type="number" name="memory" value=source.memory}}
+  </label>
+  {{input id="is-bootstrap" type="checkbox" checked=source.is_bootstrap}}
+  <label class="quiz-editor__is-bootstrap-label" for="is-bootstrap">
+    Bootstrap virtual machine
+  </label>
 </div>
+
+<div {{bind-attr class=":quiz-editor__bootstrap-script source.is_bootstrap::quiz-editor__bootstrap-script_hidden"}}>
+  <div class="edit-title">Enter your bootstrap Bash script below.</div>
+  <div class="edit-text">
+  {{view App.CodeEditorView
+    valueBinding='source.bootstrap_script'
+    required='true'
+    lang='shell'
+    placeholder="Type your bootstrap Bash script here..."}}
+  </div>
+</div>
+
 <div class="edit-title">Enter your test scenario code below.</div>
 <div class="edit-text">
 {{view App.CodeEditorView

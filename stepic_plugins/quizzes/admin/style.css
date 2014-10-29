@@ -1,3 +1,19 @@
+.quiz-editor__bootstrap-script {
+  max-height: 400px;
+  overflow: hidden;
+  transition: max-height 1s;
+}
+
+.quiz-editor__bootstrap-script_hidden {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 1s;
+}
+
+.quiz-editor__is-bootstrap-label {
+  display: inline;
+}
+
 /**
  * Terminal
  */

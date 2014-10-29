@@ -7,8 +7,13 @@ App.AdminQuizEditorComponent = Em.Component.extend
         {id: 2, name: "Ubuntu 14.04"}
       ]
       memory: 64
+      is_bootstrap: false
+      bootstrap_script: """
+        # This script provides the ability to configure a virtual machine
+        # in order to prepare it for this quiz.
+    """
       test_scenario: """
-        #This is sample admin quiz
+        # This is sample admin quiz
 
         def test_connection(s):
             assert s.run('true').succeeded, "Could not connect to server"
