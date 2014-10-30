@@ -1,4 +1,8 @@
+import base64
+import json
 import logging
+import subprocess
+import tempfile
 import time
 
 import requests
@@ -20,6 +24,9 @@ RNR_TERMINALS_URL = '{}/terminals'.format(settings.ROOTNROLL_API_URL)
 RNR_CHECKER_JOBS_URL = '{}/checker-jobs'.format(settings.ROOTNROLL_API_URL)
 RNR_CHECKER_JOB_URL = '{}/checker-jobs/{{job_id}}'.format(
     settings.ROOTNROLL_API_URL)
+RNR_SANDBOXES_URL = '{}/sandboxes'.format(settings.ROOTNROLL_API_URL)
+RNR_SANDBOX_URL = '{}/sandboxes/{{sandbox_id}}'.format(
+    settings.ROOTNROLL_API_URL)
 
 
 class ServerStatus(object):
@@ -39,6 +46,12 @@ class CheckerJobResult(object):
     FAILED = 'failed'
 
 
+class SandboxStatus(object):
+    SUCCESS = 'success'
+    FAILURE = 'failure'
+    TIMEOUT = 'timeout'
+
+
 class AdminQuiz(BaseQuiz):
     name = 'admin'
 
@@ -46,6 +59,8 @@ class AdminQuiz(BaseQuiz):
         source = {
             'image_id': int,
             'memory': int,
+            'is_bootstrap': bool,
+            'bootstrap_script': str,
             'test_scenario': str,
         }
         dataset = {
@@ -58,17 +73,24 @@ class AdminQuiz(BaseQuiz):
         super().__init__(source)
         self.image_id = source.image_id
         self.memory = source.memory
+        self.is_bootstrap = source.is_bootstrap
+        self.bootstrap_script = source.bootstrap_script
         self.test_scenario = source.test_scenario
 
     def async_init(self):
         r = requests.get(RNR_IMAGE_URL.format(image_id=self.image_id),
                          auth=RNR_AUTH)
         if r.status_code != 200:
-            raise FormatError("Image not found with ID: {}"
-                              .format(self.image_id))
+            if r.status_code == 404:
+                raise FormatError("Image not found with ID: {}"
+                                  .format(self.image_id))
+            raise PluginError("Internal server error: failed to connect to "
+                              "backend which serves virtual machines")
         if self.memory > MAX_MEMORY_LIMIT:
             raise FormatError("Maximum value for memory limit is {} MB"
                               .format(MAX_MEMORY_LIMIT))
+        # Check bootstrap script syntax
+        self._check_bootstrap_script(self.bootstrap_script)
         # Check pytest scenario (try to collect tests, but don't execute them)
         test_filename = 'test_scenario.py'
         pytest_files = [(self.test_scenario, test_filename)]
@@ -91,7 +113,11 @@ class AdminQuiz(BaseQuiz):
 
     def generate(self):
         server = self._create_server(self.image_id, self.memory)
-        self._wait_server_status(server['id'], ServerStatus.ACTIVE)
+        server = self._wait_server_status(server['id'], ServerStatus.ACTIVE)
+
+        if self.is_bootstrap:
+            self._bootstrap_server(server, self.bootstrap_script)
+
         terminal = self._create_terminal(server['id'])
         terminal_config = {
             'terminal_id': terminal['id'],
@@ -114,6 +140,27 @@ class AdminQuiz(BaseQuiz):
 
         # TODO: destroy the server if quiz solved
 
+    def _check_bootstrap_script(self, script):
+        with tempfile.NamedTemporaryFile(prefix='bootstrap-', suffix='.sh',
+                                         mode='w', encoding='utf-8') as tf:
+            tf.file.write(script)
+            tf.flush()
+            proc = subprocess.Popen(['/bin/bash', '-n', tf.name],
+                                    stderr=subprocess.PIPE)
+            try:
+                _, stderr = proc.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                try:
+                    proc.kill()
+                except ProcessLookupError:
+                    pass
+                raise FormatError("Cannot check bootstrap script syntax, "
+                                  "took too much time")
+            if proc.returncode != 0:
+                msg = "Syntax error in bootstrap script:\n\n{0}".format(
+                    stderr.decode(errors='replace'))
+                raise FormatError(msg)
+
     def _create_server(self, image_id, memory):
         server_body = {
             'image_id': image_id,
@@ -132,16 +179,76 @@ class AdminQuiz(BaseQuiz):
             r = requests.get(RNR_SERVER_URL.format(server_id=server_id),
                              auth=RNR_AUTH)
             if r:
-                server_status = r.json().get('status')
-                if server_status == until_status:
-                    return
-                if server_status == ServerStatus.ERROR:
+                server = r.json()
+                if server['status'] == until_status:
+                    return server
+                if server['status'] == ServerStatus.ERROR:
                     raise PluginError("Failed to create new virtual machine "
                                       "instance")
             time.sleep(1)
         else:
             raise PluginError("Timed out creating new virtual machine "
                               "instance")
+
+    def _bootstrap_server(self, server, script):
+        print("Start to bootstrap server:", server)
+        if not server['private_ip']:
+            raise PluginError("Failed to bootstrap your virtual machine: "
+                              "VM network is down")
+
+        sandbox = self._create_bootstrap_sandbox(server, script)
+        try:
+            sandbox = self._wait_sandbox_terminated(sandbox, timeout=60)
+        except TimeoutError:
+            raise PluginError("Failed to bootstrap your virtual machine: "
+                              "took too much time")
+        if (sandbox['status'] == SandboxStatus.SUCCESS and
+                sandbox['exit_code'] != 0):
+            err = base64.b64decode(sandbox['stdout']).decode(errors='replace')
+            raise PluginError("Failed to bootstrap your virtual machine: {0}"
+                              .format(err))
+        elif sandbox['status'] == SandboxStatus.FAILURE:
+            raise PluginError("Failed to bootstrap your virtual machine: {0}"
+                              .format(sandbox['error']))
+
+    def _create_bootstrap_sandbox(self, server, script):
+        sandbox_cmd = ('fab init_quiz -f /var/lib/admin-init/fabfile.py '
+                       '-i /var/lib/admin-init/ssh-key -H {ip} -u root'
+                       .format(ip=server['private_ip']))
+        sandbox_body = {
+            'profile': 'admin-quiz-init',
+            'cmd': sandbox_cmd,
+            "files": [{
+                "filename": "init_quiz.sh",
+                "content": base64.b64encode(script.encode()).decode()
+            }],
+            "limits": {
+                "realtime": 60,
+                "memory": 16
+            }
+        }
+        headers = {'content-type': 'application/json'}
+        r = requests.post(RNR_SANDBOXES_URL, data=json.dumps(sandbox_body),
+                          headers=headers, auth=RNR_AUTH)
+        print("Create bootstrap sandbox response:", r.status_code, r.content)
+        if r.status_code != 201:
+            raise PluginError("Failed to bootstrap your virtual machine")
+        return r.json()
+
+    def _wait_sandbox_terminated(self, sandbox, timeout=60):
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            r = requests.get(RNR_SANDBOX_URL.format(sandbox_id=sandbox['id']),
+                             auth=RNR_AUTH)
+            if r:
+                sandbox = r.json()
+                if sandbox['status'] == SandboxStatus.TIMEOUT:
+                    raise TimeoutError()
+                if sandbox['status'] in [SandboxStatus.SUCCESS,
+                                         SandboxStatus.FAILURE]:
+                    return sandbox
+            time.sleep(0.5)
+        raise TimeoutError()
 
     def _create_terminal(self, server_id):
         """Create a terminal for the given ACTIVE server."""
