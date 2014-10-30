@@ -1,0 +1,11 @@
+<div class="edit-title">Enter your code below. See <a href="/lesson/25">How to Implement Programming Assignments</a> for docs.</div>
+<div class="edit-text">
+
+{{view App.CodeEditorView
+    valueBinding='source.code'
+    required='true'
+    lang='python'
+    placeholder="Type your code here..."}}
+
+{{web-console code=source.code}}
+</div>
