@@ -9,8 +9,8 @@ App.AdminQuizEditorComponent = Em.Component.extend
       memory: 64
       is_bootstrap: false
       bootstrap_script: """
-        # This script provides the ability to configure a virtual machine
-        # in order to prepare it for this quiz.
+        # This script provides the ability to configure a virtual machine in order
+        # to prepare it for this quiz. It runs for every virtual machine created.
     """
       test_scenario: """
         # This is sample admin quiz
