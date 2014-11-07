@@ -46,7 +46,7 @@ class StringQuiz(BaseQuiz):
         if self.use_code:
             try:
                 reply = self.run_edyrun('solve', data={})
-                score, hint = self.check(reply, '')
+                score, hint = self.check(reply, '', throw=True)
             except JailedCodeFailed as e:
                 raise FormatError(str(e))
             if score != 1:
@@ -59,10 +59,10 @@ class StringQuiz(BaseQuiz):
     def clean_reply(self, reply, dataset):
         return reply.text
 
-    def check(self, reply, clue):
+    def check(self, reply, clue, throw=False):
         text = reply.strip()
         if self.use_code:
-            return self.check_using_code(text, clue)
+            return self.check_using_code(text, clue, throw=throw)
         elif self.use_re:
             return self.check_re(text)
         else:
