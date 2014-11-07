@@ -31,6 +31,9 @@ class BaseQuiz(object):
     def async_init(self):
         return None
 
+    def cleanup(self, clue):
+        pass
+
     @classmethod
     def Source(cls, source):
         return schema.build(cls.Schemas.source, source)
@@ -83,6 +86,9 @@ def quiz_wrapper_factory(quiz_class):
 
         def async_init(self):
             return self.quiz.async_init()
+
+        def cleanup(self, clue=None):
+            self.quiz.cleanup(clue)
 
     return QuizWrapper
 
