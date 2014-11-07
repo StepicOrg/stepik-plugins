@@ -110,6 +110,7 @@ class AdminQuiz(BaseQuiz):
                 raise PluginError(msg)
             msg = "Test scenario code contains errors:\n\n{0}".format(output)
             raise FormatError(msg)
+        return {'options': {'time_limit': 60 * 60}}
 
     def generate(self):
         server = self._create_server(self.image_id, self.memory)
@@ -138,7 +139,10 @@ class AdminQuiz(BaseQuiz):
         assert job['status'] == CheckerJobStatus.COMPLETED
         return job['result'] == CheckerJobResult.PASSED, job['hint']
 
-        # TODO: destroy the server if quiz solved
+    def cleanup(self, clue):
+        server_id = clue
+        print("CLeaning up admin quiz attempt, server_id:", server_id)
+        self._destroy_server(server_id)
 
     def _check_bootstrap_script(self, script):
         with tempfile.NamedTemporaryFile(prefix='bootstrap-', suffix='.sh',
@@ -284,3 +288,10 @@ class AdminQuiz(BaseQuiz):
                     return r.json()
             time.sleep(1)
         raise PluginError("Timed out waiting for checker job readiness")
+
+    def _destroy_server(self, server_id):
+        r = requests.delete(RNR_SERVER_URL.format(server_id=server_id),
+                            auth=RNR_AUTH)
+        if r.status_code not in [204, 404]:
+            raise PluginError("Failed to destroy the virtual machine: {0}"
+                              .format(server_id))
