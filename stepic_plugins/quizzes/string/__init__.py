@@ -30,6 +30,7 @@ class StringQuiz(BaseQuiz):
         self.use_re = source.use_re
         self.match_substring = source.match_substring
         self.code = source.code
+        self.use_code = bool(source.code.strip())
         if self.use_re:
             try:
                 r = re.compile(self.pattern)
@@ -42,9 +43,17 @@ class StringQuiz(BaseQuiz):
                 raise FormatError('Pattern matches empty sting')
 
     def async_init(self):
-        if self.code.strip():
-            # TODO: assert that check(solve()) is correct
-            pass
+        if self.use_code:
+            try:
+                reply = self.run_edyrun('solve', data={})
+                score, hint = self.check(reply, '')
+            except JailedCodeFailed as e:
+                raise FormatError(str(e))
+            if score != 1:
+                hint = '\nHint: {}'.format(hint) if hint else ''
+                raise FormatError('score of answer is {score} instead of 1.{hint}'.format(
+                    score=score,
+                    hint=hint))
         return None
 
     def clean_reply(self, reply, dataset):
@@ -52,7 +61,7 @@ class StringQuiz(BaseQuiz):
 
     def check(self, reply, clue):
         text = reply.strip()
-        if self.code.strip():
+        if self.use_code:
             return self.check_using_code(text, clue)
         elif self.use_re:
             return self.check_re(text)
@@ -64,7 +73,6 @@ class StringQuiz(BaseQuiz):
             score, hint = self.run_edyrun('score', data=(text, clue))
             return score, hint
         except (JailedCodeFailed, ValueError, TypeError) as e:
-            print(e)
             if throw:
                 raise JailedCodeFailed(str(e))
             return False
