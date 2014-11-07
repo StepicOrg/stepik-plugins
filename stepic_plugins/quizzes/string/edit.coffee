@@ -6,6 +6,7 @@ App.StringQuizEditorComponent = Em.Component.extend
       use_re: false
       match_substring: false
       case_sensitive: false
+      code: ""
     @set 'source',
       @get('source') || default_source
 

@@ -7,7 +7,8 @@
         pattern: "",
         use_re: false,
         match_substring: false,
-        case_sensitive: false
+        case_sensitive: false,
+        code: ""
       };
       return this.set('source', this.get('source') || default_source);
     },

@@ -5,6 +5,7 @@ from codejail import safe_exec
 
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
+from stepic_plugins.quizzes.executable_base import JailedCodeFailed, run
 
 
 class StringQuiz(BaseQuiz):
@@ -15,8 +16,8 @@ class StringQuiz(BaseQuiz):
             'pattern': str,
             'case_sensitive': bool,
             'use_re': bool,
-            'match_substring': bool
-
+            'match_substring': bool,
+            'code': str  # TODO: make solve() optional
         }
         reply = {
             'text': str
@@ -28,6 +29,7 @@ class StringQuiz(BaseQuiz):
         self.case_sensitive = source.case_sensitive
         self.use_re = source.use_re
         self.match_substring = source.match_substring
+        self.code = source.code
         if self.use_re:
             try:
                 r = re.compile(self.pattern)
@@ -39,22 +41,40 @@ class StringQuiz(BaseQuiz):
             if r.match(''):
                 raise FormatError('Pattern matches empty sting')
 
+    def async_init(self):
+        if self.code.strip():
+            # TODO: assert that check(solve()) is correct
+            pass
+        return None
+
     def clean_reply(self, reply, dataset):
         return reply.text
 
     def check(self, reply, clue):
+        text = reply.strip()
+        if self.code.strip():
+            return self.check_using_code(text, clue)
+        elif self.use_re:
+            return self.check_re(text)
+        else:
+            return self.check_simple(text)
+
+    def check_using_code(self, text, clue, throw=False):
+        try:
+            score, hint = self.run_edyrun('score', data=(text, clue))
+            return score, hint
+        except (JailedCodeFailed, ValueError, TypeError) as e:
+            print(e)
+            if throw:
+                raise JailedCodeFailed(str(e))
+            return False
+
+    def check_re(self, text):
         """Run re.match in sandbox, because re.match('(x+x+)+y', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
         is to resource consuming.
 
         May be should use https://code.google.com/p/re2/ here.
         """
-        text = reply.strip()
-        if self.use_re:
-            return self.check_re(text)
-        else:
-            return self.check_simple(text)
-
-    def check_re(self, text):
         if self.match_substring:
             pattern = "{0}({1}){0}".format(r"(.|\n)*", self.pattern)
         else:
@@ -88,3 +108,6 @@ class StringQuiz(BaseQuiz):
             score = pattern == text
         return score
 
+    def run_edyrun(self, command, data=None, **kwargs):
+        files = []
+        return run(command, self.code, data, files, **kwargs)
