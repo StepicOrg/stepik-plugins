@@ -17,7 +17,7 @@
  */
 
 .window {
-  padding-top: 15px;
+  padding-top: 20px;
   border: #fafafa solid 1px;
   background: #272829;
   position: absolute;
@@ -56,8 +56,8 @@
 }
 
 .tab {
-  font-size: 11px;
-  margin-left: 4px;
+  font-size: 14px;
+  margin-left: 6px;
   float: left;
   cursor: pointer;
 }
