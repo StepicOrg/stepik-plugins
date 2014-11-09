@@ -103,7 +103,7 @@ tty.open = function(kayleeUrl, terminalId) {
     var win = new Window
       , tab = win.tabs[0];
     tab.id = tty.terminalId;
-    tab.setProcessName("Terminal ID: " + tab.id);
+    tab.setProcessName("Terminal ID: " + tab.id.slice(0, 5));
     tty.terms[tty.terminalId] = tab;
     tab.emit('open');
     // TODO: send terminal width & height

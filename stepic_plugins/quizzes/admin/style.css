@@ -51,7 +51,7 @@
   position: absolute;
   right: 5px;
   top: 2px;
-  font-size: 11px;
+  font-size: 12px;
   cursor: default;
 }
 
@@ -83,7 +83,7 @@
 .terminal {
   border: #000 solid 5px;
   font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
-  font-size: 11px;
+  font-size: 14px;
   color: #f0f0f0;
   background: #000;
 }
