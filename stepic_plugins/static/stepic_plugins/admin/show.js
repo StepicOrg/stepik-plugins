@@ -4,6 +4,7 @@
       var self;
       this._super();
       this.set('reply', {});
+      this.set('isTerminalLoading', true);
       self = this;
       $.getScript('/static/stepic_plugins/admin/term.js', function() {
         return $.getScript('/static/stepic_plugins/admin/tty.js', function() {
@@ -14,9 +15,10 @@
           tty.on('close window', function() {
             return self.set('terminalWindow', null);
           });
-          return tty.on('disconnect', function() {
+          tty.on('disconnect', function() {
             return self.set('isTerminalLoading', false);
           });
+          return self.set('isTerminalLoading', false);
         });
       });
       $.getScript('/static/stepic_plugins/admin/sockjs.min.js');

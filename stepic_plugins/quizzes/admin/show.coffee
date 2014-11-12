@@ -2,6 +2,7 @@ App.AdminQuizComponent = Em.Component.extend
   init: ->
     @_super()
     @set 'reply', {}
+    @set 'isTerminalLoading', true
     self = @
 
     $.getScript '/static/stepic_plugins/admin/term.js', ->
@@ -17,6 +18,8 @@ App.AdminQuizComponent = Em.Component.extend
           # in case of unsuccessful sockjs connection while opening terminal
           # make it possible to try to open terminal again
           self.set 'isTerminalLoading', false
+
+        self.set 'isTerminalLoading', false
 
     $.getScript '/static/stepic_plugins/admin/sockjs.min.js'
     $.getScript '/static/stepic_plugins/admin/base64.min.js'
