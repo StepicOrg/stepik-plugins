@@ -7,6 +7,7 @@
         code: "#This is sample code quiz\nimport random\n\ndef generate():\n    num_tests = 10\n    tests = []\n    for test in range(num_tests):\n        a = random.randrange(10)\n        b = random.randrange(10)\n        test_case = \"{} {}\".format(a, b)\n        tests.append(test_case)\n    return tests\n\n\ndef solve(dataset):\n    a, b = dataset.split()\n    return str(int(a)+int(b))\n\n\ndef check(reply, clue):\n    return int(reply) == int(clue)",
         execution_time_limit: 5,
         execution_memory_limit: 256,
+        samples_count: 1,
         templates_data: ""
       };
       return this.set('source', this.get('source') || default_source);

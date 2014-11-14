@@ -27,6 +27,7 @@ App.CodeQuizEditorComponent = Em.Component.extend
         """
         execution_time_limit: 5
         execution_memory_limit: 256
+        samples_count: 1
         templates_data: ""
       @set 'source',
         @get('source') || default_source

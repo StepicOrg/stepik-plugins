@@ -43,7 +43,8 @@ class CodeQuiz(BaseQuiz):
             'code': str,
             'execution_time_limit': int,
             'execution_memory_limit': int,
-            'templates_data': str
+            'samples_count': int,
+            'templates_data': str,
         }
 
         reply = {
@@ -63,16 +64,24 @@ class CodeQuiz(BaseQuiz):
         self.code = source.code
         self.execution_time_limit = source.execution_time_limit
         self.execution_memory_limit = source.execution_memory_limit
+        self.samples_count = source.samples_count
         self.templates_data = source.templates_data
         self.tests = supplementary['tests'] if supplementary else None
 
     def async_init(self):
+        samples = []
         try:
             tests = self.get_tests()
             dataset, output = self.run_edyrun('sample')
             if not dataset:
-                dataset, clue = tests[0]
-                output = self.run_edyrun('solve', data=dataset)
+                # samples from generate function
+                for i in range(min(self.samples_count, len(tests))):
+                    dataset, clue = tests[i]
+                    output = self.run_edyrun('solve', data=dataset)
+                    samples.append((dataset, output))
+            else:
+                # samples from tests list
+                samples.append((dataset, output))
         except JailedCodeFailed as e:
             raise FormatError(str(e))
         return {
@@ -80,9 +89,8 @@ class CodeQuiz(BaseQuiz):
             'options': {
                 'execution_time_limit': self.execution_time_limit,
                 'execution_memory_limit': self.execution_memory_limit,
-                'code_templates': { lang: temp[Directives.CODE] for lang, temp in self.code_templates.items() },
-                'sample_dataset': dataset,
-                'sample_output': output
+                'code_templates': {lang: temp[Directives.CODE] for lang, temp in self.code_templates.items()},
+                'samples': samples,
             }
         }
 
