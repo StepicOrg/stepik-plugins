@@ -72,12 +72,16 @@ class CodeQuiz(BaseQuiz):
         samples = []
         try:
             tests = self.get_tests()
-            dataset, output = self.run_edyrun('sample')  # what is this for in code quiz? next if always works for me => (dataset == None)
+            dataset, output = self.run_edyrun('sample')
             if not dataset:
-                for i in range(self.samples_count):
+                # samples from generate function
+                for i in range(min(self.samples_count, len(tests))):
                     dataset, clue = tests[i]
                     output = self.run_edyrun('solve', data=dataset)
                     samples.append((dataset, output))
+            else:
+                # samples from tests list
+                samples.append((dataset, output))
         except JailedCodeFailed as e:
             raise FormatError(str(e))
         return {

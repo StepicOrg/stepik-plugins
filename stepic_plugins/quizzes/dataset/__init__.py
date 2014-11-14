@@ -52,7 +52,9 @@ class DatasetQuiz(BaseQuiz):
         except JailedCodeFailed as e:
             raise FormatError(str(e))
 
-        samples = [(sample_dataset, sample_output)]
+        samples = []
+        if sample_dataset or sample_output:
+            samples.append((sample_dataset, sample_output))
         return {
             'options': {
                 'time_limit': 5 * 60,
