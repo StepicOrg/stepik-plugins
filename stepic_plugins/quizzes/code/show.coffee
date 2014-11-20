@@ -22,6 +22,11 @@ App.CodeQuizComponent = Em.Component.extend
       @get('content.options.code_templates')[@get('user_lang')]
   ).property('user_lang')
 
+  _set_initial_language: (->
+    if @get('langs.length') == 1
+      @set 'user_lang', @get('langs.firstObject')
+  ).observes('langs').on('init')
+
   _set_initial_code: (->
     if not @get('user_code') and @get('user_lang')
       initial_code = if @get('previous_reply.language') == @get('user_lang')
