@@ -23,7 +23,7 @@ App.CodeQuizComponent = Em.Component.extend
   ).property('user_lang')
 
   _set_initial_language: (->
-    if @get('langs.length') == 1
+    if @get('content') and @get('langs.length') == 1
       @set 'user_lang', @get('langs.firstObject')
   ).observes('langs').on('init')
 

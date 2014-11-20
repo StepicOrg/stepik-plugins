@@ -23,7 +23,7 @@
       }
     }).property('user_lang'),
     _set_initial_language: (function() {
-      if (this.get('langs.length') === 1)
+      if (this.get('content') && this.get('langs.length') === 1)
         this.set('user_lang', this.get('langs.firstObject'));
     }).observes('langs').on('init'),
     _set_initial_code: (function() {
