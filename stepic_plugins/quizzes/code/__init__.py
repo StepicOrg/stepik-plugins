@@ -16,9 +16,10 @@ class Languages(object):
     OCTAVE = 'octave'
     ASM32 = 'asm32'
     ASM64 = 'asm64'
-    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64]
+    SHELL = 'shell'
+    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL]
     compiled = [CPP, HASKELL, ASM32, ASM64]
-    interpreted = [PYTHON, OCTAVE]
+    interpreted = [PYTHON, OCTAVE, SHELL]
     default_templates = {
         PYTHON: "# put your python code here",
         CPP: "#include <iostream>\n\nint main() {\n  // put your code here\n  return 0;\n}",
@@ -26,7 +27,8 @@ class Languages(object):
         JAVA: "class Main {\n  public static void main(String[] args) {\n    // put your code here\n  }\n}",
         OCTAVE: "# put your octave code here",
         ASM32: "# put your asm32 code here",
-        ASM64: "# put your asm64 code here"
+        ASM64: "# put your asm64 code here",
+        SHELL: "# put your shell (bash) code here"
     }
 
 
