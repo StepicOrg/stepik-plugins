@@ -1,0 +1,20 @@
+.matching-quiz__first-items,
+.matching-quiz__second-items {
+    list-style: none;
+}
+
+.matching-quiz__first-item,
+.matching-quiz__second-item {
+    border-bottom: 1px solid #d3d3d3;
+    border-top: 1px solid #d3d3d3;
+    color: #222222;
+    cursor: move;
+    border-collapse: collapse;
+    margin-top: -1px;
+    padding: .4em 1.28571em;
+}
+
+
+.matching-quiz__second-item_number {
+    display: none;
+}
