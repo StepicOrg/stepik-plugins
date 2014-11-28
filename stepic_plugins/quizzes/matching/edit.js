@@ -47,9 +47,8 @@ function editMatchingQuiz(target, template, source) {
           'second': t.find('.second').val()
         }
       }).get();
-      var pfo = (target.find('.preserve_firsts_order').val() === 'on')
       return {
-        'preserve_firsts_order': pfo,
+        'preserve_firsts_order': target.find('.preserve_firsts_order').prop('checked'),
         'pairs': pairs
       };
     }

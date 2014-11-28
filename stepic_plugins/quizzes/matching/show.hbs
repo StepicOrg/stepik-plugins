@@ -1,16 +1,17 @@
-<div class="matching-quiz__first-items">
-  {{#each pairs}}
-    <li class="matching-quiz__first-item">
-      <span>{{this.first}}</span>
-    </li>
-  {{/each}}
-</div>
-
-<div class="matching-quiz__second-items">
+<ol class="matching-quiz__second-items">
   {{#each pairs}}
     <li draggable="true" class="matching-quiz__second-item">
       <div class="matching-quiz__second-item_number">{{@index}}</div>
       <span>{{this.second}}</span>
     </li>
   {{/each}}
-</div>
+</ol>
+
+<ol class="matching-quiz__first-items">
+  {{#each pairs}}
+    <li class="matching-quiz__first-item">
+      <span>{{this.first}}</span>
+    </li>
+  {{/each}}
+</ol>
+

@@ -37,7 +37,6 @@ class MatchingQuiz(BaseQuiz):
         return reply == clue
 
     def generate(self):
-        print(self.pairs)
         pairs = list(self.pairs)
         if not self.preserve_firsts_order:
             random.shuffle(pairs)
@@ -47,8 +46,9 @@ class MatchingQuiz(BaseQuiz):
         dataset = {'pairs': []}
         for i in range(l):
             dataset['pairs'].append({
-                'first': pairs[i]['first'],
-                'second': pairs[permutation[i]]['second']
+                'first': pairs[i].first,
+                'second': pairs[permutation[i]].second
             })
-        return dataset, permutation
+        inverse_permutation, _ = zip(*sorted(enumerate(permutation), key=lambda x: x[1]))
+        return dataset, inverse_permutation
 
