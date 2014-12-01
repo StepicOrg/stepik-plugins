@@ -1,0 +1,55 @@
+<div class="edit-title">Enter your ROS code below. There's no docs yet about this type of quiz.<br><br></div>
+<div class="edit-title">
+  generator.launch source code:
+</div>
+<div class="edit-text">
+{{view App.CodeEditorView
+    valueBinding='source.generatorlaunch'
+    required='true'
+    lang='xml'
+    placeholder="Type your code here..."}}
+</div>
+<div class="edit-title">
+  solver.launch source code:
+</div>
+<div class="edit-text">
+{{view App.CodeEditorView
+    valueBinding='source.solverlaunch'
+    required='true'
+    lang='xml'
+    placeholder="Type your code here..."}}
+</div>
+<div class="edit-title">
+  generator.py source code:
+</div>
+<div class="edit-text">
+{{view App.CodeEditorView
+    valueBinding='source.generatorpy'
+    required='true'
+    lang='python'
+    placeholder="Type your code here..."}}
+
+{{web-console code=source.code}}
+</div>
+<div class="edit-title">
+  solver.py source code:
+</div>
+<div class="edit-text">
+{{view App.CodeEditorView
+    valueBinding='source.solverpy'
+    required='true'
+    lang='python'
+    placeholder="Type your code here..."}}
+
+{{web-console code=source.code}}
+</div>
+<div class="edit-title">
+  params.yaml source code:
+</div>
+<div class="edit-text">
+{{view App.CodeEditorView
+    valueBinding='source.paramsyaml'
+    required='true'
+    lang='yaml'
+    placeholder="Type your code here..."}}
+</div>
