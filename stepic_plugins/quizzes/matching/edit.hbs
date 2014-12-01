@@ -1,0 +1,24 @@
+<div class="edit-title">Add pairs. Users will need to put them in pairs as below:</div>
+<div class="edit-text">
+    <div class="matching-pairs">
+     {{#each pairs}}
+      <div class="matching-pair" draggable="true">
+        1: <input type="text" class="first" value="{{this.first}}"/>
+        α: <input type="text" class="second" value="{{this.second}}"/>
+        <span class="remove"></span>
+      </div>
+      {{/each}}
+     </div>
+    <div class="add-pair"></div>
+</div>
+<div class="options">
+    <label class="option">
+      {{#if preserve_firsts_order}}
+        <input type="checkbox" class="preserve_firsts_order" checked>
+      {{else}}
+        <input type="checkbox" class="preserve_firsts_order">
+      {{/if}}
+      <span title="Preserve options order as above" class="edit-tooltip">Do not randomize order of the first column (second column is always shuffled)</span>
+    </label>
+</div>
+
