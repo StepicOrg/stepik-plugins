@@ -11,6 +11,7 @@
     },
     user_langBinding: 'reply.language',
     user_codeBinding: 'reply.code',
+    file_value: null,
     langs: (function() {
       return _.keys(this.get('content.options.code_templates'));
     }).property('content'),
@@ -22,6 +23,20 @@
         return this.get('content.options.code_templates')[this.get('user_lang')];
       }
     }).property('user_lang'),
+    uploadFile: (function() {
+      var file, reader;
+      file = this.$('input[type="file"]')[0].files[0];
+      if (!file) {
+        return;
+      }
+      reader = new FileReader();
+      reader.onload = (function(_this) {
+        return function() {
+          return _this.set('reply.code', reader.result);
+        };
+      })(this);
+      return reader.readAsText(file.slice());
+    }).observes('file_value'),
     _set_initial_language: (function() {
       if (this.get('content') && this.get('langs.length') === 1) {
         return this.set('user_lang', this.get('langs.firstObject'));

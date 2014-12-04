@@ -8,6 +8,7 @@ App.CodeQuizComponent = Em.Component.extend
 
   user_langBinding: 'reply.language'
   user_codeBinding: 'reply.code'
+  file_value: null
 
   langs: (->
     _.keys @get('content.options.code_templates')
@@ -21,6 +22,15 @@ App.CodeQuizComponent = Em.Component.extend
     if @get('user_lang')
       @get('content.options.code_templates')[@get('user_lang')]
   ).property('user_lang')
+
+  uploadFile: (->
+    file = @$('input[type="file"]')[0].files[0]
+    return unless file
+    reader = new FileReader()
+    reader.onload = =>
+      @set 'reply.code', reader.result
+    reader.readAsText file.slice()
+  ).observes('file_value')
 
   _set_initial_language: (->
     if @get('content') and @get('langs.length') == 1
