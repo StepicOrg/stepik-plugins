@@ -4,11 +4,13 @@
     <button class="tiny" {{action setLang lang}}>{{lang}}</button>
   {{/each}}
 {{else}}
-  <label>
-    {{input type="file" class="code-quiz__load"
-      value=file_value}}
-    <span class="button">Load file</span>
-  </label>
+  {{#unless disabled}}
+    <label>
+      {{input type="file" class="code-quiz__load"
+        value=file_value}}
+      <span class="button">Load file</span>
+    </label>
+  {{/unless}}
   {{view App.CodeEditorView
   valueBinding='user_code'
   required='true'
