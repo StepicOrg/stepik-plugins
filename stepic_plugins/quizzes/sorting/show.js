@@ -20,16 +20,42 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) 
   if (!disabled) {
     options.on('dragstart',function(e) {
       dragSource = this;
+      $(this).addClass('sorting-quiz__item-extracted');
       e.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
     })
     .on('dragover',function(e) {
+      options.removeClass('sorting-quiz__item-insert-before')
+      .removeClass('sorting-quiz__item-insert-after');
+      if(options.index(dragSource) > options.index(this))
+        $(this).addClass('sorting-quiz__item-insert-before')
+      else
+        $(this).addClass('sorting-quiz__item-insert-after')
       e.preventDefault();
+    })
+    .on('dragend', function(e) {
+      options.removeClass('sorting-quiz__item-insert-before')
+      .removeClass('sorting-quiz__item-insert-after')
+      .removeClass('sorting-quiz__item-extracted');
+    })
+    .on('dragleave', function(e) {
+      options.removeClass('sorting-quiz__item-insert-before')
+      .removeClass('sorting-quiz__item-insert-after');
     })
     .on('drop', function(e) {
       if(options.index(dragSource) > options.index(this))
         $(this).before(dragSource);
       else
         $(this).after(dragSource);
+      options = $(target).find('li');
+    });
+    $(target).find('.sorting-quiz__arrow-up').off()
+    .on('click', function(e){
+      $(this.parentElement.previousElementSibling).before(this.parentElement);
+      options = $(target).find('li');
+    });
+    $(target).find('.sorting-quiz__arrow-down').off()
+    .on('click', function(e){
+      $(this.parentElement.nextElementSibling).after(this.parentElement);
       options = $(target).find('li');
     });
   }
