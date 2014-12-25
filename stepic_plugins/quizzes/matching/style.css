@@ -40,7 +40,9 @@
   cursor: move;
   text-align: left;
 }
-
+.matching-quiz__second-item.matching-quiz__disabled {
+  cursor: default;
+}
 .matching-quiz__second-item_number {
     display: none;
 }

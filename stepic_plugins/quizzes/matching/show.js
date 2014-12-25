@@ -15,9 +15,13 @@ function showMatchingQuiz(target, template, dataset, reply, disabled, quiz_info)
 
   var dragSource = null;
   var pairs = $(target).find('li');
-
-  pairs.off()
-  if (!disabled) {
+  pairs.off();
+  if (disabled) {
+    $(target).find('.matching-quiz__arrow-up').remove();
+    $(target).find('.matching-quiz__arrow-down').remove();
+    pairs.addClass('matching-quiz__disabled');
+    pairs.attr('draggable', false);
+  } else {
     pairs.on('dragstart',function(e) {
       dragSource = this;
       $(this).addClass('matching-quiz__item-extracted');
