@@ -1,6 +1,7 @@
 require(["app/app"], function(app) {
   app.App.ApplicationRoute = Ember.Route.extend({
     model: function() {
+      App.QuizPluginComponent.pluginRegistry['matching'] = {is_component: false};
       return App.QuizPluginComponent.loadPlugin(QUIZ_NAME).then(function(config) {
         window.model  = Ember.Object.create({
           config: config,
