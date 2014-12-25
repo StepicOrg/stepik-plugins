@@ -12,6 +12,10 @@
     padding: .4em 1.28571em;
 }
 
+.sorting-quiz__item.sorting-quiz__disabled {
+  cursor: default;
+}
+
 .sorting-quiz__item.sorting-quiz__item-extracted {
     background-color: #ffffff;
     opacity: 0.4;

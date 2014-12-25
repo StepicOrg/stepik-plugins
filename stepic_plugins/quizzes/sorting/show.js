@@ -17,7 +17,12 @@ function showSortingQuiz(target, template, dataset, reply, disabled, quiz_info) 
   var options = $(target).find('li');
 
   options.off()
-  if (!disabled) {
+  if (disabled) {
+    $(target).find('.sorting-quiz__arrow-up').remove();
+    $(target).find('.sorting-quiz__arrow-down').remove();
+    options.addClass('sorting-quiz__disabled');
+    options.attr('draggable', false);
+  } else {
     options.on('dragstart',function(e) {
       dragSource = this;
       $(this).addClass('sorting-quiz__item-extracted');
