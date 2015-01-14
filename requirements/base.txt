@@ -1,2 +1,5 @@
 git+https://github.com/bioinf/codejail
 git+ssh://git@github.com/bioinf/stepic-utils.git
+
+oslo.messaging==1.5.1
+eventlet==0.16.1
