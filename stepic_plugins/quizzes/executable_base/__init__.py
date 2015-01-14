@@ -1,11 +1,9 @@
 import inspect
 
-try:
-    from django.conf import settings
-except ImportError:
-    settings = None
 from codejail import jail_code
 from stepic_utils import utils, stepicrun
+
+from stepic_plugins import settings
 
 
 class JailedCodeFailed(Exception):

@@ -6,6 +6,8 @@ from datetime  import timedelta
 
 PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
 
+RPC_TRANSPORT_URL = 'rabbit://guest:guest@localhost:5672//'
+
 # use current user and python to execute `sandboxed` code.
 SANDBOX_FOLDER = os.path.join(PACKAGE_ROOT, 'sandbox')
 SANDBOX_PYTHON_PROTO = sys.executable
@@ -60,9 +62,9 @@ ATTEMPT_CLEANUP_TIMEOUT = timedelta(minutes=15)
 COMPUTATIONALLY_HARD_QUIZZES = ['admin', 'code', 'dataset']
 
 try:
-    from edy.plugins_settings import *
+    from .local_settings import *
 except ImportError:
     pass
 
-from .jail_config import configure_jail_code
+from .utils import configure_jail_code
 configure_jail_code(sys.modules[__name__])
