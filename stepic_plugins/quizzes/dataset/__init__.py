@@ -84,7 +84,7 @@ class DatasetQuiz(BaseQuiz):
                 raise TypeError("Bad dataset")
             return dataset, clue
         except (JailedCodeFailed, ValueError, TypeError) as e:
-            raise PluginError(e)
+            raise PluginError(str(e))
 
     def run_edyrun(self, command, data=None, **kwargs):
         files = []
