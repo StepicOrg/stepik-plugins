@@ -2,7 +2,7 @@ function editMatchingQuiz(target, template, source) {
   source = source || {preserve_firsts_order: true, pairs: [{first: 'First', second: 'Second'}]}
   target.html(template(source));
   target.find('.add-pair').click(function () {
-    var row = $('<div class="matching-pair" draggable="true">1: <input type="text" class="first"/> 2: <input type="text" class="second"/><span class="remove"></span></div>');
+    var row = $('<div class="matching-pair" draggable="true"><input type="text" class="first"/> <input type="text" class="second"/><span class="remove"></span></div>');
     target.find('.matching-pairs').append(row);
     target.find(".matching-pair").off();
     makeDraggeble();

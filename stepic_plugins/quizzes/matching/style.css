@@ -1,22 +1,23 @@
 .matching-quiz__first-items {
-  list-style: decimal inside;
-  width: 45%;
+  list-style: none;
+  width: 49%;
+  margin-top: 1px;
 }
 
 .matching-quiz__second-items {
-  list-style: lower-greek inside;
-  width: 45%;
+  list-style: none;
+  width: 49%;
   float: right;
 }
 
 .matching-quiz__first-item,
 .matching-quiz__second-item {
-    border-bottom: 1px solid #d3d3d3;
-    border-top: 1px solid #d3d3d3;
-    color: #222222;
-    border-collapse: collapse;
-    margin-top: -1px;
-    padding: .4em 1.28571em;
+  border-bottom: 1px solid #D3D3D3;
+  border-top: 1px solid #D3D3D3;
+  color: #222;
+  border-collapse: collapse;
+  margin-top: -1px;
+  padding: .4em 1.28571em;
 }
 
 .matching-quiz__second-item.matching-quiz__item-extracted {
@@ -44,7 +45,7 @@
   cursor: default;
 }
 .matching-quiz__second-item_number {
-    display: none;
+  display: none;
 }
 
 .matching-quiz__arrow-up, .matching-quiz__arrow-down {
