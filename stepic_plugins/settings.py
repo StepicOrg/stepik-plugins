@@ -54,9 +54,6 @@ USER_CODE_LIMITS = {
 
 DATASET_QUIZ_TIME_LIMIT = timedelta(minutes=5)
 DATASET_QUIZ_SIZE_LIMIT = 10 * MB
-SUBMISSION_SIZE_LIMIT = DATASET_QUIZ_SIZE_LIMIT
-ATTEMPT_POOL_SIZE = 10
-ATTEMPT_CLEANUP_TIMEOUT = timedelta(minutes=15)
 
 # These quizzes will be scored in separate celery queue.
 COMPUTATIONALLY_HARD_QUIZZES = ['admin', 'code', 'dataset']
