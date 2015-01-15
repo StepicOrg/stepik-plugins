@@ -4,6 +4,7 @@ import threading
 from oslo import messaging
 from oslo.config import cfg
 
+from . import settings
 from .base import load_by_name
 from .exceptions import FormatError, PluginError
 
@@ -42,6 +43,9 @@ class QuizEndpoint(object):
 
     def cleanup(self, ctxt, clue):
         return self._quiz_instance(ctxt).cleanup(clue=clue)
+
+    def list_computationally_hard_quizzes(self, ctxt):
+        return settings.COMPUTATIONALLY_HARD_QUIZZES
 
 
 _fake_transport = messaging.get_transport(cfg.CONF, 'fake:')

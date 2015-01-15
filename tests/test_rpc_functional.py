@@ -80,3 +80,9 @@ tests = [
         clue = [True, False]
 
         assert quiz_rpcapi.cleanup(choice_quiz_ctxt, clue=clue) is None
+
+    def test_list_computationally_hard_quizzes(self, quiz_rpcapi):
+        hard_quizzes = quiz_rpcapi.list_computationally_hard_quizzes()
+
+        assert 'code' in hard_quizzes
+        assert 'dataset' in hard_quizzes

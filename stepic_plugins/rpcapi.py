@@ -51,3 +51,6 @@ class QuizAPI(object):
 
     def cleanup(self, quiz_ctxt, clue=None):
         return self.client.call(quiz_ctxt, 'cleanup', clue=clue)
+
+    def list_computationally_hard_quizzes(self):
+        return self.client.call({}, 'list_computationally_hard_quizzes')
