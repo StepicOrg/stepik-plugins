@@ -56,6 +56,7 @@ require(["app/app"], function(app) {
       attempt: function() {
         var that=this;
         this.doAjax('quiz/attempt/').then(function(data){
+          that.set('model.display.reply', null);
           that.set('model.display.dataset', data);
           that.set('model.has_dataset', true);
         });
@@ -66,8 +67,11 @@ require(["app/app"], function(app) {
   App.ApplicationView = Ember.View.extend({
     actions: {
       submit: function() {
-        this.get('controller').doAjax(
-          'quiz/submission/', this.get('pluginInstance').getReply());
+        var reply = this.get('pluginInstance').getReply();
+        this.get('controller').doAjax('quiz/submission/', reply).then(function(data){
+          window.model.set('display.dataset', window.model.get('display.dataset'));
+          window.model.set('display.reply', {ordering: reply.ordering});
+        });
       },
       updateSource: function() {
         this.get('controller').doAjax(
