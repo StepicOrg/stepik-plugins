@@ -191,6 +191,7 @@ class AdminQuiz(BaseQuiz):
                                       "instance")
             time.sleep(1)
         else:
+            # TODO: delete instance
             raise PluginError("Timed out creating new virtual machine "
                               "instance")
 
