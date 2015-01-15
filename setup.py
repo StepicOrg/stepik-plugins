@@ -19,6 +19,7 @@ setup(
     long_description=README,
     url='https://stepic.org',
     install_requires=[
+        'oslo.messaging>=1.5.1',
         'requests==2.4.1',
     ],
 )
