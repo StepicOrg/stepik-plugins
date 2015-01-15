@@ -17,8 +17,9 @@ class Languages(object):
     ASM32 = 'asm32'
     ASM64 = 'asm64'
     SHELL = 'shell'
-    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL]
-    compiled = [CPP, HASKELL, ASM32, ASM64]
+    RUST = 'rust'
+    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL, RUST]
+    compiled = [CPP, HASKELL, ASM32, ASM64, RUST]
     interpreted = [PYTHON, OCTAVE, SHELL]
     default_templates = {
         PYTHON: "# put your python code here",
@@ -28,7 +29,8 @@ class Languages(object):
         OCTAVE: "# put your octave code here",
         ASM32: "# put your asm32 code here",
         ASM64: "# put your asm64 code here",
-        SHELL: "# put your shell (bash) code here"
+        SHELL: "# put your shell (bash) code here",
+        RUST: "fn main() {\n    // put your Rust code here\n}"
     }
 
 
