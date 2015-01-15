@@ -1,11 +1,12 @@
 function showMatchingQuiz(target, template, dataset, reply, disabled, quiz_info) {
-  var new_dataset = _.clone(dataset)
+  var new_dataset = _.clone(dataset);
   if ( reply ) {
-    var sorted_pairs = [], unsorted_pairs = new_dataset.pairs;
-    for (var i=0; i< reply.ordering.length; i++) {
-      sorted_pairs[i] = unsorted_pairs[reply.ordering[i]];
-    }
-    new_dataset.pairs = sorted_pairs
+    var unsorted_first_values  = new_dataset.pairs.map(function(pair){return pair.first;});
+    var unsorted_second_values = new_dataset.pairs.map(function(pair){return pair.second;});
+    var sorted_second_values   = reply.ordering.map(function(index){return unsorted_second_values[index];});
+    new_dataset.pairs = _.zip(unsorted_first_values, sorted_second_values).map(function(first_second){
+      return {first: first_second[0], second: first_second[1]};
+    });
   }
   target.html(template(new_dataset));
 
