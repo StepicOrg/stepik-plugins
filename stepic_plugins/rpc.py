@@ -40,6 +40,9 @@ class QuizEndpoint(object):
     def check(self, ctxt, reply, clue):
         return self._quiz_instance(ctxt).check(reply, clue=clue)
 
+    def cleanup(self, ctxt, clue):
+        return self._quiz_instance(ctxt).cleanup(clue=clue)
+
 
 _fake_transport = messaging.get_transport(cfg.CONF, 'fake:')
 _fake_server = None

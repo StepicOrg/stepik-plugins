@@ -75,3 +75,8 @@ tests = [
         clue = [True, False]
 
         assert quiz_rpcapi.check(choice_quiz_ctxt, reply, clue)
+
+    def test_cleanup(self, quiz_rpcapi, choice_quiz_ctxt):
+        clue = [True, False]
+
+        assert quiz_rpcapi.cleanup(choice_quiz_ctxt, clue=clue) is None

@@ -49,4 +49,5 @@ class QuizAPI(object):
     def check(self, quiz_ctxt, reply, clue=None):
         return self.client.call(quiz_ctxt, 'check', reply=reply, clue=clue)
 
-    # TODO: add clenaup method
+    def cleanup(self, quiz_ctxt, clue=None):
+        return self.client.call(quiz_ctxt, 'cleanup', clue=clue)
