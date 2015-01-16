@@ -3,6 +3,8 @@ import pwd
 import shutil
 import logging
 
+import bleach
+
 from codejail import jail_code
 
 
@@ -84,3 +86,46 @@ def get_limits_for_java(limits):
     java_limits["MEMORY"] = None
     xmxk = limits["MEMORY"] // 1024
     return java_limits, ["-Xmx{}k".format(xmxk), "-Xss8m"]
+
+
+ALLOWED_TAGS = [
+    'a',
+    'abbr',
+    'acronym',
+    'b',
+    'blockquote',
+    'br',
+    'code',
+    'div',
+    'em',
+    'h1',
+    'h2',
+    'h3',
+    'i',
+    'img',
+    'li',
+    'ol',
+    'p',
+    'pre',
+    'span',
+    'strong',
+    'ul',
+]
+
+ALLOWED_ATTRIBUTES = {
+    'a': ['href', 'title', 'rel', 'target'],
+    'abbr': ['title'],
+    'acronym': ['title'],
+    'div': ['class'],
+    'img': ['src', 'alt', 'class', 'title', 'width',  'height'],
+    'span': ['class'],
+    'p': ['class'],
+    'code': ['class']
+}
+
+ALLOWED_STYLES = []
+
+
+def clean_html(text):
+    return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
+                        styles=ALLOWED_STYLES, strip=True)

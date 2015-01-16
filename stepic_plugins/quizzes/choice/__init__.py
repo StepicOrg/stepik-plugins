@@ -1,10 +1,8 @@
 import random
 
-# Stepic html sanitization
-from common.html import clean
-
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
+from stepic_plugins.utils import clean_html
 
 
 class ChoiceQuiz(BaseQuiz):
@@ -39,7 +37,7 @@ class ChoiceQuiz(BaseQuiz):
         self.preserve_order = source.preserve_order
         self.options = source.options
         for option in self.options:
-            option.text = clean(option.text)
+            option.text = clean_html(option.text)
 
         if self.is_always_correct:
             if self.sample_size > len(self.options):
