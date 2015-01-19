@@ -30,7 +30,7 @@ class PycharmQuiz(BaseQuiz):
     def async_init(self):
         return {
             'options': {
-                # 'files': self.files,
+                'files': self.files,
                 'test': self.test
             }
         }
