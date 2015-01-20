@@ -1,6 +1,6 @@
-git+https://github.com/bioinf/stepic-common
-git+ssh://git@github.com/bioinf/stepic-utils.git
-git+ssh://git@github.com/bioinf/stepic-bioinformatics.git
+git+https://github.com/StepicOrg/stepic-common.git
+git+https://github.com/StepicOrg/stepic-utils.git
+git+https://github.com/StepicOrg/stepic-bioinformatics.git
 
 sympy==0.7.5
 numpy==1.8.1
