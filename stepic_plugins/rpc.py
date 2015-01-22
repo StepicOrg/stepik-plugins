@@ -56,17 +56,15 @@ def get_server(transport_url, fake=False):
     if not fake:
         transport = messaging.get_transport(cfg.CONF, transport_url)
         server_name = socket.gethostname()
-        executor = 'eventlet'
     else:
         transport = _fake_transport
         server_name = 'fake_server'
-        executor = 'blocking'
     target = messaging.Target(topic='quiz', server=server_name)
     endpoints = [
         QuizEndpoint(),
     ]
     return messaging.get_rpc_server(transport, target, endpoints,
-                                    executor=executor)
+                                    executor='blocking')
 
 
 def start_fake_server():

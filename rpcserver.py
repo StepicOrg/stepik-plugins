@@ -2,8 +2,6 @@
 import signal
 import sys
 
-import eventlet
-
 from functools import partial
 
 from oslo import messaging
@@ -12,7 +10,6 @@ from stepic_plugins import rpc
 
 
 def init():
-    eventlet.monkey_patch()
     messaging.set_transport_defaults(control_exchange='stepic.rpc')
 
 
