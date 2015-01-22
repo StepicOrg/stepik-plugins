@@ -5,6 +5,7 @@ from datetime import timedelta
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
+DEBUG = False
 
 RPC_TRANSPORT_URL = 'rabbit://guest:guest@localhost:5672//'
 
@@ -55,6 +56,10 @@ DATASET_QUIZ_SIZE_LIMIT = 10 * MB
 
 # These quizzes will be scored in edy in a separate celery queue.
 COMPUTATIONALLY_HARD_QUIZZES = ['admin', 'code', 'dataset']
+
+ROOTNROLL_API_URL = ''
+ROOTNROLL_USERNAME = ''
+ROOTNROLL_PASSWORD = ''
 
 try:
     from .local_settings import *
