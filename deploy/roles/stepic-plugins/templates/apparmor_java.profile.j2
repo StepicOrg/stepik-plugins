@@ -1,0 +1,9 @@
+#include <tunables/global>
+
+{{ sandbox_java_bin }} {
+    #include <abstractions/base>
+
+    {{ sandbox_jdk_home }}/**         rix,
+    /etc/passwd                       r,
+    {{ arena_dir }}**                 r,
+}

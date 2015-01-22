@@ -1,0 +1,62 @@
+---
+server_name: "{{ inventory_hostname }}"
+
+python_version: 3.4.2
+pythonz_dir: /opt/pythonz
+pythonz_bin: "{{ pythonz_dir }}/bin/pythonz"
+pythonz_python_dir: "{{ pythonz_dir }}/pythons/CPython-{{ python_version }}"
+python_bin: "{{ pythonz_python_dir }}/bin/python"
+python_venv_command: "{{ pythonz_python_dir }}/bin/pyvenv"
+
+stepic_user: stepic
+stepic_git_ssh: "/tmp/stepic_git_ssh.sh"
+
+stepic_plugins_repo: "https://github.com/StepicOrg/stepic-plugins.git"
+stepic_plugins_branch: master
+stepic_plugins_dir: "/home/stepic/instances/{{ stepic_plugins_branch }}/stepic-plugins"
+stepic_plugins_code_dir: "{{ stepic_plugins_dir }}/app"
+stepic_plugins_venv_dir: "{{ stepic_plugins_code_dir }}/venv"
+stepic_plugins_logs_dir: "{{ stepic_plugins_dir }}/logs"
+
+# stepic-plugins application settings
+stepic_plugins_rpc_transport_url: 'rabbit://guest:guest@localhost:5672//'
+stepic_plugins_compilers: {}
+rootnroll_api_url: ''
+rootnroll_username: ''
+rootnroll_password: ''
+
+# Settings for CodeJail sandboxes
+sandbox_user: sandbox
+sandbox_dir: "{{ stepic_plugins_dir }}/sandbox"
+# Set up only minimal sandbox for Python code. Set 'yes' to speed up
+# deployment in development environment.
+sandbox_minimal: no
+arena_dir: "{{ stepic_plugins_dir }}/arena"
+
+# Sandbox for Python
+sandbox_python_dir: "{{ sandbox_dir }}/python"
+sandbox_python_bin: "{{ sandbox_python_dir }}/bin/python"
+sandbox_python_venv_command: "{{ python_venv_command }} --copies"
+sandbox_python_requirements: "{% if sandbox_minimal -%}
+  {{ stepic_plugins_code_dir }}/requirements/sandbox_minimal.txt{% else -%}
+  {{ stepic_plugins_code_dir }}/requirements/sandbox.txt{% endif %}"
+
+# Sandbox for Java
+sandbox_java_dir: "{{ sandbox_dir }}/java"
+sandbox_oracle_jdk_url: http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.tar.gz
+# Path to the extracted jdk home directory. Note that jdkX.X.X comes from the
+# oracle jdk tarball (sandbox_oracle_jdk_url), keep these variables in sync.
+sandbox_jdk_home: "{{ sandbox_java_dir }}/jdk1.7.0_67"
+sandbox_java_bin: "{{ sandbox_jdk_home }}/jre/bin/java"
+
+# TODO: octave, shell
+sandbox_octave_bin: /bin/bash
+sandbox_bash_bin: /bin/bash
+
+apparmor_profiles:
+  - template: apparmor_python.profile.j2
+    name: "{{ sandbox_python_bin.strip('/') | regex_replace('/', '.') }}"
+  - template: apparmor_java.profile.j2
+    name: "{{ sandbox_java_bin.strip('/') | regex_replace('/', '.') }}"
+  - template: apparmor_arena.profile.j2
+    name: "{{ arena_dir.strip('/') | regex_replace('/', '.') }}"

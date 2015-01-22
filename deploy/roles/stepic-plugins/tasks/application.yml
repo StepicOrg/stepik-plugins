@@ -1,0 +1,62 @@
+---
+- name: create stepic-plugins logs directory
+  file: path={{ stepic_plugins_logs_dir }}
+        state=directory
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
+
+- name: install supervisor
+  apt: name=supervisor
+       state=present
+
+- name: start supervisor and enable it to start on boot
+  service: name=supervisor
+           enabled=yes
+           state=started
+
+- name: configure ulimits for supervisor
+  lineinfile: dest=/etc/default/supervisor
+              regexp="^ulimit"
+              line="ulimit -n 32000"
+              state=present
+  notify:
+    - restart supervisor
+
+- name: create stepic-plugins supervisor configuration
+  template: src=supervisor.conf.j2
+            dest=/etc/supervisor/conf.d/{{ server_name }}.conf
+  notify:
+    - reload supervisor
+
+- name: checkout latest stepic-plugins code
+  git: repo={{ stepic_plugins_repo }}
+       dest={{ stepic_plugins_code_dir }}
+       version={{ stepic_plugins_branch }}
+       update=yes
+  sudo_user: "{{ stepic_user }}"
+  environment:
+    GIT_SSH: "{{ stepic_git_ssh }}"
+  notify:
+    - reload supervisor
+
+# TODO: make git clean after checkout
+
+- name: install stepic-plugins base requirements
+  pip: virtualenv={{ stepic_plugins_venv_dir }}
+       virtualenv_command='{{ python_venv_command }}'
+       requirements={{ stepic_plugins_code_dir }}/requirements/base.txt
+       state=present
+  sudo_user: "{{ stepic_user }}"
+  environment:
+    GIT_SSH: "{{ stepic_git_ssh }}"
+  notify:
+    - reload supervisor
+
+- name: update stepic-plugins local settings
+  template: src=local_settings.py.j2
+            dest={{ stepic_plugins_code_dir }}/stepic_plugins/local_settings.py
+            owner={{ stepic_user }}
+            group={{ stepic_user }}
+            mode=0640
+  notify:
+    - reload supervisor

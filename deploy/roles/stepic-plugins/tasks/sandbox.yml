@@ -1,0 +1,33 @@
+---
+- name: create sandbox user
+  user: name={{ sandbox_user }}
+        shell=/bin/false
+        createhome=no
+        state=present
+
+- name: add sudoers config for sandbox user
+  template: src=sudoers.j2
+            dest=/etc/sudoers.d/50-{{ sandbox_user }}
+            mode=0440
+            owner=root
+            group=root
+            validate='visudo -c -f %s'
+
+# TODO: configure iptables for sandbox user
+#sudo addgroup sandbox
+#sudo adduser --disabled-login sandbox --ingroup sandbox
+#sudo apt-get install iptables-persistent
+#sudo iptables -A OUTPUT -m owner --uid-owner $(id -u sandbox) -j DROP
+#sudo iptables-save | sudo tee /etc/iptables/rules.v4
+
+- include: sandbox_apparmor.yml tags=sandbox,apparmor
+
+- name: create sandbox base directory
+  file: path={{ sandbox_dir }}
+        state=directory
+        owner={{ sandbox_user }}
+        group={{ sandbox_user }}
+
+- include: sandbox_python.yml
+- include: sandbox_java.yml
+  sudo_user: "{{ sandbox_user }}"

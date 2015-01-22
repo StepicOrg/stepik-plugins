@@ -1,0 +1,24 @@
+---
+# TODO: install apt packages to compile requirements
+
+- name: disable apparmor profile for Python sandbox
+  command: apparmor_parser -R /etc/apparmor.d/{{ apparmor_profiles[0].name }}
+
+- name: create/update Python sandbox directory
+  pip: virtualenv={{ sandbox_python_dir }}
+       virtualenv_command='{{ sandbox_python_venv_command }}'
+       requirements={{ sandbox_python_requirements }}
+       state=present
+  environment:
+    GIT_SSH: "{{ stepic_git_ssh }}"
+  register: sandbox_python_result
+  sudo_user: "{{ sandbox_user }}"
+  ignore_errors: yes
+
+- name: enable apparmor profile for Python sandbox
+  shell: apparmor_parser -r /etc/apparmor.d/{{ apparmor_profiles[0].name }} &&
+         aa-enforce /etc/apparmor.d/{{ apparmor_profiles[0].name }}
+
+- name: fail playbook if failed to create Python sandbox
+  fail: msg="failed to create Python sandbox directory"
+  when: sandbox_python_result | failed

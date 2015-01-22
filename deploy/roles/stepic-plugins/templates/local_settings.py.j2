@@ -1,0 +1,13 @@
+RPC_TRANSPORT_URL = '{{ stepic_plugins_rpc_transport_url }}'
+
+SANDBOX_USER = '{{ sandbox_user }}'
+SANDBOX_PYTHON = '{{ sandbox_python_bin }}'
+SANDBOX_JAVA = '{{ sandbox_java_bin }}'
+ARENA_DIR = '{{ arena_dir }}'
+
+COMPILERS = {{ stepic_plugins_compilers | to_nice_json }}
+# TODO: interpreters
+
+ROOTNROLL_API_URL = '{{ rootnroll_api_url }}'
+ROOTNROLL_USERNAME = '{{ rootnroll_username }}'
+ROOTNROLL_PASSWORD = '{{ rootnroll_password }}'

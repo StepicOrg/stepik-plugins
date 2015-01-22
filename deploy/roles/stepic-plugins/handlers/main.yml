@@ -1,0 +1,24 @@
+---
+- name: update grub
+  command: update-grub
+
+- name: reboot
+  command: reboot
+  async: 0
+  poll: 0
+  ignore_errors: yes
+
+- name: wait for server to start
+  local_action: wait_for host={{ ansible_ssh_host if ansible_ssh_host is defined else inventory_hostname }}
+                port={{ ansible_ssh_port | default(22) }}
+                search_regex=OpenSSH
+                state=started
+                delay=5
+  sudo: no
+
+- name: reload supervisor
+  command: supervisorctl reload
+
+- name: restart supervisor
+  service: name=supervisor
+           state=restarted
