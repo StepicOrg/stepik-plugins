@@ -63,6 +63,27 @@ tests = [
 
         assert clean_reply == reply['choices']
 
+    def test_clean_reply_returns_serializable(self, quiz_rpcapi):
+        quiz_ctxt = {
+            'name': 'code',
+            'source': {
+                'code': '',
+                'execution_time_limit': 1,
+                'execution_memory_limit': 1,
+                'samples_count': 0,
+                'templates_data': '',
+            }
+        }
+        reply = {
+            'language': 'python3',
+            'code': 'print(42)',
+        }
+
+        clean_reply = quiz_rpcapi.clean_reply(quiz_ctxt, reply)
+
+        assert isinstance(clean_reply, dict)
+        assert clean_reply == reply
+
     def test_clean_reply_format_error(self, quiz_rpcapi, choice_quiz_ctxt):
         dataset = {'options': ['one', 'two']}
         reply = {'choices': [True, False, False]}

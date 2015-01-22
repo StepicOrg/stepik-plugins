@@ -106,7 +106,8 @@ class CodeQuiz(BaseQuiz):
 
     def check(self, reply, clue, throw=False):
         with Arena() as arena:
-            runner = CodeRunner(arena, self.concat_code(reply.language, reply.code), reply.language, self.limits)
+            source = self.concat_code(reply['language'], reply['code'])
+            runner = CodeRunner(arena, source, reply['language'], self.limits)
             if not runner.compilation_success:
                 hint = "{message}\n{stderr}".format(
                     message=self.CE_MESSAGE,

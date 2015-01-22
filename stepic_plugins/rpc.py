@@ -7,6 +7,7 @@ from oslo.config import cfg
 from . import settings
 from .base import load_by_name
 from .exceptions import FormatError, PluginError
+from .schema import ParsedJSON
 
 
 class QuizEndpoint(object):
@@ -36,7 +37,10 @@ class QuizEndpoint(object):
 
     @messaging.expected_exceptions(FormatError)
     def clean_reply(self, ctxt, reply, dataset):
-        return self._quiz_instance(ctxt).clean_reply(reply, dataset=dataset)
+        reply = self._quiz_instance(ctxt).clean_reply(reply, dataset=dataset)
+        if isinstance(reply, ParsedJSON):
+            return reply._original
+        return reply
 
     def check(self, ctxt, reply, clue):
         return self._quiz_instance(ctxt).check(reply, clue=clue)
