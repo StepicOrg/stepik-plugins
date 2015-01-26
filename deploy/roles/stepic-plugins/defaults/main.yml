@@ -51,6 +51,7 @@ sandbox_java_bin: "{{ sandbox_jdk_home }}/jre/bin/java"
 
 # TODO: octave, shell
 sandbox_octave_bin: /bin/bash
+# TODO: do not use system bash
 sandbox_bash_bin: /bin/bash
 
 apparmor_profiles:
