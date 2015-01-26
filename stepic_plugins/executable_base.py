@@ -3,7 +3,7 @@ import inspect
 from codejail import jail_code
 from stepic_utils import utils, stepicrun
 
-from stepic_plugins import settings
+from . import settings
 
 
 class JailedCodeFailed(Exception):
@@ -43,7 +43,7 @@ def run(command, code, data=None, files=None, output_limit=None, **kwargs):
     return decoded
 
 
-def jail_code_wrapper(command, code, argv, files, stdin):
+def jail_code_wrapper(command, code=None, files=None, argv=None, stdin=None):
     with Arena() as a:
         return a.run_code(command, code=code, argv=argv, files=files, stdin=stdin)
 

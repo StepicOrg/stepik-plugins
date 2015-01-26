@@ -1,8 +1,9 @@
 import random
 
+from stepic_plugins import settings
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import PluginError, FormatError
-from stepic_plugins.quizzes.executable_base import JailedCodeFailed, run, settings
+from stepic_plugins.executable_base import JailedCodeFailed, run
 
 
 class DatasetQuiz(BaseQuiz):

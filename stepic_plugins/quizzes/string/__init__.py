@@ -5,7 +5,7 @@ from codejail import safe_exec
 
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
-from stepic_plugins.quizzes.executable_base import JailedCodeFailed, run
+from stepic_plugins.executable_base import JailedCodeFailed, run
 
 
 class StringQuiz(BaseQuiz):

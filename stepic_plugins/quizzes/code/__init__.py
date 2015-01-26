@@ -3,9 +3,10 @@ import re
 import textwrap
 import collections
 
+from stepic_plugins import settings
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
-from stepic_plugins.quizzes.executable_base import JailedCodeFailed, Arena, settings, run
+from stepic_plugins.executable_base import Arena, JailedCodeFailed, run
 
 
 class Languages(object):
