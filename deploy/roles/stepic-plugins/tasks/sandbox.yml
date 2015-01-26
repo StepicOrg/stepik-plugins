@@ -7,7 +7,7 @@
 
 - name: add sudoers config for sandbox user
   template: src=sudoers.j2
-            dest=/etc/sudoers.d/50-{{ sandbox_user }}
+            dest=/etc/sudoers.d/50-{{ sandbox_user }}-{{ server_name }}
             mode=0440
             owner=root
             group=root
