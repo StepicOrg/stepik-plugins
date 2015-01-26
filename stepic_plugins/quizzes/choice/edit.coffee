@@ -58,4 +58,6 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
 
     removeOption: (option)->
       @set('source.options', @get('source.options').without(option))
+      if @get('source.options.length') < @get('source.sample_size') and @get('source.sample_size') > 1
+        @set 'source.sample_size', @get('source.options.length')
       Em.run.next => @setBindings()

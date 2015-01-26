@@ -81,6 +81,9 @@
       },
       removeOption: function(option) {
         this.set('source.options', this.get('source.options').without(option));
+        if (this.get('source.options.length') < this.get('source.sample_size') && this.get('source.sample_size') > 1) {
+          this.set('source.sample_size', this.get('source.options.length'));
+        }
         return Em.run.next((function(_this) {
           return function() {
             return _this.setBindings();
