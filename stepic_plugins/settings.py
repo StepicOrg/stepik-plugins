@@ -63,6 +63,10 @@ ROOTNROLL_PASSWORD = ''
 
 try:
     from .local_settings import *
+    # If stepic-plugins rpc server runs in fake mode in scope of edy project
+    # (see PLUGINS_RPC_FAKE_SERVER setting) try to import local settings for
+    # plugins from edy.
+    from edy.plugins_local_settings import *
 except ImportError:
     pass
 
