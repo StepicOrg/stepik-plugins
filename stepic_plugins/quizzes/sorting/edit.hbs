@@ -1,14 +1,14 @@
 <div class="edit-title">See <a href="/lesson/9178">Step: Sorting</a> for docs and examples.</div>
 <div class="edit-title">Add options. Users will need to put them in order as below:</div>
 <div class="edit-text">
-    <div class="sort-options">
-     {{#each options}}
-      <div class="sort-option" draggable="true">
+  <div class="sort-options">
+    {{#each options}}
+      <div class="sort-option">
+        <span class="drag-area" draggable="true"></span>
         <input type="text" class="text" value="{{this}}"/>
         <span class="remove"></span>
       </div>
-      {{/each}}
-     </div>
-    <div class="add-option"></div>
+    {{/each}}
+  </div>
+  <div class="add-option"></div>
 </div>
-
