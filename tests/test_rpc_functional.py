@@ -107,3 +107,18 @@ tests = [
 
         assert 'code' in hard_quizzes
         assert 'dataset' in hard_quizzes
+
+
+class TestCodeJailApi(object):
+    def test_run_code(self, code_rpcapi):
+        code = 'n = int(input().strip()); print("inc:", n + 1)'
+
+        result = code_rpcapi.run_code('python', code=code, stdin='42')
+
+        expected_result = {
+            'status': 0,
+            'stdout': b'inc: 43\n',
+            'stderr': b'',
+            'time_limit_exceeded': False,
+        }
+        assert result == expected_result

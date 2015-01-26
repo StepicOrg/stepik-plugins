@@ -1,3 +1,5 @@
+from base64 import b64decode
+
 from oslo import messaging
 from oslo.config import cfg
 
@@ -9,8 +11,16 @@ ALLOWED_EXMODS = [
 ]
 
 
-class QuizAPI(object):
-    """Client side of the quizzes RPC API."""
+class BaseAPI(object):
+    """Base class for RPC API clients.
+
+    It sets up the RPC client and binds it to the given topic.
+    If required, it handles the starting of a fake RPC server.
+
+    """
+    topic = None
+    namespace = None
+    version = None
 
     def __init__(self, transport_url, fake_server=False):
         if not fake_server:
@@ -20,8 +30,17 @@ class QuizAPI(object):
             from . import rpc
             fake_rpc_server = rpc.start_fake_server()
             transport = fake_rpc_server.transport
-        target = messaging.Target(topic='quiz', version='0.1')
+        target = messaging.Target(topic=self.topic, namespace=self.namespace,
+                                  version=self.version)
         self.client = messaging.RPCClient(transport, target)
+
+
+class QuizAPI(BaseAPI):
+    """Client side of the quizzes RPC API."""
+
+    topic = 'plugins'
+    namespace = 'quiz'
+    version = '0.1'
 
     def ping(self, msg):
         return self.client.call({}, 'ping', msg=msg)
@@ -54,3 +73,19 @@ class QuizAPI(object):
 
     def list_computationally_hard_quizzes(self):
         return self.client.call({}, 'list_computationally_hard_quizzes')
+
+
+class CodeJailAPI(BaseAPI):
+    """Client side of the codejail RPC API."""
+
+    topic = 'plugins'
+    namespace = 'codejail'
+    version = '0.1'
+
+    def run_code(self, command, code=None, files=None, argv=None, stdin=None):
+        result = self.client.call({}, 'run_code',
+                                  command=command, code=code, files=files,
+                                  argv=argv, stdin=stdin)
+        result['stdout'] = b64decode(result['stdout'])
+        result['stderr'] = b64decode(result['stderr'])
+        return result

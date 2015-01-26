@@ -9,11 +9,22 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture
-def quiz_rpcapi(request):
-    rpc_transport_url = request.config.getoption('rpc_url')
+def rpc_transport_url(request):
+    return request.config.getoption('rpc_url')
+
+
+@pytest.fixture
+def quiz_rpcapi(rpc_transport_url):
     if rpc_transport_url:
         return rpcapi.QuizAPI(rpc_transport_url)
     return rpcapi.QuizAPI(None, fake_server=True)
+
+
+@pytest.fixture
+def code_rpcapi(rpc_transport_url):
+    if rpc_transport_url:
+        return rpcapi.CodeJailAPI(rpc_transport_url)
+    return rpcapi.CodeJailAPI(None, fake_server=True)
 
 
 @pytest.fixture

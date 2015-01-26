@@ -1,17 +1,20 @@
 import socket
 import threading
 
+from base64 import b64encode
+
 from oslo import messaging
 from oslo.config import cfg
 
 from . import settings
 from .base import load_by_name
 from .exceptions import FormatError, PluginError
+from .executable_base import jail_code_wrapper
 from .schema import ParsedJSON
 
 
 class QuizEndpoint(object):
-    target = messaging.Target(version='0.1')
+    target = messaging.Target(namespace='quiz', version='0.1')
 
     @messaging.expected_exceptions(KeyError, FormatError)
     def _quiz_instance(self, ctxt):
@@ -52,6 +55,21 @@ class QuizEndpoint(object):
         return settings.COMPUTATIONALLY_HARD_QUIZZES
 
 
+class CodeJailEndpoint(object):
+    target = messaging.Target(namespace='codejail', version='0.1')
+
+    def run_code(self, ctxt, command, code, files, argv, stdin):
+        result = jail_code_wrapper(
+            command, code=code, files=files, argv=argv, stdin=stdin)
+        serializable_result = {
+            'status': result.status,
+            'stdout': b64encode(result.stdout).decode(),
+            'stderr': b64encode(result.stderr).decode(),
+            'time_limit_exceeded': result.time_limit_exceeded,
+        }
+        return serializable_result
+
+
 _fake_transport = messaging.get_transport(cfg.CONF, 'fake:')
 _fake_server = None
 
@@ -63,9 +81,10 @@ def get_server(transport_url, fake=False):
     else:
         transport = _fake_transport
         server_name = 'fake_server'
-    target = messaging.Target(topic='quiz', server=server_name)
+    target = messaging.Target(topic='plugins', server=server_name)
     endpoints = [
         QuizEndpoint(),
+        CodeJailEndpoint(),
     ]
     return messaging.get_rpc_server(transport, target, endpoints,
                                     executor='blocking')
