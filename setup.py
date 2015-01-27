@@ -12,7 +12,7 @@ version = __import__('stepic_plugins').get_version()
 setup(
     name='stepic-plugins',
     version=version,
-    packages=['stepic_plugins'],
+    packages=find_packages(include=['stepic_plugins*']),
     include_package_data=True,
     author='Stepic Team',
     description='A collection of plugins for Stepic',
