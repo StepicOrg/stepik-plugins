@@ -1,3 +1,6 @@
+import io
+import tarfile
+
 from base64 import b64decode
 
 from oslo import messaging
@@ -50,7 +53,7 @@ class QuizAPI(BaseAPI):
 
         Returns None if the source is valid, otherwise raises FormatError
 
-        :raises: FormatError
+        :raises FormatError: if source is not valid
 
         """
         return self.client.call(quiz_ctxt, 'validate_source')
@@ -73,6 +76,16 @@ class QuizAPI(BaseAPI):
 
     def list_computationally_hard_quizzes(self):
         return self.client.call({}, 'list_computationally_hard_quizzes')
+
+    def get_static(self):
+        """Get static files for all quizzes bundled in a tarball.
+
+        :return: A :class:`TarFile` instance
+
+        """
+        tarball_serialized = self.client.call({}, 'get_static')
+        tarball_bytes = b64decode(tarball_serialized)
+        return tarfile.open(fileobj=io.BytesIO(tarball_bytes))
 
 
 class CodeJailAPI(BaseAPI):

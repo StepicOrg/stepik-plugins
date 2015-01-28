@@ -1,4 +1,6 @@
+import base64
 import pytest
+import tarfile
 
 from stepic_plugins.exceptions import FormatError
 
@@ -107,6 +109,17 @@ tests = [
 
         assert 'code' in hard_quizzes
         assert 'dataset' in hard_quizzes
+
+    def test_get_static(self, quiz_rpcapi):
+        tarball = quiz_rpcapi.get_static()
+
+        assert isinstance(tarball, tarfile.TarFile)
+        assert all(f.startswith('stepic_plugins') for f in tarball.getnames())
+        assert 'stepic_plugins/code/show.js' in tarball.getnames()
+        code_show_js_member = tarball.getmember('stepic_plugins/code/show.js')
+        assert code_show_js_member.size > 0
+        code_show_js = tarball.extractfile(code_show_js_member)
+        assert b'function()' in code_show_js.read()
 
 
 class TestCodeJailApi(object):

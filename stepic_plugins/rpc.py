@@ -1,4 +1,10 @@
+import base64
+import fnmatch
+import io
+import logging
+import os
 import socket
+import tarfile
 import threading
 
 from base64 import b64encode
@@ -7,10 +13,13 @@ from oslo import messaging
 from oslo.config import cfg
 
 from . import settings
-from .base import load_by_name
+from .base import QUIZZES_DIR, load_by_name
 from .exceptions import FormatError, PluginError
 from .executable_base import jail_code_wrapper
 from .schema import ParsedJSON
+
+
+logger = logging.getLogger(__name__)
 
 
 class QuizEndpoint(object):
@@ -53,6 +62,62 @@ class QuizEndpoint(object):
 
     def list_computationally_hard_quizzes(self, ctxt):
         return settings.COMPUTATIONALLY_HARD_QUIZZES
+
+    def _collect_quiz_static(self, quiz_directory, tarball):
+        quiz_basedir = os.path.basename(quiz_directory)
+        tarball_quiz_dir = os.path.join('stepic_plugins', quiz_basedir)
+
+        coffee_pattern = '*.coffee'
+        patterns = ['*.js', '*.css', '*.hbs', coffee_pattern]
+
+        for file in os.listdir(quiz_directory):
+            if all(not fnmatch.fnmatch(file, p) for p in patterns):
+                continue
+            source_file = os.path.join(quiz_directory, file)
+            tar_file = os.path.join(tarball_quiz_dir, file)
+            if fnmatch.fnmatch(file, coffee_pattern):
+                try:
+                    import coffeescript
+                except ImportError:
+                    msg = "Package 'CoffeeScript' is required to compile " \
+                          "static file: %s, it will be skipped"
+                    logger.error(msg, source_file)
+                    continue
+
+                tar_file = os.path.splitext(tar_file)[0] + '.js'
+                try:
+                    source_compiled = (coffeescript.compile_file(source_file)
+                                       .encode())
+                except (coffeescript.EngineError,
+                        coffeescript.CompilationError):
+                    logger.exception("Failed to compile coffeescript file: %s,"
+                                     " it will be skipped", source_file)
+                    continue
+                logger.info("Successfully compiled coffeescript file: %s",
+                            source_file)
+                tar_info = tarfile.TarInfo(name=tar_file)
+                tar_info.size = len(source_compiled)
+                tar_info.mtime = os.path.getmtime(source_file)
+                tarball.addfile(tar_info, fileobj=io.BytesIO(source_compiled))
+            else:
+                tarball.add(source_file, arcname=tar_file)
+
+    def get_static(self, ctxt):
+        """Get static files for all quizzes bundled in a tarball.
+
+        Coffeescript files are dynamically compiled before being added
+        to a resulting tarball.
+
+        :return: A Base64-encoded tarball file
+
+        """
+        tarball_fileobj = io.BytesIO()
+        with tarfile.open(fileobj=tarball_fileobj, mode='w:gz') as tarball:
+            for directory in os.listdir(QUIZZES_DIR):
+                quiz_directory = os.path.join(QUIZZES_DIR, directory)
+                if os.path.isdir(quiz_directory):
+                    self._collect_quiz_static(quiz_directory, tarball)
+        return base64.b64encode(tarball_fileobj.getvalue()).decode()
 
 
 class CodeJailEndpoint(object):
