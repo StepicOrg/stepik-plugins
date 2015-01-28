@@ -9,18 +9,28 @@
         });
       }
     },
-    user_langBinding: 'reply.language',
-    user_codeBinding: 'reply.code',
+    user_lang: Em.computed.alias('reply.language'),
+    user_code: Em.computed.alias('reply.code'),
+    is_multiple_langs: Em.computed.gt('langs.length', 1),
     file_value: null,
+    setLangVisually: (function() {
+      if (this.get('user_lang') && this.get('is_multiple_langs')) {
+        return this.$(".lang-selector").val(this.get('user_lang'));
+      }
+    }).on('didInsertElement'),
     langs: (function() {
       return _.keys(this.get('content.options.code_templates'));
     }).property('content'),
-    is_lang_selectable: (function() {
-      return !(this.get('user_code') || this.get('user_lang'));
-    }).property('langs', 'user_lang'),
     code_template: (function() {
       if (this.get('user_lang')) {
         return this.get('content.options.code_templates')[this.get('user_lang')];
+      }
+    }).property('user_lang'),
+    initial_code: (function() {
+      if (this.get('previous_reply.language') === this.get('user_lang')) {
+        return this.get('previous_reply.code');
+      } else {
+        return this.get('code_template');
       }
     }).property('user_lang'),
     uploadFile: (function() {
@@ -37,11 +47,14 @@
       })(this);
       return reader.readAsText(file.slice());
     }).observes('file_value'),
-    _set_initial_language: (function() {
-      if (this.get('content') && this.get('langs.length') === 1) {
-        return this.set('user_lang', this.get('langs.firstObject'));
+    setInitialCode: (function(forced) {
+      if (forced == null) {
+        forced = false;
       }
-    }).observes('langs').on('init'),
+      if (!this.get('user_code') && this.get('user_lang')) {
+        return this.set('user_code', this.get('initial_code'));
+      }
+    }).observes('user_lang'),
     _set_initial_code: (function() {
       var initial_code;
       if (!this.get('user_code') && this.get('user_lang')) {
@@ -50,11 +63,16 @@
       }
     }).observes('user_lang'),
     onLangSelected: (function() {
-      return this.set('is_reply_ready', !this.get('is_lang_selectable'));
-    }).observes('is_lang_selectable').on('init'),
+      return this.set('is_reply_ready', !!this.get('user_lang'));
+    }).observes('user_lang').on('init'),
     actions: {
-      setLang: function(lang) {
-        return this.set('user_lang', lang);
+      setLang: function() {
+        var lang;
+        lang = this.$('.lang-selector').val();
+        if ((this.get('initial_code') === this.get('user_code')) || !this.get('user_code') || confirm('This will erase your changes!')) {
+          this.set('user_lang', lang);
+          return this.set('user_code', this.get('initial_code'));
+        }
       }
     }
   });

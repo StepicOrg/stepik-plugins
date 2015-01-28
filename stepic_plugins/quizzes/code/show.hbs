@@ -1,9 +1,16 @@
-{{#if is_lang_selectable}}
-  <b>Choose your language:</b>
-  {{#each lang in langs}}
-    <button class="tiny" {{action setLang lang}}>{{lang}}</button>
-  {{/each}}
-{{else}}
+{{#if is_multiple_langs}}
+  <label>
+    <b>Programming language:</b>
+
+    <select class='lang-selector'{{action 'setLang' on='change'}}>
+      {{#each lang in langs}}
+        <option value="{{unbound lang}}">{{lang}}</option>
+      {{/each}}
+    </select>
+  </label>
+{{/if}}
+
+{{#if user_lang}}
   {{#unless disabled}}
     <label>
       {{input type="file" class="code-quiz__load"
@@ -12,9 +19,9 @@
     </label>
   {{/unless}}
   {{view App.CodeEditorView
-  valueBinding='user_code'
-  required='true'
-  langBinding='user_lang'
-  placeholder="Type your code here..."
-  disabledBinding='disabled'}}
+      value=user_code
+      required='true'
+      lang=user_lang
+      placeholder="Type your code here..."
+      disabled=disabled}}
 {{/if}}
