@@ -2,7 +2,7 @@ function editSortingQuiz(target, template, source) {
   source = source || {options: []}
   target.html(template(source));
   target.find('.add-option').click(function () {
-    var row = $('<div class="sort-option" draggable="true"><input type="text" class="text"/><span class="remove"></span></div>');
+    var row = $('<div class="sort-option"><span class="drag-area" draggable="true"></span><input type="text" class="text"/><span class="remove"></span></div>');
     target.find('.sort-options').append(row);
     target.find(".sort-option").off();
     makeDraggeble();
@@ -48,5 +48,3 @@ function editSortingQuiz(target, template, source) {
     }
   };
 }
-
-
