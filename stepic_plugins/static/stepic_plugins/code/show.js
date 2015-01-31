@@ -3,10 +3,13 @@
     init: function() {
       this._super();
       if (this.get('reply') == null) {
-        return this.set('reply', {
+        this.set('reply', {
           code: '',
           language: null
         });
+        if (!this.get('is_multiple_langs')) {
+          return this.set('user_lang', this.get('langs.firstObject'));
+        }
       }
     },
     user_lang: Em.computed.alias('reply.language'),

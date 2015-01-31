@@ -5,6 +5,8 @@ App.CodeQuizComponent = Em.Component.extend
       @set 'reply',
         code: ''
         language: null
+      unless @get('is_multiple_langs')
+       @set 'user_lang', @get('langs.firstObject')
 
   user_lang: Em.computed.alias 'reply.language'
   user_code: Em.computed.alias 'reply.code'
