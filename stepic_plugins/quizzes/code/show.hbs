@@ -1,13 +1,15 @@
 {{#if is_multiple_langs}}
-  <label>
-    <b>Programming language:</b>
+  {{#unless disabled}}
+    <label>
+      <b>Programming language:</b>
 
-    <select class='lang-selector'{{action 'setLang' on='change'}}>
-      {{#each lang in langs}}
-        <option value="{{unbound lang}}">{{lang}}</option>
-      {{/each}}
-    </select>
-  </label>
+      <select class='lang-selector'{{action 'setLang' on='change'}}>
+        {{#each lang in langs}}
+          <option value="{{unbound lang}}">{{lang}}</option>
+        {{/each}}
+      </select>
+    </label>
+  {{/unless}}
 {{/if}}
 
 {{#if user_lang}}

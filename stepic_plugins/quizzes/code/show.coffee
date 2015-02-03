@@ -7,6 +7,7 @@ App.CodeQuizComponent = Em.Component.extend
         language: null
       unless @get('is_multiple_langs')
        @set 'user_lang', @get('langs.firstObject')
+       @setInitialCode()
 
   user_lang: Em.computed.alias 'reply.language'
   user_code: Em.computed.alias 'reply.code'
@@ -46,15 +47,6 @@ App.CodeQuizComponent = Em.Component.extend
   setInitialCode: ((forced=false)->
     if not @get('user_code') and @get('user_lang')
       @set 'user_code', @get('initial_code')
-  ).observes('user_lang')
-
-  _set_initial_code: (->
-    if not @get('user_code') and @get('user_lang')
-      initial_code = if @get('previous_reply.language') == @get('user_lang')
-      then @get('previous_reply.code')
-      else @get('code_template')
-
-      @set 'user_code', initial_code
   ).observes('user_lang')
 
   onLangSelected: (->

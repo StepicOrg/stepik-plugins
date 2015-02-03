@@ -8,7 +8,8 @@
           language: null
         });
         if (!this.get('is_multiple_langs')) {
-          return this.set('user_lang', this.get('langs.firstObject'));
+          this.set('user_lang', this.get('langs.firstObject'));
+          return this.setInitialCode();
         }
       }
     },
@@ -56,13 +57,6 @@
       }
       if (!this.get('user_code') && this.get('user_lang')) {
         return this.set('user_code', this.get('initial_code'));
-      }
-    }).observes('user_lang'),
-    _set_initial_code: (function() {
-      var initial_code;
-      if (!this.get('user_code') && this.get('user_lang')) {
-        initial_code = this.get('previous_reply.language') === this.get('user_lang') ? this.get('previous_reply.code') : this.get('code_template');
-        return this.set('user_code', initial_code);
       }
     }).observes('user_lang'),
     onLangSelected: (function() {
