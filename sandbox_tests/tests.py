@@ -3,8 +3,8 @@ import os
 from unittest import TestCase
 from codejail import jail_code
 
+from stepic_plugins.executable_base import Arena
 from stepic_plugins.quizzes.code import CodeRunner, Languages
-from stepic_plugins.quizzes.executable_base import Arena
 
 
 class SandboxTest(TestCase):

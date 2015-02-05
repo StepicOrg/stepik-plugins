@@ -29,3 +29,6 @@ sandbox: arena
 
 arena:
 	@mkdir -p $(ARENA_DIR)
+
+test-sandbox:
+	@python -m unittest -v $(PROJECT_ROOT)/sandbox_tests/tests.py
