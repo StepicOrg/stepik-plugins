@@ -5,6 +5,7 @@ DEFAULT_LOCAL_SETTINGS = $(PROJECT_ROOT)/contrib/dev_settings.py
 REQUIREMENTS_DEV = $(PROJECT_ROOT)/requirements/dev.txt
 VIRTUAL_ENV ?= $(shell pwd)
 PIP = $(VIRTUAL_ENV)/bin/pip
+PYTHON = $(VIRTUAL_ENV)/bin/python
 
 SANDBOX_PYTHON_DIR := sandbox/python
 SANDBOX_PIP = $(SANDBOX_PYTHON_DIR)/bin/pip
@@ -31,4 +32,4 @@ arena:
 	@mkdir -p $(ARENA_DIR)
 
 test-sandbox:
-	@python -m unittest -v $(PROJECT_ROOT)/sandbox_tests/tests.py
+	@$(PYTHON) -m unittest -v $(PROJECT_ROOT)/sandbox_tests/tests.py
