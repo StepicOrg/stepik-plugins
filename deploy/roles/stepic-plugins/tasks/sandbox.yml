@@ -47,3 +47,8 @@
 - include: sandbox_python.yml
 - include: sandbox_java.yml
   sudo_user: "{{ stepic_user }}"
+- include: sandbox_haskell.yml
+- include: sandbox_shell.yml
+  sudo_user: "{{ stepic_user }}"
+- include: sandbox_octave.yml
+- include: sandbox_rust.yml

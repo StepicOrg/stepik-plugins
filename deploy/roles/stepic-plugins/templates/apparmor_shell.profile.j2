@@ -1,9 +1,9 @@
 #include <tunables/global>
 
-{{ BASH_BIN }} {
+{{ sandbox_shell_bin }} {
     #include <abstractions/base>
 
-    {{ ARENA_DIR }}/**                 r,
+    {{ arena_dir }}/**                 r,
 
     set rlimit nproc <= 0, # forbid forking
     set rlimit as <= 1G,   # limit memory(address space)

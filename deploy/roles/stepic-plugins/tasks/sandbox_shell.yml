@@ -1,0 +1,8 @@
+---
+- name: create Shell sandbox directory
+  file: path={{ sandbox_shell_dir }}
+        state=directory
+
+- name: copy system bash to shell sandbox
+  shell: cp `which bash` {{ sandbox_shell_bin }}
+         creates={{ sandbox_shell_bin }}

@@ -1,6 +1,6 @@
 #include <tunables/global>
 
-{{ OCTAVE_BIN }} {
+{{ sandbox_octave_bin }} {
 	#include <abstractions/base>
 	/usr/lib/**.oct	        rm,
 	/usr/share/octave/**    rmix,
@@ -8,8 +8,6 @@
 	/etc/inputrc            r,
 	/etc/nsswitch.conf      r,
 
-    {% for INSTANCE in INSTANCES %}
-    {{ INSTANCE.ARENA_DIR }}/codejail-*/     r,
-    {{ INSTANCE.ARENA_DIR }}/codejail-*/**   r,
-    {% endfor %}
+    {{ arena_dir }}/codejail-*/     r,
+    {{ arena_dir }}/codejail-*/**   r,
 }

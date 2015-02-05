@@ -1,0 +1,5 @@
+---
+- name: download and install the nightly build of Rust compiler
+  shell: curl -s https://static.rust-lang.org/rustup.sh |
+         bash -s -- --date={{ sandbox_rust_nightly_date }}
+         creates=/usr/local/bin/rustc

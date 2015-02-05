@@ -27,6 +27,7 @@
             dest=/etc/supervisor/conf.d/{{ server_name }}.conf
   notify:
     - reload supervisor
+  tags: config
 
 - name: checkout latest stepic-plugins code
   git: repo={{ stepic_plugins_repo }}
@@ -60,3 +61,4 @@
             mode=0640
   notify:
     - reload supervisor
+  tags: config
