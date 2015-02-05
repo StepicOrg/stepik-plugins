@@ -55,5 +55,6 @@
 
 - name: run tests for sandboxes
   shell: source {{ stepic_plugins_venv_dir }}/bin/activate; make test-sandbox
-         chdir={{ stepic_plugins_dir }}
+         executable=/bin/bash
+         chdir={{ stepic_plugins_code_dir }}
   tags: test
