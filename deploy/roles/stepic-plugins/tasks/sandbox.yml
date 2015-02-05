@@ -13,12 +13,22 @@
             group=root
             validate='visudo -c -f %s'
 
-# TODO: configure iptables for sandbox user
-#sudo addgroup sandbox
-#sudo adduser --disabled-login sandbox --ingroup sandbox
-#sudo apt-get install iptables-persistent
-#sudo iptables -A OUTPUT -m owner --uid-owner $(id -u sandbox) -j DROP
-#sudo iptables-save | sudo tee /etc/iptables/rules.v4
+- name: install iptables-persistent package
+  apt: name=iptables-persistent
+       state=present
+
+- name: check if iptables configured for sandbox user
+  shell: iptables -L | grep -q "drop outgoing packets for sandbox user"
+  register: check_sandbox_iptables
+  ignore_errors: true
+  changed_when: no
+
+- name: set iptables to drop outgoing packets for sandbox user
+  shell: iptables -A OUTPUT -m owner --uid-owner $(id -u {{ sandbox_user}})
+           -m comment --comment "drop outgoing packets for sandbox user" -j DROP
+  when: check_sandbox_iptables | failed
+  notify:
+    - save iptables
 
 - include: sandbox_apparmor.yml tags=sandbox,apparmor
 
