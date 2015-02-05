@@ -22,7 +22,7 @@
   environment:
     GIT_SSH: "{{ stepic_git_ssh }}"
   register: sandbox_python_result
-  sudo_user: "{{ sandbox_user }}"
+  sudo_user: "{{ stepic_user }}"
   ignore_errors: yes
 
 - name: enable apparmor profile for Python sandbox

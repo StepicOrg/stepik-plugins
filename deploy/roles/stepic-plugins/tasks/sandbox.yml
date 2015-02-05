@@ -35,9 +35,15 @@
 - name: create sandbox base directory
   file: path={{ sandbox_dir }}
         state=directory
-        owner={{ sandbox_user }}
-        group={{ sandbox_user }}
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
+
+- name: create arena directory
+  file: path={{ arena_dir }}
+        state=directory
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
 
 - include: sandbox_python.yml
 - include: sandbox_java.yml
-  sudo_user: "{{ sandbox_user }}"
+  sudo_user: "{{ stepic_user }}"
