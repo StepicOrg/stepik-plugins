@@ -1,5 +1,15 @@
 ---
-# TODO: install apt packages to compile requirements
+- name: install apt packages required to compile Python sandbox requirements
+  apt: name={{ item }}
+       state=present
+  with_items:
+    - build-essential
+    - libjpeg-dev
+    - zlib1g-dev
+    - libfreetype6-dev
+    - gfortran
+    - libblas-dev
+    - liblapack-dev
 
 - name: disable apparmor profile for Python sandbox
   command: apparmor_parser -R /etc/apparmor.d/{{ apparmor_profiles[0].name }}
