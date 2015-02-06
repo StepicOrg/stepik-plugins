@@ -1,4 +1,14 @@
 ---
+- name: setup Node.js repos
+  shell: curl -sL https://deb.nodesource.com/setup | bash -
+         creates=/etc/apt/sources.list.d/nodesource.list
+  tags: debug
+
+- name: install Node.js runtime to be able to compile CoffeeScript files
+  apt: name=nodejs
+       state=present
+  tags: debug
+
 - name: create stepic-plugins logs directory
   file: path={{ stepic_plugins_logs_dir }}
         state=directory
