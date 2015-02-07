@@ -7,6 +7,8 @@ import socket
 import tarfile
 import threading
 
+import structlog
+
 from base64 import b64encode
 
 from oslo import messaging
@@ -20,6 +22,7 @@ from .schema import ParsedJSON
 
 
 logger = logging.getLogger(__name__)
+logger = structlog.get_logger()
 
 
 class QuizEndpoint(object):

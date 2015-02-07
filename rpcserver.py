@@ -2,11 +2,16 @@
 import signal
 import sys
 
+import structlog
+
 from functools import partial
 
 from oslo import messaging
 from stepic_plugins import settings
 from stepic_plugins import rpc
+
+
+logger = structlog.get_logger()
 
 
 def init():
@@ -41,6 +46,7 @@ def main():
     rpc_server = rpc.get_server(settings.RPC_TRANSPORT_URL)
     shutdown_handler = partial(stop_server, rpc_server)
     register_shutdown_handler(shutdown_handler)
+    logger.info("Starting stepic-plugins RPC server...")
     rpc_server.start()
     rpc_server.wait()
 

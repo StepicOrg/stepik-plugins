@@ -1,7 +1,13 @@
+import logging
+import logging.config
 import os
 import sys
 
+import structlog
+
 from datetime import timedelta
+
+from . import log
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
@@ -61,6 +67,9 @@ ROOTNROLL_API_URL = ''
 ROOTNROLL_USERNAME = ''
 ROOTNROLL_PASSWORD = ''
 
+LOGGING_JSON = False
+LOGGING_SENTRY = False
+
 try:
     from .local_settings import *
 except ImportError:
@@ -72,6 +81,88 @@ try:
     from edy.plugins_local_settings import *
 except ImportError:
     pass
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s] [%(name)s] %(levelname)s %(message)s'
+        },
+        'structlog_json': {
+            '()': 'stepic_plugins.log.LoggingJsonFormatter',
+            'format': '%(message)s'
+        }
+    },
+    'filters': {
+        'require_logging_json_true': {
+            '()': 'stepic_plugins.log.RequireLoggingJsonTrue'
+        },
+        'require_logging_json_false': {
+            '()': 'stepic_plugins.log.RequireLoggingJsonFalse'
+        },
+        'require_logging_sentry_true': {
+            '()': 'stepic_plugins.log.RequireLoggingSentryTrue'
+        },
+    },
+    'handlers': {
+        # TODO: configure sentry
+        #'sentry': {
+        #    'level': 'WARNING',
+        #    'filters': ['require_logging_sentry_true'],
+        #    'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        #},
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_logging_json_false'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'console_json': {
+            'level': 'DEBUG',
+            'filters': ['require_logging_json_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'structlog_json',
+        },
+    },
+    'loggers': {
+        'py.warnings': {
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'stepic_plugins': {
+            'handlers': ['console', 'console_json'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        '': {
+            'handlers': ['console', 'console_json'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
+
+logging.config.dictConfig(LOGGING)
+logging.captureWarnings(True)
+
+structlog.configure(
+    processors=[
+        structlog.stdlib.filter_by_level,
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        log.add_supervisor_instance_id,
+        structlog.processors.TimeStamper(fmt='iso'),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.JSONRenderer() if LOGGING_JSON else
+        structlog.processors.KeyValueRenderer(),
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
 
 from .utils import configure_jail_code
 configure_jail_code(sys.modules[__name__])

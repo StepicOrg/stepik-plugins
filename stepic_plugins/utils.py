@@ -1,7 +1,7 @@
+import logging
 import os
 import pwd
 import shutil
-import logging
 
 import bleach
 
