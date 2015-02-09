@@ -17,7 +17,7 @@
   sudo: no
 
 - name: reload supervisor
-  command: supervisorctl reload
+  shell: supervisorctl reload && sleep 1
 
 - name: restart supervisor
   service: name=supervisor

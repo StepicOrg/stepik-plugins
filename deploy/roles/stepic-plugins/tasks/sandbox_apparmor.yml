@@ -1,6 +1,8 @@
 - name: install apparmor packages
   apt: pkg=apparmor-utils state=present
 
+- meta: flush_handlers
+
 - name: configure grub to enable apparmor
   lineinfile: dest=/etc/default/grub
               regexp='^GRUB_CMDLINE_LINUX='
