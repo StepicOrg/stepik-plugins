@@ -13,7 +13,7 @@ workon ansible
 Deployment
 ==========
 ```
-ansible-playbook -vv -i <staging|production> <develop.yml|master.yml>
+ansible-playbook -vv [-u <sudo_user> --ask-sudo-pass] -i <staging|production> <develop.yml|master.yml>
 ```
 
 Update the application after the source code has changed:
