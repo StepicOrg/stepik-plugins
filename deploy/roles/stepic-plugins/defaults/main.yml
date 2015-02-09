@@ -13,10 +13,12 @@ stepic_git_ssh: "/tmp/stepic_git_ssh.sh"
 
 stepic_plugins_repo: "https://github.com/StepicOrg/stepic-plugins.git"
 stepic_plugins_branch: master
-stepic_plugins_dir: "/home/stepic/instances/{{ stepic_plugins_branch }}/stepic-plugins"
+stepic_plugins_instance: "{{ stepic_plugins_branch }}"
+stepic_plugins_dir: "/home/{{ stepic_user }}/instances/{{ stepic_plugins_instance }}/stepic-plugins"
 stepic_plugins_code_dir: "{{ stepic_plugins_dir }}/app"
 stepic_plugins_venv_dir: "{{ stepic_plugins_code_dir }}/venv"
 stepic_plugins_logs_dir: "{{ stepic_plugins_dir }}/logs"
+stepic_plugins_numprocs: 4
 
 # stepic-plugins application settings
 stepic_plugins_rpc_transport_url: 'rabbit://guest:guest@localhost:5672//'
@@ -57,7 +59,7 @@ sandbox_shell_bin: "{{ sandbox_shell_dir }}/bash"
 sandbox_octave_dir: "{{ sandbox_dir }}/octave"
 sandbox_octave_bin: "{{ sandbox_octave_dir }}/octave"
 
-# Sandbo for Rust
+# Sandbox for Rust
 sandbox_rust_nightly_date: 2015-02-03
 
 apparmor_profiles:

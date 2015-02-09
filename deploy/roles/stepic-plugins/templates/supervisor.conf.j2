@@ -1,7 +1,7 @@
 [program:{{ server_name }}.stepic-plugins]
 command={{ stepic_plugins_venv_dir }}/bin/python rpcserver.py
 process_name=%(program_name)s_%(process_num)d
-numprocs=4
+numprocs={{ stepic_plugins_numprocs }}
 environment=LANG="en_US.UTF-8"
 user={{ stepic_user }}
 stdout_logfile={{ stepic_plugins_logs_dir }}/rpcserver.log

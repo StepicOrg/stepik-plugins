@@ -34,7 +34,7 @@
 
 - name: create stepic-plugins supervisor configuration
   template: src=supervisor.conf.j2
-            dest=/etc/supervisor/conf.d/{{ server_name }}.conf
+            dest=/etc/supervisor/conf.d/plugins.{{ server_name }}.conf
   notify:
     - reload supervisor
   tags: config
