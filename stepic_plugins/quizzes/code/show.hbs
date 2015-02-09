@@ -3,11 +3,13 @@
     <label>
       <b>Programming language:</b>
 
-      <select class='lang-selector'{{action 'setLang' on='change'}}>
-        {{#each lang in langs}}
-          <option value="{{unbound lang}}">{{lang}}</option>
-        {{/each}}
-      </select>
+      <label class="s-select">
+        <select class="s-select__select lang-selector" {{action 'setLang' on='change'}}>
+          {{#each lang in langs}}
+            <option value="{{unbound lang}}">{{lang}}</option>
+          {{/each}}
+        </select>
+      </label>
     </label>
   {{/unless}}
 {{/if}}
