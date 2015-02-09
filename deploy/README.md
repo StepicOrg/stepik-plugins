@@ -12,8 +12,19 @@ workon ansible
 
 Deployment
 ==========
+The application layout is as follows:
+
+`/home/{{ stepic_user }}/instances/{{ stepic_plugins_branch }}/stepic-plugins` is the application root directory that contains the following directories:
+
+* `/app` — source code directory
+* `/app/venv` — virtualenv directory
+* `/logs` — logs are stored here
+* `/sandbox` — contains compilers and interpreters used by `codejail` (python, java, bash, etc.)
+* `/arena` — arena is a working directory for unsafe code executed by `codejail`
+
+The general deployment command looks like:
 ```
-ansible-playbook -vv [-u <sudo_user> --ask-sudo-pass] -i <staging|production> <develop.yml|master.yml>
+ansible-playbook -vv [-u <sudo_user> --ask-sudo-pass] -i <staging|production> <develop.yml|master.yml> [-t tags]
 ```
 
 Update the application after the source code has changed:
