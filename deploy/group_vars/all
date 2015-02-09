@@ -1,0 +1,39 @@
+---
+# NOTE: compilers and interpreters versions and used flags should be
+# in sync with the guide lesson: https://stepic.org/lesson/Step-Code-9173
+stepic_plugins_compilers:
+  c++:
+    bin: g++
+    ext: cpp
+    args: [-pipe, -O2, -static, -o, main]
+  asm32:
+    bin: gcc
+    ext: S
+    args: [-pipe, -m32, -o, main]
+  asm64:
+    bin: gcc
+    ext: S
+    args: [-pipe, -m64, -o, main]
+  haskell:
+    bin: ghc
+    ext: hs
+    args: [-O, -static, -optl-static, -optl-pthread, -o, main]
+  java:
+    bin: "{{ sandbox_jdk_home }}/bin/javac"
+    ext: java
+    args: []
+  rust:
+    bin: rustc
+    ext: rs
+    args: [-o, main]
+
+stepic_plugins_interpreters:
+  shell:
+    bin: "{{ sandbox_shell_bin }}"
+    args: [--noprofile, --norc]
+    reserved_memory: 209715200
+  octave:
+    bin: "{{ sandbox_octave_bin }}"
+    args: [--quiet, --no-window-system, --no-history,
+            --no-init-file, --no-site-file, --norc]
+    reserved_memory: 209715200

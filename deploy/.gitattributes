@@ -1,0 +1,3 @@
+group_vars/develop filter=git-crypt diff=git-crypt
+staging filter=git-crypt diff=git-crypt
+.gitattributes !filter !diff
