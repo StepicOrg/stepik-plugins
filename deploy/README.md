@@ -46,3 +46,16 @@ Run sandbox tests:
 ```
 ansible-playbook -vv -i staging develop.yml -t test
 ```
+
+Secrets
+=======
+Production and staging inventory files and files with secrets (such as passwords or user names) are encrypted using [git-crypt](https://github.com/AGWA/git-crypt).
+
+On Mac OS X install `git-crypt` using `brew`:
+```
+brew install git-crypt
+```
+After cloning a repository change directory to the repo's root and unlock encrypted files with a symmetric key:
+```
+git-crypt unlock /path/to/key
+```
