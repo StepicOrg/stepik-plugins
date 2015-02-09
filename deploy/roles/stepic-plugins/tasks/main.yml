@@ -8,12 +8,18 @@
   user: name={{ stepic_user }}
         state=present
         createhome=yes
+  tags:
+    - app
+    - sandbox
 
 - name: create ssh script for git (not authenticated)
   template: src=git_ssh_noauth.sh.j2
             dest={{ stepic_git_ssh }}
             owner={{ stepic_user }}
             mode=755
+  tags:
+    - app
+    - sandbox
 
 - include: python.yml tags=python
 - include: application.yml tags=app

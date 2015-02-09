@@ -20,8 +20,7 @@
   shell: supervisorctl reload && sleep 1
 
 - name: restart supervisor
-  service: name=supervisor
-           state=restarted
+  command: service supervisor restart
 
 - name: save iptables
   command: service iptables-persistent save
