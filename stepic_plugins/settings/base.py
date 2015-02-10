@@ -1,16 +1,10 @@
-import logging
-import logging.config
 import os
-import sys
-
-import structlog
 
 from datetime import timedelta
 
-from . import log
 
-
-PACKAGE_ROOT = os.path.dirname(os.path.dirname(__file__))
+PACKAGE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.realpath(__file__))))
 DEBUG = False
 
 RPC_TRANSPORT_URL = 'rabbit://guest:guest@localhost:5672//'
@@ -67,21 +61,9 @@ ROOTNROLL_API_URL = ''
 ROOTNROLL_USERNAME = ''
 ROOTNROLL_PASSWORD = ''
 
+LOGGING_CONFIGURE = True
 LOGGING_JSON = False
 LOGGING_SENTRY = False
-
-try:
-    from .local_settings import *
-except ImportError:
-    pass
-try:
-    # If stepic-plugins rpc server runs in fake mode in scope of edy project
-    # (see PLUGINS_RPC_FAKE_SERVER setting) try to import local settings for
-    # plugins from edy.
-    from edy.plugins_local_settings import *
-except ImportError:
-    pass
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -132,37 +114,12 @@ LOGGING = {
         },
         'stepic_plugins': {
             'handlers': ['console', 'console_json'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'INFO',
             'propagate': False,
         },
         '': {
             'handlers': ['console', 'console_json'],
             'level': 'INFO',
-            'propagate': False,
         },
     }
 }
-
-logging.config.dictConfig(LOGGING)
-logging.captureWarnings(True)
-
-structlog.configure(
-    processors=[
-        structlog.stdlib.filter_by_level,
-        structlog.stdlib.add_logger_name,
-        structlog.stdlib.add_log_level,
-        structlog.stdlib.PositionalArgumentsFormatter(),
-        log.add_supervisor_instance_id,
-        structlog.processors.TimeStamper(fmt='iso'),
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
-        structlog.processors.JSONRenderer() if LOGGING_JSON else
-        structlog.processors.KeyValueRenderer(),
-    ],
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
-)
-
-from .utils import configure_jail_code
-configure_jail_code(sys.modules[__name__])

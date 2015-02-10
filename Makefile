@@ -1,6 +1,6 @@
 PROJECT_ROOT ?= $(shell pwd)
 
-LOCAL_SETTINGS = $(PROJECT_ROOT)/stepic_plugins/local_settings.py
+LOCAL_SETTINGS = $(PROJECT_ROOT)/stepic_plugins/settings/local.py
 DEFAULT_LOCAL_SETTINGS = $(PROJECT_ROOT)/contrib/dev_settings.py
 REQUIREMENTS_DEV = $(PROJECT_ROOT)/requirements/dev.txt
 VIRTUAL_ENV ?= $(shell pwd)

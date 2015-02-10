@@ -65,7 +65,7 @@
 
 - name: update stepic-plugins local settings
   template: src=local_settings.py.j2
-            dest={{ stepic_plugins_code_dir }}/stepic_plugins/local_settings.py
+            dest={{ stepic_plugins_code_dir }}/stepic_plugins/settings/local.py
             owner={{ stepic_user }}
             group={{ stepic_user }}
             mode=0640
