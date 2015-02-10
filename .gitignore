@@ -54,4 +54,4 @@ docs/_build/
 .idea
 arena
 sandbox
-stepic_plugins/local_settings.py
+stepic_plugins/settings/local.py
