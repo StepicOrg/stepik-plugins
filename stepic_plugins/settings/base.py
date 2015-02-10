@@ -92,7 +92,7 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_logging_sentry_true'],
             'class': 'raven.handlers.logging.SentryHandler',
-            'dsn': '[to-be-defined]',
+            'dsn': '',
         },
         'console': {
             'level': 'DEBUG',
