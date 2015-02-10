@@ -48,7 +48,7 @@
   environment:
     GIT_SSH: "{{ stepic_git_ssh }}"
   notify:
-    - reload supervisor
+    - restart stepic-plugins
 
 # TODO: make git clean after checkout
 
@@ -61,7 +61,7 @@
   environment:
     GIT_SSH: "{{ stepic_git_ssh }}"
   notify:
-    - reload supervisor
+    - restart stepic-plugins
 
 - name: update stepic-plugins local settings
   template: src=local_settings.py.j2
@@ -70,5 +70,5 @@
             group={{ stepic_user }}
             mode=0640
   notify:
-    - reload supervisor
+    - restart stepic-plugins
   tags: config

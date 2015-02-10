@@ -19,6 +19,9 @@ stepic_plugins_dir: "/home/{{ stepic_user }}/instances/{{ stepic_plugins_instanc
 stepic_plugins_code_dir: "{{ stepic_plugins_dir }}/app"
 stepic_plugins_venv_dir: "{{ stepic_plugins_code_dir }}/venv"
 stepic_plugins_logs_dir: "{{ stepic_plugins_dir }}/logs"
+
+# supervisor configuration
+stepic_plugins_program_name: "{{ server_name }}.stepic-plugins"
 stepic_plugins_numprocs: 4
 
 # stepic-plugins application settings

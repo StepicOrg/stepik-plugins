@@ -1,4 +1,4 @@
-[program:{{ server_name }}.stepic-plugins]
+[program:{{ stepic_plugins_program_name }}]
 command={{ stepic_plugins_venv_dir }}/bin/python rpcserver.py
 process_name=%(program_name)s_%(process_num)d
 numprocs={{ stepic_plugins_numprocs }}

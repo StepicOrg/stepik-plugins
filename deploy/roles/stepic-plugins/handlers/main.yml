@@ -17,10 +17,14 @@
   sudo: no
 
 - name: restart supervisor
-  command: service supervisor restart
+  service: name=supervisor
+           state=restarted
+
+- name: restart stepic-plugins
+  command: supervisorctl restart "{{ stepic_plugins_program_name }}:*"
 
 - name: reload supervisor
-  shell: supervisorctl reload
+  command: supervisorctl reload
 
 - name: save iptables
   command: service iptables-persistent save
