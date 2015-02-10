@@ -1,5 +1,6 @@
 ---
 server_name: "{{ inventory_hostname }}"
+sentry_dsn: ''
 
 python_version: 3.4.2
 pythonz_dir: /opt/pythonz
