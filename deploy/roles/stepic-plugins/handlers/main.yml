@@ -16,11 +16,11 @@
                 delay=5
   sudo: no
 
-- name: reload supervisor
-  shell: supervisorctl reload && sleep 1
-
 - name: restart supervisor
   command: service supervisor restart
+
+- name: reload supervisor
+  shell: supervisorctl reload
 
 - name: save iptables
   command: service iptables-persistent save
