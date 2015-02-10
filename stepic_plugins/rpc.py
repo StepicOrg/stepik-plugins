@@ -1,7 +1,6 @@
 import base64
 import fnmatch
 import io
-import logging
 import os
 import socket
 import tarfile
@@ -21,7 +20,6 @@ from .executable_base import jail_code_wrapper
 from .schema import ParsedJSON
 
 
-logger = logging.getLogger(__name__)
 logger = structlog.get_logger()
 
 
@@ -67,6 +65,9 @@ class QuizEndpoint(object):
         return settings.COMPUTATIONALLY_HARD_QUIZZES
 
     def _collect_quiz_static(self, quiz_directory, tarball):
+        log = logger.bind()
+        log.info("Start to collect static from quiz directory",
+                 quiz_directory=quiz_directory)
         quiz_basedir = os.path.basename(quiz_directory)
         tarball_quiz_dir = os.path.join('stepic_plugins', quiz_basedir)
 
@@ -79,12 +80,12 @@ class QuizEndpoint(object):
             source_file = os.path.join(quiz_directory, file)
             tar_file = os.path.join(tarball_quiz_dir, file)
             if fnmatch.fnmatch(file, coffee_pattern):
+                log = log.bind(file=source_file)
                 try:
                     import coffeescript
                 except ImportError:
-                    msg = "Package 'CoffeeScript' is required to compile " \
-                          "static file: %s, it will be skipped"
-                    logger.error(msg, source_file)
+                    log.error("Package 'CoffeeScript' is required to compile "
+                              "static file, it will be skipped")
                     continue
 
                 tar_file = os.path.splitext(tar_file)[0] + '.js'
@@ -93,11 +94,10 @@ class QuizEndpoint(object):
                                        .encode())
                 except (coffeescript.EngineError,
                         coffeescript.CompilationError):
-                    logger.exception("Failed to compile coffeescript file: %s,"
-                                     " it will be skipped", source_file)
+                    log.exception("Failed to compile coffeescript file, "
+                                  "it will be skipped")
                     continue
-                logger.info("Successfully compiled coffeescript file: %s",
-                            source_file)
+                log.info("Successfully compiled coffeescript file")
                 tar_info = tarfile.TarInfo(name=tar_file)
                 tar_info.size = len(source_compiled)
                 tar_info.mtime = os.path.getmtime(source_file)
