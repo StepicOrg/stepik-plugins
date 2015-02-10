@@ -88,12 +88,12 @@ LOGGING = {
         },
     },
     'handlers': {
-        # TODO: configure sentry
-        #'sentry': {
-        #    'level': 'WARNING',
-        #    'filters': ['require_logging_sentry_true'],
-        #    'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        #},
+        'sentry': {
+            'level': 'ERROR',
+            'filters': ['require_logging_sentry_true'],
+            'class': 'raven.handlers.logging.SentryHandler',
+            'dsn': '[to-be-defined]',
+        },
         'console': {
             'level': 'DEBUG',
             'filters': ['require_logging_json_false'],
@@ -113,12 +113,12 @@ LOGGING = {
             'propagate': False,
         },
         'stepic_plugins': {
-            'handlers': ['console', 'console_json'],
+            'handlers': ['console', 'console_json', 'sentry'],
             'level': 'INFO',
             'propagate': False,
         },
         '': {
-            'handlers': ['console', 'console_json'],
+            'handlers': ['console', 'console_json', 'sentry'],
             'level': 'INFO',
         },
     }

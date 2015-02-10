@@ -5,6 +5,7 @@ oslo.messaging==1.5.1
 bleach==1.4.1
 CoffeeScript==1.0.10
 structlog==15.0.0
+raven==5.1.1
 
 # required by Linux challenge
 requests==2.5.1

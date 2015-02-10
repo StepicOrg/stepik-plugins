@@ -14,3 +14,6 @@ INTERPRETERS = {{ stepic_plugins_interpreters | to_nice_json }}
 ROOTNROLL_API_URL = '{{ rootnroll_api_url }}'
 ROOTNROLL_USERNAME = '{{ rootnroll_username }}'
 ROOTNROLL_PASSWORD = '{{ rootnroll_password }}'
+
+LOGGING_SENTRY = True
+LOGGING['handlers']['sentry']['dsn'] = '{{ sentry_dsn }}'
