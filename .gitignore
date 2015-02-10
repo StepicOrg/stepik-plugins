@@ -52,3 +52,6 @@ coverage.xml
 docs/_build/
 
 .idea
+arena
+sandbox
+stepic_plugins/local_settings.py
