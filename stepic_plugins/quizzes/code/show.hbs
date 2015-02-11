@@ -1,31 +1,33 @@
 {{#if is_multiple_langs}}
   {{#unless disabled}}
-    <label>
-      <b>Programming language:</b>
+    <div class="clearfix">
+      <label class="code-quiz__lang-select">
+        <b>Programming language:</b>
 
-      <label class="s-select">
-        <select class="s-select__select lang-selector" {{action 'setLang' on='change'}}>
-          {{#each lang in langs}}
-            <option value="{{unbound lang}}">{{lang}}</option>
-          {{/each}}
-        </select>
+        <label class="s-select">
+          <select class="s-select__select lang-selector" {{action 'setLang' on='change'}}>
+            {{#each lang in langs}}
+              <option value="{{unbound lang}}">{{lang}}</option>
+            {{/each}}
+          </select>
+        </label>
       </label>
-    </label>
+    </div>
   {{/unless}}
 {{/if}}
 
 {{#if user_lang}}
-  {{#unless disabled}}
-    <label>
-      {{input type="file" class="code-quiz__load"
-        value=file_value}}
-      <span class="button">Load file</span>
-    </label>
-  {{/unless}}
   {{view App.CodeEditorView
       value=user_code
       required='true'
       lang=user_lang
       placeholder="Type your code here..."
       disabled=disabled}}
+  {{#unless disabled}}
+    <label class="code-quiz__load" tooltip="Choose file to upload as a solution">
+      {{input type="file" class="code-quiz__load-input"
+        value=file_value}}
+      <span class="button secondary">Upload file</span>
+    </label>
+  {{/unless}}
 {{/if}}
