@@ -10,8 +10,6 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
     @set 'source',
       @get('source') || default_source
 
-
-
   picker_view: (->
     if @get('is_multiple_choice')
       Em.Checkbox
@@ -50,9 +48,6 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
       component.set 'source.options', new_options
       Em.run.next -> component.setBindings()
 
-
-
-
   actions:
     addOption: ->
       @get('source.options').pushObject(
@@ -61,8 +56,8 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
       )
       Em.run.next => @setBindings()
 
-
     removeOption: (option)->
       @set('source.options', @get('source.options').without(option))
+      if @get('source.options.length') < @get('source.sample_size') and @get('source.sample_size') > 1
+        @set 'source.sample_size', @get('source.options.length')
       Em.run.next => @setBindings()
-

@@ -1,7 +1,8 @@
 .matching-quiz__first-items {
   list-style: none;
   width: 49%;
-  margin-top: 1px;
+  margin-right: 2%;
+  float: right;
 }
 
 .matching-quiz__second-items {

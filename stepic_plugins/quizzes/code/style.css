@@ -1,4 +1,12 @@
 .code-quiz__load {
+	margin-top: .5em;	
+}
+
+.code-quiz__load-input{
   position: absolute;
-  top: 9999px;
+  top: 99999em;
+}
+
+.code-quiz__lang-select {
+	float: right;
 }

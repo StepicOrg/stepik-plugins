@@ -1,5 +1,6 @@
 function showMatchingQuiz(target, template, dataset, reply, disabled, quiz_info) {
   var new_dataset = _.clone(dataset);
+  var max_height = 0;
   if ( reply ) {
     var unsorted_first_values  = new_dataset.pairs.map(function(pair){return pair.first;});
     var unsorted_second_values = new_dataset.pairs.map(function(pair){return pair.second;});
@@ -10,9 +11,17 @@ function showMatchingQuiz(target, template, dataset, reply, disabled, quiz_info)
   }
   target.html(template(new_dataset));
 
-  /*if (MathJax) {
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, target.get()])
-  }*/
+  var resizeHandler = function(e){
+    $(target).find('li').attr('style', '');
+    max_height = 0;
+    $(target).find('li').each(function(index){
+      if ($(this).height() > max_height)
+        max_height = $(this).height();
+    });
+    $(target).find('li').height(max_height);
+  };
+  $(window).on('resize', resizeHandler);
+  resizeHandler();
 
   var dragSource = null;
   var pairs = $(target).find('li');
