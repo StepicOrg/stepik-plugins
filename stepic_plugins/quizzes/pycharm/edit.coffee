@@ -2,22 +2,26 @@ App.PycharmQuizEditorComponent = Em.Component.extend
   init: ->
     @_super()
     default_source =
+      title: 'PyCharm Problem'
       files: [
         {
-          name: 'hello_world.py',
-          text: 'print("Hello, world! My name is type your name")',
+          name: 'hello_world.py'
+          text: 'print("Hello, world! My name is type your name")'
           placeholders: [
             {
-              line: 0,
-              start: 32,
-              length: 14,
-              hint: 'Type your name here',
+              line: 0
+              start: 32
+              length: 14
+              hint: 'Type your name here'
               possible_answer: 'Liana'
             }
           ]
          }
       ]
-      test: """
+      test: [
+        {
+          name: 'tests.py'
+          text: """
           from test_helper import run_common_tests, failed, passed, get_answer_placeholders
 
           def test_is_alpha():
@@ -33,6 +37,8 @@ App.PycharmQuizEditorComponent = Em.Component.extend
               run_common_tests("You should enter your name")
               test_is_alpha()
         """
+        }
+      ]
     @set 'source',
       @get('source') || default_source
 

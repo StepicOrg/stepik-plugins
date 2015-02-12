@@ -4,6 +4,7 @@
       var default_source;
       this._super();
       default_source = {
+        title: 'PyCharm Problem',
         files: [
           {
             name: 'hello_world.py',
@@ -19,7 +20,12 @@
             ]
           }
         ],
-        test: "from test_helper import run_common_tests, failed, passed, get_answer_placeholders\n\ndef test_is_alpha():\n    window = get_answer_placeholders()[0]\n    splitted = window.split()\n    for s in splitted:\n        if not s.isalpha():\n            failed(\"Please use only English characters this time.\")\n            return\n    passed()\n\nif __name__ == '__main__':\n    run_common_tests(\"You should enter your name\")\n    test_is_alpha()"
+        test: [
+          {
+            name: 'tests.py',
+            text: "from test_helper import run_common_tests, failed, passed, get_answer_placeholders\n\ndef test_is_alpha():\n    window = get_answer_placeholders()[0]\n    splitted = window.split()\n    for s in splitted:\n        if not s.isalpha():\n            failed(\"Please use only English characters this time.\")\n            return\n    passed()\n\nif __name__ == '__main__':\n    run_common_tests(\"You should enter your name\")\n    test_is_alpha()"
+          }
+        ]
       };
       return this.set('source', this.get('source') || default_source);
     },
