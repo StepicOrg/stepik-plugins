@@ -6,8 +6,6 @@ import sys
 
 import structlog
 
-from collections import OrderedDict
-
 from .. import log
 from ..utils import configure_jail_code
 
