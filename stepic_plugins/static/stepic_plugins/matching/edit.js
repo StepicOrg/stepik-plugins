@@ -1,1 +1,0 @@
-../../../quizzes/matching/edit.js

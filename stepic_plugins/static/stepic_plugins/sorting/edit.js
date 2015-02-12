@@ -1,1 +1,0 @@
-../../../quizzes/sorting/edit.js

@@ -1,1 +1,0 @@
-../../../quizzes/admin/tty.js

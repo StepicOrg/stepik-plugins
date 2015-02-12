@@ -1,1 +1,0 @@
-../../../quizzes/admin/term.js
