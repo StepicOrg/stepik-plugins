@@ -52,6 +52,7 @@ coverage.xml
 docs/_build/
 
 .idea
+.vagrant
 arena
 sandbox
 stepic_plugins/settings/local.py
