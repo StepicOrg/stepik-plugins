@@ -6,6 +6,7 @@ class PycharmQuiz(BaseQuiz):
 
     class Schemas:
         source = {
+            'title': str,
             'files': [{'name': str,
                        'text': str,
                        'placeholders': [{
@@ -16,14 +17,16 @@ class PycharmQuiz(BaseQuiz):
                                            'possible_answer': str
                                        }]
                       }],
-            'test': str,
+            'test': [{'name': str, 'text': str}],
         }
         reply = {
-            'score': str
+            'score': str,
+            'solution': [{'name': str, 'text': str}]
         }
 
     def __init__(self, source):
         super().__init__(source)
+        self.title = source.title
         self.files = source.files
         self.test = source.test
 
