@@ -34,18 +34,18 @@ def is_valid_scheme(scheme):
 
 def build(scheme, obj):
     def ensure_type(obj, t):
-       if not isinstance(obj, t):
+        if not isinstance(obj, t):
             # if integer passed as string (EDY-1668)
-            if not ( t == int and isinstance(obj, str) and obj.isdecimal()):
+            if not (t == int and isinstance(obj, str) and obj.isdecimal()):
                 raise FormatError('Expected {}, got {}'.format(t.__name__, obj))
 
     if _is_primitive(scheme):
-       ensure_type(obj, scheme)
-       # if integer passed as string (EDY-1668)
-       if scheme == int and isinstance(obj, str) and obj.isdecimal():
-           return int(obj)
-       else:
-           return obj
+        ensure_type(obj, scheme)
+        # if integer passed as string (EDY-1668)
+        if scheme == int and isinstance(obj, str) and obj.isdecimal():
+            return int(obj)
+        else:
+            return obj
     elif isinstance(scheme, list):
         ensure_type(obj, list)
         return [build(scheme[0], x) for x in obj]
@@ -53,6 +53,17 @@ def build(scheme, obj):
         assert isinstance(scheme, dict)
         ensure_type(obj, dict)
         return ParsedJSON(scheme, obj)
+
+
+def to_original(obj):
+    if isinstance(obj, list):
+        return [to_original(x) for x in obj]
+    elif isinstance(obj, dict):
+        return {k: to_original(v) for k, v in obj.items()}
+    elif isinstance(obj, ParsedJSON):
+        return obj._original
+    else:
+        return obj
 
 
 class ParsedJSON(object):

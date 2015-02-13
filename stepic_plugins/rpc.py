@@ -17,7 +17,7 @@ from . import settings
 from .base import QUIZZES_DIR, load_by_name
 from .exceptions import FormatError, PluginError
 from .executable_base import jail_code_wrapper
-from .schema import ParsedJSON
+from .schema import to_original
 
 
 logger = structlog.get_logger()
@@ -42,7 +42,8 @@ class QuizEndpoint(object):
 
     @messaging.expected_exceptions(PluginError)
     def async_init(self, ctxt):
-        return self._quiz_instance(ctxt).async_init()
+        supplementary = self._quiz_instance(ctxt).async_init()
+        return to_original(supplementary)
 
     @messaging.expected_exceptions(PluginError)
     def generate(self, ctxt):
@@ -51,9 +52,7 @@ class QuizEndpoint(object):
     @messaging.expected_exceptions(FormatError)
     def clean_reply(self, ctxt, reply, dataset):
         reply = self._quiz_instance(ctxt).clean_reply(reply, dataset=dataset)
-        if isinstance(reply, ParsedJSON):
-            return reply._original
-        return reply
+        return to_original(reply)
 
     def check(self, ctxt, reply, clue):
         return self._quiz_instance(ctxt).check(reply, clue=clue)
