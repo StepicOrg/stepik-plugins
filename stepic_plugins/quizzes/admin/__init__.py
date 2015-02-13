@@ -7,9 +7,10 @@ import time
 
 import requests
 
+from stepic_plugins import settings
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError, PluginError
-from stepic_plugins.quizzes.executable_base import jail_code_wrapper, settings
+from stepic_plugins.executable_base import jail_code_wrapper
 
 
 logger = logging.getLogger(__name__)
@@ -191,6 +192,7 @@ class AdminQuiz(BaseQuiz):
                                       "instance")
             time.sleep(1)
         else:
+            # TODO: delete instance
             raise PluginError("Timed out creating new virtual machine "
                               "instance")
 

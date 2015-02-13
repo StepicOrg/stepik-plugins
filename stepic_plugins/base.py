@@ -93,24 +93,23 @@ def quiz_wrapper_factory(quiz_class):
     return QuizWrapper
 
 
+# TODO: rewrite using mitsuhiko's PluginBase
 def load_by_name(name):
-    """Dynamically loads plugin class by name"""
+    """Dynamically load plugin class by name."""
 
-    base = os.path.join(os.path.dirname(__file__), 'quizzes')
-    for directory in os.listdir(base):
-        if os.path.isdir(os.path.join(base, directory)):
-            package_name = os.path.basename(directory)
-            qualified_name = 'stepic_plugins.quizzes.' + package_name
-            try:
-                module = import_module(qualified_name)
-            except ImportError:
-                continue
+    package_name = name.replace('-', '_')
+    qualified_name = 'stepic_plugins.quizzes.' + package_name
+    try:
+        module = import_module(qualified_name)
+    except ImportError as e:
+        raise UnknownPluginError("Failed to import {0} quiz: {1}"
+                                 .format(name, e))
 
-            for att in dir(module):
-                val = getattr(module, att)
-                if isinstance(val, type) and issubclass(val, BaseQuiz):
-                    # noinspection PyUnresolvedReferences
-                    if val.name == name:
-                        return quiz_wrapper_factory(val)
+    for att in dir(module):
+        val = getattr(module, att)
+        if isinstance(val, type) and issubclass(val, BaseQuiz):
+            # noinspection PyUnresolvedReferences
+            if val.name == name:
+                return quiz_wrapper_factory(val)
 
     raise UnknownPluginError(name)

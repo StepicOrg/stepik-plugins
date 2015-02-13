@@ -1,0 +1,10 @@
+#include <tunables/global>
+
+{{ sandbox_shell_bin }} {
+    #include <abstractions/base>
+
+    {{ arena_dir }}/**                 r,
+
+    set rlimit nproc <= 0, # forbid forking
+    set rlimit as <= 1G,   # limit memory(address space)
+}

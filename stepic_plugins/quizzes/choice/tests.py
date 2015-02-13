@@ -62,6 +62,18 @@ class ChoiceQuizInitTest(ChoiceQuizTest):
         for good_source in [dict(self.default_source, **d) for d in diff]:
             ChoiceQuiz(ChoiceQuiz.Source(good_source))
 
+    def test_sanitized_options(self):
+        self.default_source['options'] = [
+            {'is_correct': False, 'text': '<script>alert("XSS");</script>'},
+            {'is_correct': True, 'text': '<p hack_attr="42">correct</p>'},
+        ]
+        self.default_source['sample_size'] = 2
+
+        quiz = ChoiceQuiz(ChoiceQuiz.Source(self.default_source))
+
+        assert quiz.options[0].text == 'alert("XSS");'
+        assert quiz.options[1].text == '<p>correct</p>'
+
 
 class ChoiceQuizCleanReplyTest(ChoiceQuizTest):
     def setUp(self):

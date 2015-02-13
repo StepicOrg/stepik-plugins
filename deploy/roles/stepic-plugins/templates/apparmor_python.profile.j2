@@ -1,0 +1,23 @@
+#include <tunables/global>
+
+{{ sandbox_python_dir }}/bin/python* {
+  #include <abstractions/base>
+
+  # adopted from <abstractions/python>
+  {{ python_lib_dir }}/**.{pyc,so}           mr,
+  {{ python_lib_dir }}/**.{egg,py,pth}       r,
+  {{ python_lib_dir }}/**/                   r,
+  {{ python_lib_dir }}/{site,dist}-packages/ r,
+  # this one is needed for inspect module
+  {{ python_lib_dir }}/                      r,
+
+  {{ sandbox_python_dir }}/** mr,
+
+  {{ arena_dir }}/codejail-*/                rix,
+  {{ arena_dir }}/codejail-*/**              rix,
+  /tmp/codejail-*/                           rix,
+  /tmp/codejail-*/**                         rix,
+
+  set rlimit nproc <= 0, # forbid forking
+  set rlimit as <= 1G,   # limit memory(address space)
+}

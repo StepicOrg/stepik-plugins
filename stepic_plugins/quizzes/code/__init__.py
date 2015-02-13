@@ -3,9 +3,10 @@ import re
 import textwrap
 import collections
 
+from stepic_plugins import settings
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
-from stepic_plugins.quizzes.executable_base import JailedCodeFailed, Arena, settings, run
+from stepic_plugins.executable_base import Arena, JailedCodeFailed, run
 
 
 class Languages(object):
@@ -108,7 +109,8 @@ class CodeQuiz(BaseQuiz):
 
     def check(self, reply, clue, throw=False):
         with Arena() as arena:
-            runner = CodeRunner(arena, self.concat_code(reply.language, reply.code), reply.language, self.limits)
+            source = self.concat_code(reply['language'], reply['code'])
+            runner = CodeRunner(arena, source, reply['language'], self.limits)
             if not runner.compilation_success:
                 hint = "{message}\n{stderr}".format(
                     message=self.CE_MESSAGE,

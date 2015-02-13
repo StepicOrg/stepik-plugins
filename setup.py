@@ -1,6 +1,6 @@
 import os
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
@@ -12,13 +12,17 @@ version = __import__('stepic_plugins').get_version()
 setup(
     name='stepic-plugins',
     version=version,
-    packages=find_packages(),
+    packages=find_packages(include=['stepic_plugins*']),
     include_package_data=True,
     author='Stepic Team',
     description='A collection of plugins for Stepic',
     long_description=README,
     url='https://stepic.org',
     install_requires=[
-        'requests==2.4.1',
+        'oslo.messaging>=1.5.1',
+    ],
+    data_files=[
+        ('stepic_plugins_data', ['Makefile']),
+        ('stepic_plugins_data/requirements', ['requirements/sandbox_minimal.txt']),
     ],
 )

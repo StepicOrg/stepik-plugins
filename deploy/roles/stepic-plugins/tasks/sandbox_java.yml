@@ -1,0 +1,27 @@
+---
+- name: create Java sandbox directory
+  file: path={{ sandbox_java_dir }}
+        state=directory
+  register: sandbox_java
+
+- name: check if Java JDK is already installed into java sandbox
+  stat: path={{ sandbox_jdk_home }}
+  register: sandbox_jdk_status
+
+# http://stackoverflow.com/questions/10268583/
+- name: download Java JDK tarball
+  command: "wget --no-check-certificate --no-cookies
+            --header 'Cookie: oraclelicense=accept-securebackup-cookie'
+            -O {{ sandbox_java_dir }}/jdk.tar.gz
+            {{ sandbox_oracle_jdk_url }}"
+  when: not sandbox_jdk_status.stat.exists
+
+- name: extract Java JDK tarball into java sandbox directory
+  unarchive: src={{ sandbox_java_dir }}/jdk.tar.gz
+             dest={{ sandbox_java_dir }}
+             copy=no
+  when: not sandbox_jdk_status.stat.exists
+
+- name: remove unpacked Java JDK 7 tarball
+  file: path={{ sandbox_java_dir }}/jdk.tar.gz
+        state=absent

@@ -1,0 +1,27 @@
+---
+- name: install packages required to build Python from source
+  apt: name={{ item }}
+       state=present
+  with_items:
+    - build-essential
+    - libz-dev
+    - libreadline-dev
+    - libncursesw5-dev
+    - libssl-dev
+    - libgdbm-dev
+    - libsqlite3-dev
+    - libbz2-dev
+    - liblzma-dev
+    - uuid-dev
+
+- name: install pythonz
+  shell: curl -kL https://raw.github.com/saghul/pythonz/master/pythonz-install | bash
+         creates={{ pythonz_dir }}
+  environment:
+    PYTHONZ_ROOT: "{{ pythonz_dir }}"
+
+- name: install Python via pythonz
+  shell: "{{ pythonz_bin }} install {{ python_version }}
+          creates={{ pythonz_python_dir }}"
+  environment:
+    PYTHONZ_ROOT: "{{ pythonz_dir }}"

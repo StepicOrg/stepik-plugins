@@ -1,0 +1,15 @@
+---
+- name: install Octave interpreter
+  apt: name=octave
+       state=present
+
+- name: create Octave sandbox directory
+  file: path={{ sandbox_octave_dir }}
+        state=directory
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
+
+- name: copy system octave binary to octave sandbox
+  shell: cp `which octave` {{ sandbox_octave_bin }}
+         creates={{ sandbox_octave_bin }}
+  sudo_user: "{{ stepic_user }}"

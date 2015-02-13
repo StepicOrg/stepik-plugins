@@ -1,0 +1,8 @@
+#include <tunables/global>
+
+{{ arena_dir }}/** {
+  #include <abstractions/base>
+
+  set rlimit nproc <= 0,
+  set rlimit as <= 1G,
+}

@@ -1,0 +1,13 @@
+#include <tunables/global>
+
+{{ sandbox_octave_bin }} {
+	#include <abstractions/base>
+	/usr/lib/**.oct	        rm,
+	/usr/share/octave/**    rmix,
+	/etc/passwd             r,
+	/etc/inputrc            r,
+	/etc/nsswitch.conf      r,
+
+    {{ arena_dir }}/codejail-*/     r,
+    {{ arena_dir }}/codejail-*/**   r,
+}

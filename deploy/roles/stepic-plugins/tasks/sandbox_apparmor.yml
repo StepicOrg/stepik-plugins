@@ -1,0 +1,41 @@
+- name: install apparmor packages
+  apt: pkg=apparmor-utils state=present
+
+- meta: flush_handlers
+
+- name: configure grub to enable apparmor
+  lineinfile: dest=/etc/default/grub
+              regexp='^GRUB_CMDLINE_LINUX='
+              line='GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor"'
+              backup=yes
+  notify:
+    - update grub
+    - reboot
+    - wait for server to start
+
+- meta: flush_handlers
+
+- name: dynamically discover system python lib directory
+  command: "{{ python_bin }} -c \"import sys; print('{prefix}/lib/python{X}.{Y}'.format(
+    prefix=sys.prefix, X=sys.version_info.major, Y=sys.version_info.minor))\""
+  register: python_lib_dir_result
+
+- name: assign python_lib_dir variable
+  set_fact:
+    python_lib_dir: "{{ python_lib_dir_result.stdout }}"
+
+- name: add apparmor profiles for sandboxes
+  template: src={{ item.template }}
+            dest=/etc/apparmor.d/{{ item.name }}
+            mode=0644
+            owner=root
+            group=root
+  with_items: apparmor_profiles
+
+- name: reload apparmor profiles
+  service: name=apparmor
+           state=reloaded
+
+- name: put apparmor sandbox profiles into enforce mode
+  command: aa-enforce /etc/apparmor.d/{{ item.name }}
+  with_items: apparmor_profiles

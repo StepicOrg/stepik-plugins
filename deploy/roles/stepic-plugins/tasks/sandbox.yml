@@ -1,0 +1,60 @@
+---
+- name: create sandbox user
+  user: name={{ sandbox_user }}
+        shell=/bin/false
+        createhome=no
+        state=present
+
+- name: add sudoers config for sandbox user
+  template: src=sudoers.j2
+            dest=/etc/sudoers.d/50-{{ sandbox_user }}-{{ server_name | regex_replace('\.', '-') }}
+            mode=0440
+            owner=root
+            group=root
+            validate='visudo -c -f %s'
+
+- name: install iptables-persistent package
+  apt: name=iptables-persistent
+       state=present
+
+- name: check if iptables configured for sandbox user
+  shell: iptables -L | grep -q "drop outgoing packets for sandbox user"
+  register: check_sandbox_iptables
+  ignore_errors: true
+  changed_when: no
+
+- name: set iptables to drop outgoing packets for sandbox user
+  shell: iptables -A OUTPUT -m owner --uid-owner $(id -u {{ sandbox_user}})
+         -m comment --comment "drop outgoing packets for sandbox user" -j DROP
+  when: check_sandbox_iptables | failed
+  notify:
+    - save iptables
+
+- include: sandbox_apparmor.yml tags=sandbox,apparmor
+
+- name: create sandbox base directory
+  file: path={{ sandbox_dir }}
+        state=directory
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
+
+- name: create arena directory
+  file: path={{ arena_dir }}
+        state=directory
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
+
+- include: sandbox_python.yml
+- include: sandbox_java.yml
+  sudo_user: "{{ stepic_user }}"
+- include: sandbox_haskell.yml
+- include: sandbox_shell.yml
+  sudo_user: "{{ stepic_user }}"
+- include: sandbox_octave.yml
+- include: sandbox_rust.yml
+
+- name: run tests for sandboxes
+  shell: source {{ stepic_plugins_venv_dir }}/bin/activate; make test-sandbox
+         executable=/bin/bash
+         chdir={{ stepic_plugins_code_dir }}
+  tags: test

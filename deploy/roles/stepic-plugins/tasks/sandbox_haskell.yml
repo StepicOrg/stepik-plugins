@@ -1,0 +1,16 @@
+---
+- name: install haskell compiler (ghc) and cabal system
+  apt: name={{ item }}
+       state=present
+  with_items:
+    - ghc
+    - cabal-install
+  register: install_haskell
+
+- name: update cabal
+  command: cabal update
+  when: install_haskell | changed
+
+- name: cabal install hunit
+  command: cabal install hunit
+  when: install_haskell | changed
