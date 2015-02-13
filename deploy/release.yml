@@ -1,0 +1,5 @@
+---
+- hosts: release
+  sudo: yes
+  roles:
+    - stepic-plugins
