@@ -25,6 +25,4 @@ Let's Start
 
 [Quick Start](http://stepic-plugins.readthedocs.org/en/latest/for_impatient.html)
 
-
-
-[![Hack StepicOrg/stepic-plugins on Nitrous.IO](https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-s-v1-7475db0cf93fe5d1e29420c928ebc614.png)](https://www.nitrous.io/hack_button?source=embed&runtime=django&repo=StepicOrg%2Fstepic-plugins&file_to_open=stepic_plugins%2Fquizzes%2Fsimple_choice%2F__init__.py)
+[[Hack StepicOrg/stepic-plugins on Nitrous.IO]](https://www.nitrous.io/hack_button?source=embed&runtime=django&repo=StepicOrg%2Fstepic-plugins&file_to_open=stepic_plugins%2Fquizzes%2Fsimple_choice%2F__init__.py)
