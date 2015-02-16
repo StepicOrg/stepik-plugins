@@ -1,7 +1,11 @@
 Introduction
 ************
 
-`Stepic <https://stepic.org>`_ is an educational engine, focused on quizzed and exercises.
+`Stepic <https://stepic.org>`_ is an educational engine, focused on interactive 
+problems (quizzes).
+
+**Please note, that this documentation is a bit obsolete – Stepic Plugins become standalone
+service in Feb 2015. We'll update this docs in Feb-March 2015.**
 
 Quiz is an interactive component, which can present task to the user,
 gather user's solution, evaluate it and present the result back to the user.
