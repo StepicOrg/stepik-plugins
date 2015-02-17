@@ -20,6 +20,7 @@
   border-collapse: collapse;
   margin-top: -1px;
   padding: .4em 1.28571em;
+  min-height: 50px;
 }
 
 .matching-quiz__second-item.matching-quiz__item-extracted {
