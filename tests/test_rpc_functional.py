@@ -10,6 +10,15 @@ class TestQuizApi(object):
         reply = quiz_rpcapi.ping("May the Force be with you")
         assert reply == "May the Force be with you"
 
+    def test_ping_serialization(self, quiz_rpcapi):
+        complex_data = {
+            'list': ['Use', b'the Force', 42],
+            'dict': {'bin': b'data', 'float': 42.42},
+            'bytes': b'The Force will be with you, always'
+        }
+        reply = quiz_rpcapi.ping(complex_data)
+        assert reply == complex_data
+
     def test_validate_source(self, quiz_rpcapi, choice_quiz_ctxt):
         quiz_rpcapi.validate_source(choice_quiz_ctxt)
 

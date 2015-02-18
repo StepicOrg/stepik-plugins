@@ -1,5 +1,8 @@
+import base64
 import keyword
 import re
+
+from oslo import messaging
 
 from .exceptions import FormatError
 
@@ -84,3 +87,25 @@ class SchemeError(ValueError):
 
 def _is_primitive(obj):
     return obj in [str, int, float, bool]
+
+
+class RPCSerializer(messaging.NoOpSerializer):
+    def serialize_entity(self, ctxt, entity):
+        if isinstance(entity, (tuple, list)):
+            return [self.serialize_entity(ctxt, v) for v in entity]
+        elif isinstance(entity, dict):
+            return {k: self.serialize_entity(ctxt, v)
+                    for k, v in entity.items()}
+        elif isinstance(entity, bytes):
+            return {'_serialized.bytes': base64.b64encode(entity).decode()}
+        return entity
+
+    def deserialize_entity(self, ctxt, entity):
+        if isinstance(entity, dict):
+            if '_serialized.bytes' in entity:
+                return base64.b64decode(entity['_serialized.bytes'])
+            return {k: self.deserialize_entity(ctxt, v)
+                    for k, v in entity.items()}
+        elif isinstance(entity, list):
+            return [self.deserialize_entity(ctxt, v) for v in entity]
+        return entity

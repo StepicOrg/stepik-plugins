@@ -17,7 +17,7 @@ from . import settings
 from .base import QUIZZES_DIR, load_by_name
 from .exceptions import FormatError, PluginError
 from .executable_base import jail_code_wrapper
-from .schema import to_original
+from .schema import RPCSerializer, to_original
 
 
 logger = structlog.get_logger()
@@ -154,7 +154,8 @@ def get_server(transport_url, fake=False):
         CodeJailEndpoint(),
     ]
     return messaging.get_rpc_server(transport, target, endpoints,
-                                    executor='blocking')
+                                    executor='blocking',
+                                    serializer=RPCSerializer())
 
 
 def start_fake_server():
