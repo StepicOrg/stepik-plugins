@@ -58,17 +58,6 @@ def build(scheme, obj):
         return ParsedJSON(scheme, obj)
 
 
-def to_original(obj):
-    if isinstance(obj, list):
-        return [to_original(x) for x in obj]
-    elif isinstance(obj, dict):
-        return {k: to_original(v) for k, v in obj.items()}
-    elif isinstance(obj, ParsedJSON):
-        return obj._original
-    else:
-        return obj
-
-
 class ParsedJSON(object):
     def __init__(self, scheme, obj):
         self._original = obj
@@ -98,6 +87,8 @@ class RPCSerializer(messaging.NoOpSerializer):
                     for k, v in entity.items()}
         elif isinstance(entity, bytes):
             return {'_serialized.bytes': base64.b64encode(entity).decode()}
+        elif isinstance(entity, ParsedJSON):
+            return self.serialize_entity(ctxt, entity._original)
         return entity
 
     def deserialize_entity(self, ctxt, entity):

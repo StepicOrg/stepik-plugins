@@ -1,8 +1,8 @@
-import base64
 import pytest
 import tarfile
 
 from stepic_plugins.exceptions import FormatError
+from stepic_plugins.schema import ParsedJSON
 
 
 class TestQuizApi(object):
@@ -11,12 +11,17 @@ class TestQuizApi(object):
         assert reply == "May the Force be with you"
 
     def test_ping_serialization(self, quiz_rpcapi):
+        parsed_json = ParsedJSON({'code': str}, {'code': 'some code here'})
         complex_data = {
             'list': ['Use', b'the Force', 42],
             'dict': {'bin': b'data', 'float': 42.42},
-            'bytes': b'The Force will be with you, always'
+            'bytes': b'The Force will be with you, always',
+            'parsed_json': parsed_json,
         }
+
         reply = quiz_rpcapi.ping(complex_data)
+
+        complex_data['parsed_json'] = parsed_json._original
         assert reply == complex_data
 
     def test_validate_source(self, quiz_rpcapi, choice_quiz_ctxt):
