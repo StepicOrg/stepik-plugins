@@ -17,7 +17,7 @@ from . import settings
 from .base import QUIZZES_DIR, load_by_name
 from .exceptions import FormatError, PluginError
 from .executable_base import jail_code_wrapper
-from .schema import to_original
+from .schema import RPCSerializer
 
 
 logger = structlog.get_logger()
@@ -42,8 +42,7 @@ class QuizEndpoint(object):
 
     @messaging.expected_exceptions(PluginError)
     def async_init(self, ctxt):
-        supplementary = self._quiz_instance(ctxt).async_init()
-        return to_original(supplementary)
+        return self._quiz_instance(ctxt).async_init()
 
     @messaging.expected_exceptions(PluginError)
     def generate(self, ctxt):
@@ -51,8 +50,7 @@ class QuizEndpoint(object):
 
     @messaging.expected_exceptions(FormatError)
     def clean_reply(self, ctxt, reply, dataset):
-        reply = self._quiz_instance(ctxt).clean_reply(reply, dataset=dataset)
-        return to_original(reply)
+        return self._quiz_instance(ctxt).clean_reply(reply, dataset=dataset)
 
     def check(self, ctxt, reply, clue):
         return self._quiz_instance(ctxt).check(reply, clue=clue)
@@ -154,7 +152,8 @@ def get_server(transport_url, fake=False):
         CodeJailEndpoint(),
     ]
     return messaging.get_rpc_server(transport, target, endpoints,
-                                    executor='blocking')
+                                    executor='blocking',
+                                    serializer=RPCSerializer())
 
 
 def start_fake_server():

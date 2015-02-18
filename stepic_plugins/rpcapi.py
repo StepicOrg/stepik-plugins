@@ -6,6 +6,8 @@ from base64 import b64decode
 from oslo import messaging
 from oslo.config import cfg
 
+from .schema import RPCSerializer
+
 
 messaging.set_transport_defaults(control_exchange='stepic.rpc')
 
@@ -35,7 +37,8 @@ class BaseAPI(object):
             transport = fake_rpc_server.transport
         target = messaging.Target(topic=self.topic, namespace=self.namespace,
                                   version=self.version)
-        self.client = messaging.RPCClient(transport, target)
+        self.client = messaging.RPCClient(transport, target,
+                                          serializer=RPCSerializer())
 
 
 class QuizAPI(BaseAPI):
