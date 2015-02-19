@@ -21,15 +21,15 @@ clean-local-settings:
 	@rm -f $(LOCAL_SETTINGS)
 
 pip:
-	@$(PIP) install -r $(REQUIREMENTS_DEV)
+	@$(PIP) install -U -r $(REQUIREMENTS_DEV)
 
 local-settings:
 	@[ ! -f "$(LOCAL_SETTINGS)" ] && cp $(DEFAULT_LOCAL_SETTINGS) $(LOCAL_SETTINGS) || true
 
 sandbox: arena
 	@mkdir -p $(SANDBOX_PYTHON_DIR)
-	@$(VIRTUALENV_COMMAND) $(SANDBOX_PYTHON_DIR)
-	@$(SANDBOX_PIP) install -r $(SANDBOX_REQUIREMENTS)
+	@[ ! -f "$(SANDBOX_PIP)" ] && $(VIRTUALENV_COMMAND) $(SANDBOX_PYTHON_DIR) || true
+	@$(SANDBOX_PIP) install -U -r $(SANDBOX_REQUIREMENTS)
 
 arena:
 	@mkdir -p $(ARENA_DIR)
