@@ -10,12 +10,15 @@ PYTHON = $(VIRTUAL_ENV)/bin/python
 SANDBOX_PYTHON_DIR := sandbox/python
 SANDBOX_PIP = $(SANDBOX_PYTHON_DIR)/bin/pip
 SANDBOX_REQUIREMENTS = $(PROJECT_ROOT)/requirements/sandbox_minimal.txt
-VIRTUALENV_COMMAND := virtualenv --python `which python3`
+VIRTUALENV_COMMAND ?= virtualenv --python `which python3`
 ARENA_DIR = arena
 
 .PHONY: init pip local-settings sandbox arena
 
 init: pip local-settings sandbox
+
+clean-local-settings:
+	@rm -f $(LOCAL_SETTINGS)
 
 pip:
 	@$(PIP) install -r $(REQUIREMENTS_DEV)
