@@ -1,6 +1,6 @@
 group_vars/develop filter=git-crypt diff=git-crypt
 group_vars/release filter=git-crypt diff=git-crypt
 group_vars/master filter=git-crypt diff=git-crypt
-staging filter=git-crypt diff=git-crypt
+staging* filter=git-crypt diff=git-crypt
 production filter=git-crypt diff=git-crypt
 .gitattributes !filter !diff
