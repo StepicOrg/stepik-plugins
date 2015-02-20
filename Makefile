@@ -18,7 +18,7 @@ ARENA_DIR = arena
 init: pip local-settings sandbox
 
 clean-local-settings:
-	@rm -f $(LOCAL_SETTINGS)
+	@[ -f "$(LOCAL_SETTINGS)" ] && rm -f $(LOCAL_SETTINGS) || true
 
 pip:
 	@$(PIP) install -U -r $(REQUIREMENTS_DEV)
