@@ -4,7 +4,7 @@ This project provides sandbox for developing custom quizzes at [Stepic](http://s
 Requirements
 ===
 
-Python >=3.3 required.
+Python >=3.4 required.
 
 Documentation
 ===
