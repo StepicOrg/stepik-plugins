@@ -1,4 +1,5 @@
 import random
+import collections
 
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
@@ -46,6 +47,14 @@ class ChoiceQuiz(BaseQuiz):
             min_correct, max_correct = self.get_min_max_correct()
             if min_correct > max_correct:
                 raise FormatError('Not enough answers')
+
+        results = collections.defaultdict(set)
+        for option in self.options:
+            results[option.text].add(option.is_correct)
+
+        for result in results.values():
+            if len(result) > 1:
+                raise FormatError('Ambiguous options')
 
     def clean_reply(self, reply, dataset):
         choices = reply.choices

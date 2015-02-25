@@ -18,6 +18,9 @@ class SortingQuiz(BaseQuiz):
         if not self.options:
             raise FormatError("Empty options")
 
+        if len(set(self.options)) != len(self.options):
+            raise FormatError("Ambiguous options")
+
     def clean_reply(self, reply, dataset):
         if sorted(reply.ordering) != list(range(len(dataset.options))):
             raise FormatError('Reply should be a permutation of numbers 0..(len(dataset.options) - 1)')

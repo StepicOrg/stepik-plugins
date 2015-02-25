@@ -45,7 +45,11 @@ class ChoiceQuizInitTest(ChoiceQuizTest):
             {'sample_size': 10, 'is_always_correct': True},
             {'options': self.default_options[:4]},  # all wrong
             {'options': self.default_options[4:]},  # all correct
-            {'options': self.default_options[:2] + self.default_options[4:6]}  # 2 wrong 2 correct
+            {'options': self.default_options[:2] + self.default_options[4:6]},  # 2 wrong 2 correct
+            {'sample_size': 2, 'options': [  # equal text but different results
+                {'is_correct': False, 'text': 'correct'},
+                {'is_correct': True, 'text': 'correct'},
+            ]},
         ]
 
         for bad_source in [dict(self.default_source, **d) for d in diff]:

@@ -30,6 +30,11 @@ class MatchingQuiz(BaseQuiz):
         if not self.pairs:
             raise FormatError("Empty pairs")
 
+        first_parts = [pair.first for pair in self.pairs]
+        second_parts = [pair.second for pair in self.pairs]
+        if len(first_parts) != len(set(first_parts)) or len(second_parts) != len(set(second_parts)):
+            raise FormatError("Ambiguous pairs")
+
     def clean_reply(self, reply, dataset):
         return reply.ordering
 
