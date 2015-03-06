@@ -58,6 +58,7 @@ class CodeQuiz(BaseQuiz):
         }
 
     FAILED_TEST_MESSAGE = "Failed test #{test_number}. {message}"
+    PASSED_TEST_MESSAGE = "Passed test #{test_number}. {message}"
 
     CE_MESSAGE = "Compilation error"
     TL_MESSAGE = "Time limit exceeded"
@@ -118,6 +119,8 @@ class CodeQuiz(BaseQuiz):
                 )
                 return 0, hint
 
+            hints = []
+
             for i, (dataset, clue) in enumerate(self.tests):
                 test_number = i + 1
                 result = runner.run(dataset)
@@ -141,7 +144,14 @@ class CodeQuiz(BaseQuiz):
                     )
                     return False, hint
 
-            return True
+                if result[1]:
+                    hint = self.PASSED_TEST_MESSAGE.format(
+                        test_number=test_number,
+                        message=result[1]
+                    )
+                    hints.append(hint)
+
+            return True, '\n'.join(hints)
 
     def concat_code(self, language, code):
         return '\n'.join([self.header(language), code, self.footer(language)])
@@ -202,13 +212,13 @@ class CodeQuiz(BaseQuiz):
     def available_languages(self):
         return self.code_templates.keys()
 
-    def score_one_test(self, reply, clue):
+    def score_one_test(self, reply, clue, throw=False):
         try:
             data = (reply, clue)
             score, hint = self.run_edyrun('score', data=data)
             return score, hint
-        except (JailedCodeFailed, ValueError, TypeError):
-            return False, ''
+        except (JailedCodeFailed, ValueError, TypeError) as e:
+            return False, str(e) if throw else "Cannot check answer. Perhaps output format is wrong."
 
     def get_tests(self):
         tests = self.run_edyrun("generate", seed=random.randrange(10 ** 6))
@@ -226,11 +236,11 @@ class CodeQuiz(BaseQuiz):
                 raise FormatError("Test format is wrong")
 
         for dataset, clue in tests:
-            msg = "{{}}\ndataset: {}\nclue: {}".format(dataset, clue)
+            msg = "{}\ndataset: {}\nclue: {}\nreply: {}\nresult: {}\nhint: {}"
             reply = self.run_edyrun('solve', data=dataset)
-            result = self.score_one_test(reply, clue)
+            result = self.score_one_test(reply, clue, throw=True)
             if result[0] != 1:
-                raise FormatError(msg.format("Test is broken"))
+                raise FormatError(msg.format("Test is broken", dataset, clue, reply, *result))
 
         return tests
 
