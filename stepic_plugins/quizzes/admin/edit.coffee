@@ -4,7 +4,8 @@ App.AdminQuizEditorComponent = Em.Component.extend
     default_source =
       images: [
         # For now only hardcoded options
-        {id: 2, name: "Ubuntu 14.04"}
+        {id: 3, name: "Ubuntu 14.04"},
+        {id: 2, name: "Ubuntu 14.04 (deprecated)"}
       ]
       memory: 64
       is_bootstrap: false
