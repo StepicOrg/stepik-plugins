@@ -11,10 +11,10 @@ App.AdminQuizEditorComponent = Em.Component.extend
       is_bootstrap: false
       bootstrap_script: """
         # This script provides the ability to configure a virtual machine in order
-        # to prepare it for this quiz. It runs for every virtual machine created.
+        # to prepare it for this challenge. It runs for every virtual machine created.
     """
       test_scenario: """
-        # This is sample admin quiz
+        # This is a sample Linux challenge test scenario
 
         def test_connection(s):
             assert s.run('true').succeeded, "Could not connect to server"
@@ -25,7 +25,8 @@ App.AdminQuizEditorComponent = Em.Component.extend
 
 
         def test_file_content(s):
-            assert 'secret' in s.run('cat /root/key.txt'), "Incorrect file content"
+            file_content = s.run('cat /home/box/key.txt')
+            assert 'secret' in file_content, "Incorrect file content"
       """
     @set 'source',
       @get('source') || default_source
