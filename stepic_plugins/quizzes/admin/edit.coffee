@@ -11,7 +11,8 @@ App.AdminQuizEditorComponent = Em.Component.extend
       is_bootstrap: false
       bootstrap_script: """
         # This script provides the ability to configure a virtual machine in order
-        # to prepare it for this challenge. It runs for every virtual machine created.
+        # to prepare it for this challenge. It runs for every virtual machine created
+        # prior to assigning it to a user.
     """
       test_scenario: """
         # This is a sample Linux challenge test scenario
