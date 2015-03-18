@@ -22,7 +22,7 @@ def register_shutdown_handler(handler):
     """Register a handler that will be called on process termination."""
 
     def _signal_handler(signum, frame):
-        print('Signal handler called with signal', signum)
+        logger.info("Signal handler called with signal", signum=signum)
         handler()
         sys.exit(0)
 
@@ -32,8 +32,7 @@ def register_shutdown_handler(handler):
 
 def stop_server(rpc_server):
     """Attempt to stop the RPC server gracefully."""
-    # TODO: configure logging
-    print("Stopping RPC server...")
+    logger.info("Stopping RPC server...")
     try:
         rpc_server.stop()
         rpc_server.wait()

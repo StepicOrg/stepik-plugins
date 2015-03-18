@@ -5,10 +5,13 @@ import os
 import socket
 import tarfile
 import threading
+import time
+import uuid
 
 import structlog
 
 from base64 import b64encode
+from functools import wraps
 
 from oslo import messaging
 from oslo.config import cfg
@@ -23,7 +26,35 @@ from .schema import RPCSerializer
 logger = structlog.get_logger()
 
 
-class QuizEndpoint(object):
+class LoggedEndpointMetaclass(type):
+    def __new__(mcs, name, bases, dct):
+        for name, method in dct.items():
+            if not name.startswith('_') and callable(method):
+                dct[name] = mcs.log_method_wrapper(method)
+        return super().__new__(mcs, name, bases, dct)
+
+    @classmethod
+    def log_method_wrapper(mcs, method):
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            call_id = str(uuid.uuid4())[:8]
+            log = logger.bind(method=method.__name__, args=args, kwargs=kwargs,
+                              call_id=call_id, version=self.target.version)
+            if self.target.namespace:
+                log = log.bind(namespace=self.target.namespace)
+            log.info("RPC method call started")
+            start_time = time.time()
+            try:
+                result = method(self, *args, **kwargs)
+                log.debug("RPC method call result", result=result)
+                return result
+            finally:
+                duration = int((time.time() - start_time) * 1000) / 1000
+                log.info("RPC method call finished", duration=duration)
+        return wrapper
+
+
+class QuizEndpoint(metaclass=LoggedEndpointMetaclass):
     target = messaging.Target(namespace='quiz', version='0.1')
 
     @messaging.expected_exceptions(KeyError, FormatError)
@@ -33,8 +64,6 @@ class QuizEndpoint(object):
                           supplementary=ctxt.get('supplementary'))
 
     def ping(self, ctxt, msg):
-        # TODO: configure logging and add debug logs
-        print("Called ping")
         return msg
 
     def validate_source(self, ctxt):
@@ -120,7 +149,7 @@ class QuizEndpoint(object):
         return base64.b64encode(tarball_fileobj.getvalue()).decode()
 
 
-class CodeJailEndpoint(object):
+class CodeJailEndpoint(metaclass=LoggedEndpointMetaclass):
     target = messaging.Target(namespace='codejail', version='0.1')
 
     def run_code(self, ctxt, command, code, files, argv, stdin):
@@ -161,7 +190,6 @@ def start_fake_server():
     if _fake_server:
         return _fake_server
     _fake_server = get_server(None, fake=True)
-    # TODO: configure logging
-    print("Starting fake RPC server in thread...")
+    logger.info("Starting fake RPC server in thread")
     threading.Thread(target=_fake_server.start, daemon=True).start()
     return _fake_server
