@@ -33,6 +33,9 @@ class MathQuiz(BaseQuiz):
             if (reply - answer).simplify() == 0:
                 return True
 
+            if reply.is_Number and answer.is_Number:
+                return reply == answer
+
             n_tries = 3
             return all(test_numerically(reply, answer) for _ in range(n_tries))
 
