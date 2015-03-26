@@ -3,6 +3,7 @@ import textwrap
 from codejail import safe_exec
 
 from stepic_plugins.base import BaseQuiz
+from stepic_plugins.exceptions import FormatError
 
 
 class MathQuiz(BaseQuiz):
@@ -15,6 +16,23 @@ class MathQuiz(BaseQuiz):
     def __init__(self, source):
         super().__init__(source)
         self.answer = source.answer
+        if not self.answer.strip():
+            raise FormatError('Correct answer should be non-empty')
+
+    def async_init(self):
+        global_dict = {'answer': self.answer}
+        code = textwrap.dedent("""
+        from sympy.parsing.sympy_parser import parse_expr
+
+        def to_expr(s):
+            return parse_expr(s.replace("^", "**"))
+
+        answer = to_expr(answer)
+        """)
+        try:
+            safe_exec.safe_exec(code, global_dict)
+        except safe_exec.SafeExecException:
+            raise FormatError('Failed to parse correct answer.')
 
     def clean_reply(self, reply, dataset):
         return reply.formula.strip()
@@ -48,18 +66,22 @@ class MathQuiz(BaseQuiz):
             reply = to_expr(reply)
         except Exception:
             matched = False
-            hint = 'failed to parse expression'
+            hint = 'Failed to parse expression.'
         else:
-            hint = "understood answer as ${}$".format(latex(reply))
+            hint = "Understood answer as ${}$.".format(latex(reply))
             if not answer.free_symbols >= reply.free_symbols:
                 matched = False
             else:
-                matched = compare(reply, answer)
+                try:
+                    matched = compare(reply, answer)
+                except Exception:
+                    matched = False
+                    hint += '\\nCannot check answer. Perhaps syntax is wrong.'
         """)
         try:
             safe_exec.safe_exec(code, global_dict)
         except safe_exec.SafeExecException:
-            return False
+            return False, 'Cannot check answer. Perhaps syntax is wrong.'
 
         score = bool(global_dict['matched'])
         hint = ''
