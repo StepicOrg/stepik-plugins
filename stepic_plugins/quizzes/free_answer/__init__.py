@@ -1,3 +1,5 @@
+import bleach
+
 from stepic_plugins.base import BaseQuiz
 
 
@@ -12,8 +14,10 @@ class FreeAnswerQuiz(BaseQuiz):
         super().__init__(source)
         self.manual_scoring = source.manual_scoring
 
-    def check(self, reply, clue):
-        if self.manual_scoring:
-            return None  # will be scored manually later
-        return True
+    def clean_reply(self, reply, dataset):
+        return reply.text
 
+    def check(self, reply, clue):
+        if not bleach.clean(reply, tags=['img'], strip=True).strip():
+            return False, 'Empty reply. Please write some text.'
+        return True
