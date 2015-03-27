@@ -6,4 +6,55 @@
           required="true"}}
 </div>
 <hr>
+<div class="edit-title">Numerical test on random point z (advanced settings):</div>
+<div class="edit-text">
+    <div class="edit-block">
+        <div class="edit-title">Min Re z</div>
+        <div class="edit-text">
+            {{input value=source.numerical_test.z_re_min
+                  class="ember-text-field"
+                  required="true"}}
+        </div>
+    </div>
+    <div class="edit-block">
+        <div class="edit-title">Max Re z</div>
+        <div class="edit-text">
+            {{input value=source.numerical_test.z_re_max
+                  class="ember-text-field"
+                  required="true"}}
+        </div>
+    </div>
+    <div class="edit-block">
+        <div class="edit-title">Min Im z</div>
+        <div class="edit-text">
+            {{input value=source.numerical_test.z_im_min
+                  class="ember-text-field"
+                  required="true"}}
+        </div>
+    </div>
+    <div class="edit-block">
+        <div class="edit-title">Max Im z</div>
+        <div class="edit-text">
+            {{input value=source.numerical_test.z_im_max
+                  class="ember-text-field"
+                  required="true"}}
+        </div>
+    </div>
+    <div class="edit-title">Tolerated absolute error</div>
+    <div class="edit-text">
+        {{input value=source.numerical_test.max_error
+              class="ember-text-field"
+              required="true"}}
+    </div>
+    <div class="options">
+        <label class="option">
+            {{input
+                type="checkbox"
+                name="integer_only"
+                checked=source.numerical_test.integer_only}}
+            <span title="Test on random integer numbers only" class="edit-tooltip">Integer numbers only</span>
+        </label>
+    </div>
+</div>
+<hr>
 <div class="right">See <a href="/lesson/9176">Documentation: Math</a> for docs and examples.</div>

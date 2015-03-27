@@ -2,6 +2,7 @@ import decimal
 
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
+from stepic_plugins.utils import parse_decimal
 
 
 MAX_DIGITS = 50
@@ -45,10 +46,3 @@ class NumberQuiz(BaseQuiz):
                 hint = ''
 
         return score, hint
-
-
-def parse_decimal(s, filed_name):
-    try:
-        return decimal.Decimal(s.replace(',', '.').replace(' ', ''))
-    except decimal.DecimalException:
-        raise FormatError("Field `{}` should be a number".format(filed_name))
