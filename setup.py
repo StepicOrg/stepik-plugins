@@ -19,7 +19,7 @@ setup(
     long_description=README,
     url='https://stepic.org',
     install_requires=[
-        'oslo.messaging>=1.5.1',
+        'oslo.messaging==1.9.0',
     ],
     data_files=[
         ('stepic_plugins_data', ['Makefile']),
