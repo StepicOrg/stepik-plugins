@@ -4,8 +4,10 @@ import tarfile
 import oslo_messaging as messaging
 
 from base64 import b64decode
+from contextlib import contextmanager
 
 from oslo_config import cfg
+from oslo_messaging.rpc.client import _client_opts
 
 from .schema import RPCSerializer
 
@@ -15,6 +17,30 @@ messaging.set_transport_defaults(control_exchange='stepic.rpc')
 ALLOWED_EXMODS = [
     'stepic_plugins.exceptions'
 ]
+
+
+def set_default_response_timeout(timeout):
+    """Set default timeout to wait for a response from a call.
+
+    Given timeout is applied for all rpc calls.
+
+    :param timeout: default timeout in seconds
+
+    """
+    cfg.CONF.register_opts(_client_opts)
+    cfg.CONF.set_default('rpc_response_timeout', timeout)
+
+
+@contextmanager
+def set_response_timeout(timeout):
+    """Context manager to set timeout to wait for a response from a call."""
+
+    current_timeout = cfg.CONF.rpc_response_timeout
+    set_default_response_timeout(timeout)
+    try:
+        yield
+    finally:
+        set_default_response_timeout(current_timeout)
 
 
 class BaseAPI(object):
