@@ -1,10 +1,11 @@
 import io
 import tarfile
 
+import oslo_messaging as messaging
+
 from base64 import b64decode
 
-from oslo import messaging
-from oslo.config import cfg
+from oslo_config import cfg
 
 from .schema import RPCSerializer
 
