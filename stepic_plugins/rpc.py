@@ -7,12 +7,13 @@ import tarfile
 import threading
 import time
 import uuid
-from base64 import b64encode
-from functools import wraps
 
 import structlog
-from oslo import messaging
-from oslo.config import cfg
+import oslo_messaging as messaging
+
+from oslo_config import cfg
+from base64 import b64encode
+from functools import wraps
 
 from . import settings
 from .base import QUIZZES_DIR, load_by_name
