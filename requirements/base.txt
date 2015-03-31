@@ -1,7 +1,7 @@
 git+https://github.com/StepicOrg/codejail.git
 git+https://github.com/StepicOrg/stepic-utils.git
 
-oslo.messaging==1.9.0
+git+https://github.com/StepicOrg/oslo.messaging.git
 bleach==1.4.1
 CoffeeScript==1.0.10
 structlog==15.0.0
