@@ -18,7 +18,7 @@ logger = structlog.get_logger()
 
 def init():
     messaging.set_transport_defaults(control_exchange='stepic.rpc')
-    cfg.CONF.rpc_acks_late = True
+    # cfg.CONF.rpc_acks_late = True
 
 
 def register_shutdown_handler(handler):
