@@ -202,7 +202,7 @@ def get_server(transport_url, fake=False):
         CodeJailEndpoint(),
     ]
     return messaging.get_rpc_server(transport, target, endpoints,
-                                    executor='blocking',
+                                    executor='threading',
                                     serializer=RPCSerializer())
 
 
