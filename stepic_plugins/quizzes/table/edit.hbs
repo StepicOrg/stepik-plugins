@@ -1,0 +1,35 @@
+Nothing here.
+<br>
+<table border="0">
+<tr>
+<th></th>
+
+{{#each column in source.name_columns}}
+  <th>
+  {{simple-render
+        text=column
+        class="option__text"}}
+  </th>
+{{/each}}
+</tr>
+
+{{#with picker_view as picker_view}}
+  {{#each row in source.rows}}
+    <tr>
+    <td>
+    {{simple-render
+        text=row.name
+        class="option__text"}}
+    </td>
+    {{#each column in row.columns}}
+      <td>
+      {{view picker_view
+          name=row.name
+          checkedBinding=column.answer
+          class="option__input"}}
+      </td>
+    {{/each}}
+    </tr>
+  {{/each}}
+
+{{/with}}
