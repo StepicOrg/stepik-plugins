@@ -12,26 +12,32 @@ class TableQuiz(BaseQuiz):
                 'name': str,
                 'columns': [{'name': str, 'answer': bool}]
             }],
-            'is_multiple_choice': bool
+            'is_checkbox': bool,
+            'name_rows': str
         }
         reply = {
             'choices': [[bool]]
         }
         dataset = {
-            'name_rows': [str],
-            'name_columns': [str],
+            'name_rows': str,
+            'rows': [str],
+            'columns': [str],
+            'is_checkbox': bool
         }
 
     def __init__(self, source):
         super().__init__(source)
         self.name_columns = source.name_columns
         self.rows = source.rows
-        self.is_multiple_choice = source.is_multiple_choice
+        self.name_rows = source.name_rows
+        self.is_checkbox = source.is_checkbox
 
     def generate(self):
-        dataset = {'name_rows': [row.name for row in self.rows],
-                   'name_columns': self.name_columns}
-
+        dataset = {'name_rows': self.name_rows,
+                   'rows': [row.name for row in self.rows],
+                   'columns': self.name_columns,
+                   'is_checkbox': self.is_checkbox}
+        
         return dataset, [row.columns for row in self.rows]
 
     def clean_reply(self, reply, dataset):
@@ -39,4 +45,3 @@ class TableQuiz(BaseQuiz):
 
     def check(self, reply, clue):
         return True
-

@@ -1,25 +1,42 @@
 App.TableQuizEditorComponent = Em.Component.extend
   init: ->
     @_super()
+    name_columns = ['First column', 'Second column', 'Third column']
+
     default_source =
         rows: [
-             {name: 'AAA', columns: [{name:'A', answer: false}, {name:'B', answer: false}, {name:'C', answer: false}]},
-             {name: 'BBB', columns: [{name:'A', answer: false}, {name:'B', answer: false}, {name:'C', answer: false}]},
-             {name: 'CCC', columns: [{name:'A', answer: false}, {name:'B', answer: false}, {name:'C', answer: false}]}
+             {name: 'First row', columns: ({name: column, answer: false} for column in name_columns)},
+             {name: 'Second row', columns: ({name: column, answer: false} for column in name_columns)},
+             {name: 'Third row', columns: ({name: column, answer: false} for column in name_columns)}
           ]
-        is_multiple_choice: true
-        name_columns: ['A', 'B', 'C']
+        is_checkbox: true
+        name_columns: ['First column', 'Second column', 'Third column']
+        name_rows: 'Rows: '
     @set 'source',
       @get('source') || default_source
 
-  picker_view: Em.computed 'source.is_multiple_choice', ->
-    if @get('source.is_multiple_choice')
+  picker_view: Em.computed 'source.is_checkbox', ->
+    if @get('source.is_checkbox')
       Em.Checkbox
     else
-      console.log("O_O")
       Em.RadioButton
-
+      
+     
   get_source: ->
     @get('source')
     
-  
+ 
+  actions:
+    log: ->
+      console.log(@get('source'))
+    
+    add_row: ->
+      new_rows = @get('source.rows').slice()
+      new_rows.push({name: 'Next row', columns: ({name: column, answer: false} for column in @get('source.name_columns'))})
+      @set 'source.rows', new_rows 
+
+    delete_row: ->
+      if (@get('source.rows').length > 1)
+        new_rows = @get('source.rows').slice()
+        new_rows.pop()
+        @set 'source.rows', new_rows

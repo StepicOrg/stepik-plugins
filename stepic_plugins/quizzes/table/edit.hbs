@@ -1,35 +1,42 @@
-Nothing here.
-<br>
-<table border="0">
-<tr>
-<th></th>
+<table border="0" align="center">
+  <tr>
+    <th>
+      {{input type="text" value=source.name_rows class="text"}}
+    </th>
 
-{{#each column in source.name_columns}}
-  <th>
-  {{simple-render
-        text=column
-        class="option__text"}}
-  </th>
-{{/each}}
-</tr>
-
-{{#with picker_view as picker_view}}
-  {{#each row in source.rows}}
-    <tr>
-    <td>
-    {{simple-render
-        text=row.name
-        class="option__text"}}
-    </td>
-    {{#each column in row.columns}}
-      <td>
-      {{view picker_view
-          name=row.name
-          checkedBinding=column.answer
-          class="option__input"}}
-      </td>
+    {{#each column in source.name_columns}}
+      <th>
+        {{input type="text" value=column class="text"}}
+      </th>
     {{/each}}
-    </tr>
-  {{/each}}
+  </tr>
 
-{{/with}}
+  {{#with picker_view as picker_view}}
+  {{#each row in source.rows}}
+  <tr>
+    <td>
+      {{input type="text" value=row.name class="text"}}
+    </td>
+      {{#each column in row.columns}}
+        <td>
+          {{input type="checkbox" checked=column.answer class="is_correct"}}
+        </td>
+      {{/each}}
+  </tr>
+  {{/each}}
+  {{/with}}
+</table>
+
+
+<button {{action 'delete_row'}}>Delete last row</button>
+<button {{action 'add_row'}}>Add new row</button>
+
+<br>
+{{input
+    type="checkbox"
+    name="Multiple"
+    checked=source.is_checkbox}}
+<span title="Make a poll" class="edit-tooltip">Multiple choices are possible</span>
+<br>
+
+<button {{action 'log'}}>Log</button>
