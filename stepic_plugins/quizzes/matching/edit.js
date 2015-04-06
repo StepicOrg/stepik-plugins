@@ -1,5 +1,5 @@
 function editMatchingQuiz(target, template, source) {
-  source = source || {preserve_firsts_order: true, pairs: [{first: 'First', second: 'Second'}]}
+  source = source || {preserve_firsts_order: true, pairs: [{first: 'Sky', second: 'Blue'}, {first: 'Sun', second: 'Orange'}, {first: 'Grass', second: 'Green'}]};
   target.html(template(source));
   target.find('.add-pair').click(function () {
     var row = $('<div class="matching-pair"><span class="drag-area" draggable="true"></span><input type="text" class="first" value="First"/> <input type="text" class="second" value="Second"/><span class="remove"></span></div>');
