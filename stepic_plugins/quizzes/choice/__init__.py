@@ -108,7 +108,7 @@ class ChoiceQuiz(BaseQuiz):
         correct, wrong = self.partition_options()
         if self.is_multiple_choice:
             max_correct = min(len(correct), self.sample_size)
-            min_correct = max(0, self.sample_size - len(wrong))
+            min_correct = max(1 if len(correct) else 0, self.sample_size - len(wrong))
         else:
             max_correct = min(len(correct), 1)
             min_correct = max(1, self.sample_size - len(wrong))
