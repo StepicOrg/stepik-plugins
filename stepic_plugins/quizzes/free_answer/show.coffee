@@ -4,3 +4,4 @@ App.FreeAnswerQuizComponent = Em.Component.extend
     if not @get('reply')?
       @set 'reply',
         text: ''
+        attachments: []

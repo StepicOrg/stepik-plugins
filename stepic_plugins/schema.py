@@ -1,4 +1,5 @@
 import base64
+import inspect
 import keyword
 import re
 
@@ -42,6 +43,9 @@ def build(scheme, obj):
             if not (t == int and isinstance(obj, str) and obj.isdecimal()):
                 raise FormatError('Expected {}, got {}'.format(t.__name__, obj))
 
+    if inspect.isfunction(scheme):
+        scheme = scheme()
+
     if _is_primitive(scheme):
         ensure_type(obj, scheme)
         # if integer passed as string (EDY-1668)
@@ -76,6 +80,15 @@ class SchemeError(ValueError):
 
 def _is_primitive(obj):
     return obj in [str, int, float, bool]
+
+
+attachment = lambda: {
+    'name': str,
+    'type': str,
+    'size': int,
+    'content': str,
+    'url': str,
+}
 
 
 class RPCSerializer(messaging.NoOpSerializer):
