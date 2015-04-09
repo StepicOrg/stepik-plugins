@@ -1,6 +1,5 @@
 App.ChoiceQuizComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->()
     if not @get('reply.choices')
       initial_choices = @get('dataset.options').map -> false
       @set 'reply',
@@ -13,6 +12,7 @@ App.ChoiceQuizComponent = Em.Component.extend
 
     @set 'selections',
       selections
+  ).on('init')
 
   picker_view: (->
     if @get('dataset.is_multiple_choice')

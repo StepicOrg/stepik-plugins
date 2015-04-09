@@ -1,6 +1,6 @@
 App.FreeAnswerQuizComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->()
     if not @get('reply')?
       @set 'reply',
         text: ''
+  ).on('init')

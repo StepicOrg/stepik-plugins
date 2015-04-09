@@ -1,6 +1,5 @@
 App.AdminQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->()
     default_source =
       images: [
         # For now only hardcoded options
@@ -31,6 +30,7 @@ App.AdminQuizEditorComponent = Em.Component.extend
       """
     @set 'source',
       @get('source') || default_source
+  ).on('init')
 
   get_source: ->
     @get('source')

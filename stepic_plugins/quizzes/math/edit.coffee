@@ -1,6 +1,5 @@
 App.MathQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->()
     default_source =
       answer: '2*x+y/z'
       numerical_test:
@@ -12,6 +11,7 @@ App.MathQuizEditorComponent = Em.Component.extend
         integer_only: false
     @set 'source',
       @get('source') || default_source
+  ).on('init')
 
   get_source: ->
     @get('source')

@@ -1,6 +1,5 @@
 App.AdminQuizComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->()
     @set 'reply', {}
     @set 'isTerminalLoading', true
     self = @
@@ -28,6 +27,7 @@ App.AdminQuizComponent = Em.Component.extend
 
     $.getScript '/static/stepic_plugins/admin/sockjs.min.js'
     $.getScript '/static/stepic_plugins/admin/base64.min.js'
+  ).on('init')
 
   actions:
     toggleTerminal: ->
