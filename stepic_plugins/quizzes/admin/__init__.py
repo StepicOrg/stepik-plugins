@@ -204,7 +204,7 @@ class AdminQuiz(BaseQuiz):
 
         sandbox = self._create_bootstrap_sandbox(server, script)
         try:
-            sandbox = self._wait_sandbox_terminated(sandbox, timeout=60)
+            sandbox = self._wait_sandbox_terminated(sandbox, timeout=300)
         except TimeoutError:
             raise PluginError("Failed to bootstrap your virtual machine: "
                               "took too much time")
@@ -230,7 +230,8 @@ class AdminQuiz(BaseQuiz):
                 "content": base64.b64encode(script.encode()).decode()
             }],
             "limits": {
-                "realtime": 60,
+                "cputime": 305,
+                "realtime": 305,
                 "memory": 32,
             }
         }
