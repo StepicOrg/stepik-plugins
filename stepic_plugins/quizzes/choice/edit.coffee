@@ -1,5 +1,5 @@
 App.ChoiceQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       is_multiple_choice: false
       is_always_correct: false

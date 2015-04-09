@@ -1,5 +1,5 @@
 App.MathQuizComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     if not @get('reply')?
       @set 'reply',
         text: ''

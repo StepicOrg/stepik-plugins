@@ -1,5 +1,5 @@
 App.AdminQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       images: [
         # For now only hardcoded options

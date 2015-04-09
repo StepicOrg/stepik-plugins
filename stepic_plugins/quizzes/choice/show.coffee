@@ -1,5 +1,5 @@
 App.ChoiceQuizComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     if not @get('reply.choices')
       initial_choices = @get('dataset.options').map -> false
       @set 'reply',

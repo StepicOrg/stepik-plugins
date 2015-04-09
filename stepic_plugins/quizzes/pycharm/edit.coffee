@@ -1,5 +1,5 @@
 App.PycharmQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       title: 'PyCharm Problem'
       files: [

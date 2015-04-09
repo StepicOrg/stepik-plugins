@@ -1,5 +1,5 @@
 App.MathQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       answer: '2*x+y/z'
       numerical_test:

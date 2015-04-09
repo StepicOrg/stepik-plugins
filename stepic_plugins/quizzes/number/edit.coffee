@@ -1,5 +1,5 @@
 App.NumberQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       answer: '0'
       max_error: '0'

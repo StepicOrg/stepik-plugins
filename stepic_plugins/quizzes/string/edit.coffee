@@ -1,5 +1,5 @@
 App.StringQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       pattern: ""
       use_re: false

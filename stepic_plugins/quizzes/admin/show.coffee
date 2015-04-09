@@ -1,5 +1,5 @@
 App.AdminQuizComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     @set 'reply', {}
     @set 'isTerminalLoading', true
     self = @

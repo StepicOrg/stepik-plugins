@@ -1,5 +1,5 @@
 App.DatasetQuizEditorComponent = Em.Component.extend
-  setInitial: (->()
+  setInitial: (->
     default_source =
       code: """
           #This is sample dataset quiz
