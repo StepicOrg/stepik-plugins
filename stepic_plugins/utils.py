@@ -133,8 +133,23 @@ def clean_html(text):
                         styles=ALLOWED_STYLES, strip=True)
 
 
+NUMBER_REPLACEMENTS = (
+    (' ', ''),
+    (',', '.'),
+    ('\N{HYPHEN}', '-'),
+    ('\N{NON-BREAKING HYPHEN}', '-'),
+    ('\N{FIGURE DASH}', '-'),
+    ('\N{EN DASH}', '-'),
+    ('\N{EM DASH}', '-'),
+    ('\N{HORIZONTAL BAR}', '-'),
+    ('\N{MINUS SIGN}', '-'),
+)
+
+
 def parse_decimal(s, filed_name):
+    for old, new in NUMBER_REPLACEMENTS:
+        s = s.replace(old, new)
     try:
-        return decimal.Decimal(s.replace(',', '.').replace(' ', ''))
+        return decimal.Decimal(s)
     except decimal.DecimalException:
         raise FormatError("Field `{}` should be a number".format(filed_name))
