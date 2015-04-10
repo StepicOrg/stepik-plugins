@@ -1,5 +1,7 @@
-{{wysi-textarea 
+{{wysi-textarea
 	value=reply.text
 	is_disabled=disabled
 	toolbar='bottom-right'
 	placeholder="Type your answer here..."}}
+
+{{attachment-list attachments=reply.attachments disabled=disabled maxFiles=3 maxSize=5242880}}
