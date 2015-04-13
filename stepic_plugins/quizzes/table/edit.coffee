@@ -5,35 +5,53 @@ App.TableQuizEditorComponent = Em.Component.extend
 
     default_source =
         rows: [
-             {name: 'First row', columns: ({name: column, answer: false} for column in name_columns)},
-             {name: 'Second row', columns: ({name: column, answer: false} for column in name_columns)},
-             {name: 'Third row', columns: ({name: column, answer: false} for column in name_columns)}
+            {name: 'First row', columns: ({choice: false} for column in name_columns)},
+            {name: 'Second row', columns: ({choice: false} for column in name_columns)},
+            {name: 'Third row', columns: ({choice: false} for column in name_columns)}
           ]
-        is_checkbox: true
-        name_columns: ['First column', 'Second column', 'Third column']
-        name_rows: 'Rows: '
+        options: {
+            is_checkbox: false,
+            is_randomize_rows: false,
+            is_randomize_columns: false,
+            sample_size: -1
+          }
+        columns: ['First column', 'Second column', 'Third column']
+        description: 'Rows: '
     @set 'source',
       @get('source') || default_source
-
-  picker_view: Em.computed 'source.is_checkbox', ->
-    if @get('source.is_checkbox')
-      Em.Checkbox
-    else
-      Em.RadioButton
-      
      
   get_source: ->
     @get('source')
     
  
-  actions:
-    log: ->
-      console.log(@get('source'))
-    
+  actions: 
+    add_column: ->
+      new_rows = @get('source.rows').slice()
+      new_columns = @get('source.columns').slice()
+
+      new_columns.push "New column"
+      for row in new_rows
+          row.columns.push ({choice: false})
+        
+      @set 'source.rows', new_rows
+      @set 'source.columns', new_columns
+
+    delete_column: ->
+      if (@get('source.columns').length > 1) 
+        new_rows = @get('source.rows').slice()
+        new_columns = @get('source.columns').slice()
+        new_columns.pop()
+        
+        for row in new_rows
+          row.columns.pop()
+        
+        @set 'source.rows', new_rows
+        @set 'source.columns', new_columns
+
     add_row: ->
       new_rows = @get('source.rows').slice()
-      new_rows.push({name: 'Next row', columns: ({name: column, answer: false} for column in @get('source.name_columns'))})
-      @set 'source.rows', new_rows 
+      new_rows.push({name: 'Next row', columns: ({choice: false} for column in @get('source.columns'))})
+      @set 'source.rows', new_rows
 
     delete_row: ->
       if (@get('source.rows').length > 1)

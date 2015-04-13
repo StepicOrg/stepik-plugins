@@ -7,19 +7,27 @@ class TableQuiz(BaseQuiz):
 
     class Schemas:
         source = {
-            'name_columns': [str],
+            'description': str,
+            'columns': [str],
             'rows': [{
                 'name': str,
-                'columns': [{'name': str, 'answer': bool}]
+                'columns': [{'choice': bool}]
             }],
-            'is_checkbox': bool,
-            'name_rows': str
+            'options': { 
+                'is_checkbox': bool,
+                'is_randomize_rows': bool,
+                'is_randomize_columns': bool,
+                'sample_size': int
+            }
         }
         reply = {
-            'choices': [[bool]]
+            'choices': [{
+                'name_row': str,
+                'columns': [{'name': str, 'answer': bool}]
+            }]
         }
         dataset = {
-            'name_rows': str,
+            'description': str,
             'rows': [str],
             'columns': [str],
             'is_checkbox': bool
@@ -27,21 +35,34 @@ class TableQuiz(BaseQuiz):
 
     def __init__(self, source):
         super().__init__(source)
-        self.name_columns = source.name_columns
+        self.columns = source.columns
         self.rows = source.rows
-        self.name_rows = source.name_rows
-        self.is_checkbox = source.is_checkbox
+        self.description = source.description
+        self.options = source.options
+        for row in self.rows:
+            possible_answer = 0
+            for cell in row.columns:
+                possible_answer += cell.choice
+
+            if possible_answer > 1 and not self.options.is_checkbox:
+                raise FormatError("Can't be multiple right answer in this mode")
+            if possible_answer == 0:
+                raise FormatError("There no right answers")
+        
 
     def generate(self):
-        dataset = {'name_rows': self.name_rows,
+        dataset = {'description': self.description,
                    'rows': [row.name for row in self.rows],
-                   'columns': self.name_columns,
-                   'is_checkbox': self.is_checkbox}
+                   'columns': self.columns,
+                   'is_checkbox': self.options.is_checkbox}
+
+        clue = [[column.choice for column in row.columns] for row in self.rows]
         
-        return dataset, [row.columns for row in self.rows]
+        return dataset, clue
 
     def clean_reply(self, reply, dataset):
         return reply.choices
 
     def check(self, reply, clue):
-        return True
+        reply_plain = [[column['answer'] for column in row['columns']] for row in reply]
+        return reply_plain == clue

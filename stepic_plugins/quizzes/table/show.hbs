@@ -1,9 +1,8 @@
-HEY!
 <table border="0" align="center">
 <tr>
 <th>
 {{simple-render
-      text=dataset.name_rows
+      text=dataset.description
       class="option__text"}}
 </th>
 
@@ -17,18 +16,18 @@ HEY!
 </tr>
 
 {{#with picker_view as picker_view}}
-  {{#each row in dataset.rows}}
+  {{#each row in reply.choices}}
     <tr>
     <td>
     {{simple-render
-        text=row
+        text=row.name_row
         class="option__text"}}
     </td>
-    {{#each column in dataset.columns}}
+    {{#each column in row.columns}}
       <td>
       {{view picker_view
-          name=row
-          checkedBinding=column
+          name=row.name_row
+          checkedBinding=column.answer
           class="option__input"}}
       </td>
     {{/each}}
