@@ -7,6 +7,17 @@ from stepic_plugins.exceptions import FormatError
 from stepic_plugins.utils import parse_decimal
 
 
+def is_math_quiz_enabled():
+    code = textwrap.dedent("""
+        import sympy
+        """)
+    try:
+        safe_exec.safe_exec(code, {})
+    except safe_exec.SafeExecException:
+        return False
+    return True
+
+
 class MathQuiz(BaseQuiz):
     name = 'math'
 
@@ -105,7 +116,7 @@ class MathQuiz(BaseQuiz):
             if reply.is_Number and answer.is_Number:
                 return abs(reply - answer) <= max_error
 
-            n_tries = 3
+            n_tries = 10
             return all(test_numerically(reply, answer) for _ in range(n_tries))
 
         def to_expr(s):

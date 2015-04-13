@@ -1,9 +1,9 @@
 import unittest
 
-from . import MathQuiz
+from . import MathQuiz, is_math_quiz_enabled
 
 
-@unittest.skip
+@unittest.skipUnless(is_math_quiz_enabled(), 'sympy is not installed')
 class MathQuizCheckTest(unittest.TestCase):
     def setUp(self):
         self.default_numerical_test = {
