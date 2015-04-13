@@ -1,6 +1,5 @@
 App.PycharmQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     default_source =
       title: 'PyCharm Problem'
       files: [
@@ -41,6 +40,7 @@ App.PycharmQuizEditorComponent = Em.Component.extend
       ]
     @set 'source',
       @get('source') || default_source
+  ).on('init')
 
   get_source: ->
     @get('source')

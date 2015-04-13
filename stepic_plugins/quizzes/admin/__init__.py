@@ -204,33 +204,35 @@ class AdminQuiz(BaseQuiz):
 
         sandbox = self._create_bootstrap_sandbox(server, script)
         try:
-            sandbox = self._wait_sandbox_terminated(sandbox, timeout=60)
+            sandbox = self._wait_sandbox_terminated(sandbox, timeout=300)
         except TimeoutError:
             raise PluginError("Failed to bootstrap your virtual machine: "
                               "took too much time")
         if (sandbox['status'] == SandboxStatus.SUCCESS and
                 sandbox['exit_code'] != 0):
-            err = base64.b64decode(sandbox['stdout']).decode(errors='replace')
-            raise PluginError("Failed to bootstrap your virtual machine: {0}"
-                              .format(err))
+            stdout = base64.b64decode(sandbox['stdout']).decode(errors='replace')
+            stderr = base64.b64decode(sandbox['stderr']).decode(errors='replace')
+            raise PluginError("Failed to bootstrap your virtual machine: {0}\n{1}"
+                              .format(stdout, stderr))
         elif sandbox['status'] == SandboxStatus.FAILURE:
             raise PluginError("Failed to bootstrap your virtual machine: {0}"
                               .format(sandbox['error']))
 
     def _create_bootstrap_sandbox(self, server, script):
-        sandbox_cmd = ('fab init_quiz -f /var/lib/admin-init/fabfile.py '
-                       '-i /var/lib/admin-init/ssh-key -H {ip} -u root'
+        sandbox_cmd = ('fab bootstrap -f /bootstrap/fabfile.py '
+                       '-i /bootstrap/ssh-key -H {ip} -u root'
                        .format(ip=server['private_ip']))
         sandbox_body = {
-            'profile': 'admin-quiz-init',
-            'cmd': sandbox_cmd,
+            'profile': 'linux-bootstrap',
+            'command': sandbox_cmd,
             "files": [{
-                "filename": "init_quiz.sh",
+                "name": "bootstrap.sh",
                 "content": base64.b64encode(script.encode()).decode()
             }],
             "limits": {
-                "realtime": 60,
-                "memory": 16
+                "cputime": 305,
+                "realtime": 305,
+                "memory": 32,
             }
         }
         headers = {'content-type': 'application/json'}
@@ -248,7 +250,7 @@ class AdminQuiz(BaseQuiz):
                              auth=RNR_AUTH)
             if r:
                 sandbox = r.json()
-                if sandbox['status'] == SandboxStatus.TIMEOUT:
+                if sandbox['timeout']:
                     raise TimeoutError()
                 if sandbox['status'] in [SandboxStatus.SUCCESS,
                                          SandboxStatus.FAILURE]:

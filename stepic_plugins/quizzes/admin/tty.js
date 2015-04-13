@@ -105,8 +105,10 @@ tty.open = function(kayleeUrl, terminalId) {
     tab.id = tty.terminalId;
     tab.setProcessName("Terminal ID: " + tab.id.slice(0, 5));
     tty.terms[tty.terminalId] = tab;
+    win.each(function(term) {
+      term.resize(win.cols, win.rows);
+    });
     tab.emit('open');
-    // TODO: send terminal width & height
   });
 
   tty.removeAllListeners('tty');

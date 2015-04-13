@@ -24,7 +24,7 @@ function showMatchingQuiz(target, template, dataset, reply, disabled, quiz_info)
   resizeHandler();
 
   var dragSource = null;
-  var pairs = $(target).find('li');
+  var pairs = $(target).find('li.matching-quiz__second-item');
   pairs.off();
   if (disabled) {
     $(target).find('.matching-quiz__arrow-up').remove();

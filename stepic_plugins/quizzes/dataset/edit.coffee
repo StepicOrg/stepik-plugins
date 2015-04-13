@@ -1,6 +1,5 @@
 App.DatasetQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     default_source =
       code: """
           #This is sample dataset quiz
@@ -27,6 +26,7 @@ App.DatasetQuizEditorComponent = Em.Component.extend
       """
     @set 'source',
       @get('source') || default_source
+  ).on('init')
 
   get_source: ->
     @get('source')

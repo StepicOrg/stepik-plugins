@@ -1,6 +1,5 @@
 App.PycharmQuizComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     if not @get('reply')?
       @set 'reply',
         score: 0
@@ -10,3 +9,4 @@ App.PycharmQuizComponent = Em.Component.extend
             text: 'print("Hello, world! My name is Liana")'
           }
         ]
+  ).on('init')

@@ -1,6 +1,6 @@
 <div class="options">
   <label class="option">
-    <span title="Image that is used to create new virtual machine instance" class="edit-tooltip">Image:</span>
+    <span title="Image that is used to create a new virtual machine instance" class="edit-tooltip">Image:</span>
     {{view Ember.Select
       content=source.images
       optionValuePath="content.id"
@@ -22,7 +22,6 @@
   <div class="edit-text">
   {{view App.CodeEditorView
     valueBinding='source.bootstrap_script'
-    required='true'
     lang='shell'
     placeholder="Type your bootstrap Bash script here..."}}
   </div>
@@ -32,7 +31,6 @@
 <div class="edit-text">
 {{view App.CodeEditorView
   valueBinding='source.test_scenario'
-  required='true'
   lang='python'
   placeholder="Type your test scenario code here..."}}
 </div>

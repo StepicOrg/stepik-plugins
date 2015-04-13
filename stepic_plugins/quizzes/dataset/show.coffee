@@ -13,11 +13,11 @@ App.DatasetQuizComponent = Em.Component.extend
 
   is_textarea_disabled: Em.computed.or('disabled', 'dataset_not_downloaded')
 
-  init: ->
-    @_super()
+  setInitial: (->
     if not @get('reply')?
       @set 'reply',
         file: ''
+  ).on('init')
 
   didInsertElement: ->
     markLoaded = => @send 'download_started'

@@ -1,6 +1,5 @@
 App.StringQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     default_source =
       pattern: ""
       use_re: false
@@ -9,6 +8,7 @@ App.StringQuizEditorComponent = Em.Component.extend
       code: ""
     @set 'source',
       @get('source') || default_source
+  ).on('init')
 
   get_source: ->
     @get('source')

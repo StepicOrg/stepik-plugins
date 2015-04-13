@@ -1,11 +1,13 @@
+import decimal
 import logging
 import os
 import pwd
 import shutil
 
 import bleach
-
 from codejail import jail_code
+
+from stepic_plugins.exceptions import FormatError
 
 
 logger = logging.getLogger(__name__)
@@ -117,7 +119,7 @@ ALLOWED_ATTRIBUTES = {
     'abbr': ['title'],
     'acronym': ['title'],
     'div': ['class'],
-    'img': ['src', 'alt', 'class', 'title', 'width',  'height'],
+    'img': ['src', 'alt', 'class', 'title', 'width', 'height'],
     'span': ['class'],
     'p': ['class'],
     'code': ['class']
@@ -129,3 +131,25 @@ ALLOWED_STYLES = []
 def clean_html(text):
     return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
                         styles=ALLOWED_STYLES, strip=True)
+
+
+NUMBER_REPLACEMENTS = (
+    (' ', ''),
+    (',', '.'),
+    ('\N{HYPHEN}', '-'),
+    ('\N{NON-BREAKING HYPHEN}', '-'),
+    ('\N{FIGURE DASH}', '-'),
+    ('\N{EN DASH}', '-'),
+    ('\N{EM DASH}', '-'),
+    ('\N{HORIZONTAL BAR}', '-'),
+    ('\N{MINUS SIGN}', '-'),
+)
+
+
+def parse_decimal(s, filed_name):
+    for old, new in NUMBER_REPLACEMENTS:
+        s = s.replace(old, new)
+    try:
+        return decimal.Decimal(s)
+    except decimal.DecimalException:
+        raise FormatError("Field `{}` should be a number".format(filed_name))

@@ -1,6 +1,5 @@
 App.CodeQuizEditorComponent = Em.Component.extend
-  init: ->
-      @_super()
+  setInitial: (->
       default_source =
         code: """
           #This is sample code quiz
@@ -31,6 +30,7 @@ App.CodeQuizEditorComponent = Em.Component.extend
         templates_data: ""
       @set 'source',
         @get('source') || default_source
+  ).on('init')
 
   get_source: ->
     @get('source')

@@ -1,14 +1,14 @@
 App.ChoiceQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     default_source =
       is_multiple_choice: false
       is_always_correct: false
       sample_size: 3
       preserve_order: false
-      options: [{is_correct: false, text: 'Choice 1'}, {is_correct: true, text: 'Choice 2'}, {is_correct: false, text: 'Choice 3'}]
+      options: [{is_correct: false, text: 'Choice A'}, {is_correct: true, text: 'Choice B'}, {is_correct: false, text: 'Choice C'}]
     @set 'source',
       @get('source') || default_source
+  ).on('init')
 
   picker_view: (->
     if @get('is_multiple_choice')

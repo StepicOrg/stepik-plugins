@@ -1,5 +1,5 @@
 function editSortingQuiz(target, template, source) {
-  source = source || {options: []}
+  source = source || {options: ['One', 'Two', 'Three']};
   target.html(template(source));
   target.find('.add-option').click(function () {
     var row = $('<div class="sort-option"><span class="drag-area" draggable="true"></span><input type="text" class="text"/><span class="remove"></span></div>');

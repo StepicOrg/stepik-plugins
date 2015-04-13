@@ -1,15 +1,19 @@
 App.AdminQuizComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     @set 'reply', {}
     @set 'isTerminalLoading', true
     self = @
 
     $.getScript '/static/stepic_plugins/admin/term.js', ->
       $.getScript '/static/stepic_plugins/admin/tty.js', ->
-        tty.on 'open window', (window) ->
-          self.set 'terminalWindow', window
+        tty.on 'open window', (termWindow) ->
+          self.set 'terminalWindow', termWindow
           self.set 'isTerminalLoading', false
+          # Center the terminal window on the screen
+          topOffset = Math.max(0, $(window).height() - $(termWindow.element).outerHeight()) / 2
+          leftOffset = Math.max(0, $(window).width() - $(termWindow.element).outerWidth()) / 2
+          $(termWindow.element).css 'top', topOffset + $(window).scrollTop();
+          $(termWindow.element).css 'left', leftOffset + $(window).scrollLeft();
 
         tty.on 'close window', ->
           self.set 'terminalWindow', null
@@ -23,6 +27,7 @@ App.AdminQuizComponent = Em.Component.extend
 
     $.getScript '/static/stepic_plugins/admin/sockjs.min.js'
     $.getScript '/static/stepic_plugins/admin/base64.min.js'
+  ).on('init')
 
   actions:
     toggleTerminal: ->
