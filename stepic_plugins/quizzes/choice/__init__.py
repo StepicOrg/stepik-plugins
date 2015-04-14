@@ -40,7 +40,7 @@ class ChoiceQuiz(BaseQuiz):
         for option in self.options:
             text = option.text
             option.text = clean_html(option.text)
-            if text.replace('<', '&lt;').replace('>', '&gt;') != option.text:
+            if option.text.replace('&gt;', '>').replace('&lt;', '<').replace('&amp;', '&') != text:
                 raise FormatError('incorrect option: ' + text)
 
         if self.is_always_correct:
