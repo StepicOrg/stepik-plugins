@@ -38,7 +38,10 @@ class ChoiceQuiz(BaseQuiz):
         self.preserve_order = source.preserve_order
         self.options = source.options
         for option in self.options:
+            text = option.text
             option.text = clean_html(option.text)
+            if text.replace('<', '&lt;').replace('>', '&gt;') != option.text:
+                raise FormatError('incorrect option: ' + text)
 
         if self.is_always_correct:
             if self.sample_size > len(self.options):
