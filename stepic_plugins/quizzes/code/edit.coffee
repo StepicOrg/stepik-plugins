@@ -2,7 +2,7 @@ App.CodeQuizEditorComponent = Em.Component.extend
   setInitial: (->
       default_source =
         code: """
-          #This is sample code quiz
+          #This is sample code challenge
           import random
 
           def generate():
