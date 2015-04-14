@@ -20,6 +20,8 @@ def configure_by_language(config_dict, prefix, limits, user=None, env=None):
             msg = "can't find {} binary for {}!"
             logger.warning(msg.format(binary, lang))
         else:
+            if 'limits' in options:
+                limits.update(options['limits'])
             jail_code.configure(prefix + lang, binary, limits,
                                 user=user,
                                 extra_args=options['args'],
