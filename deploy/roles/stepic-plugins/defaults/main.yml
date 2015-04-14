@@ -66,6 +66,12 @@ sandbox_octave_bin: "{{ sandbox_octave_dir }}/octave"
 # Sandbox for Rust
 sandbox_rust_nightly_date: 2015-02-03
 
+# Sandbox for R
+sandbox_r_dir: "{{ sandbox_dir }}/r"
+sandbox_r_tmp_dir: "{{ sandbox_r_dir }}/tmp"
+sandbox_r_bin: "{{ sandbox_r_dir }}/R"
+sandbox_r_runner_bin: "{{ sandbox_r_dir }}/R_runner.sh"
+
 apparmor_profiles:
   - template: apparmor_python.profile.j2
     name: "{{ sandbox_python_bin.strip('/') | regex_replace('/', '.') }}"
@@ -75,5 +81,7 @@ apparmor_profiles:
     name: "{{ sandbox_shell_bin.strip('/') | regex_replace('/', '.') }}"
   - template: apparmor_octave.profile.j2
     name: "{{ sandbox_octave_bin.strip('/') | regex_replace('/', '.') }}"
+  - template: apparmor_r.profile.j2
+    name: "{{ sandbox_r_bin.strip('/') | regex_replace('/', '.') }}"
   - template: apparmor_arena.profile.j2
     name: "{{ arena_dir.strip('/') | regex_replace('/', '.') }}"

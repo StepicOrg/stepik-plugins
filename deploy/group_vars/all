@@ -37,3 +37,9 @@ stepic_plugins_interpreters:
     args: [--quiet, --no-window-system, --no-history,
             --no-init-file, --no-site-file, --norc]
     reserved_memory: 209715200
+  r:
+    bin: "{{ sandbox_r_runner_bin }}"
+    args: [--vanilla, --slave, -f]
+    limits:
+      CAN_FORK: 1
+    reserved_memory: 209715200

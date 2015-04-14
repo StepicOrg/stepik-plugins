@@ -12,6 +12,7 @@
             owner=root
             group=root
             validate='visudo -c -f %s'
+  tags: config
 
 - name: install iptables-persistent package
   apt: name=iptables-persistent
@@ -52,6 +53,7 @@
   sudo_user: "{{ stepic_user }}"
 - include: sandbox_octave.yml
 - include: sandbox_rust.yml
+- include: sandbox_r.yml tags=r
 
 - name: run tests for sandboxes
   shell: source {{ stepic_plugins_venv_dir }}/bin/activate; make test-sandbox

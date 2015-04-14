@@ -1,0 +1,17 @@
+#include <tunables/global>
+
+{{ sandbox_r_bin }} {
+    #include <abstractions/base>
+
+    /etc/R/*                r,
+    /usr/lib/R/library/**   rm,
+    /etc/passwd             r,
+    /etc/group              r,
+    /etc/inputrc            r,
+    /etc/nsswitch.conf      r,
+
+    {{ arena_dir }}/codejail-*/     r,
+    {{ arena_dir }}/codejail-*/**   r,
+
+    {{ sandbox_r_tmp_dir }}/**      rw,
+}
