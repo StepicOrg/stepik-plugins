@@ -1,6 +1,5 @@
 App.TableQuizEditorComponent = Em.Component.extend
-  init: ->
-    @_super()
+  setInitial: (->
     name_columns = ['First column', 'Second column', 'Third column']
 
     default_source =
@@ -19,10 +18,10 @@ App.TableQuizEditorComponent = Em.Component.extend
         description: 'Rows: '
     @set 'source',
       @get('source') || default_source
-     
+  ).on('init')   
+
   get_source: ->
     @get('source')
-    
  
   actions: 
     add_column: ->
