@@ -116,3 +116,8 @@ class TestJava(SandboxTest):
 class TestOctave(SandboxTest):
     language = Languages.OCTAVE
     extension = 'm'
+
+
+class TestR(SandboxTest):
+    language = Languages.R
+    extension = 'R'
