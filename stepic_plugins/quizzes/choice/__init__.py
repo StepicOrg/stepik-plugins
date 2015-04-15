@@ -37,11 +37,13 @@ class ChoiceQuiz(BaseQuiz):
         self.sample_size = source.sample_size
         self.preserve_order = source.preserve_order
         self.options = source.options
+
         for option in self.options:
             text = option.text
-            option.text = clean_html(option.text)
-            if option.text.replace('&gt;', '>').replace('&lt;', '<').replace('&amp;', '&') != text:
-                raise FormatError('incorrect option: ' + text)
+            option.text = clean_html(option.text, strip=False)
+            is_incorrect_html = lambda a, b: option.text.replace(a, b).count(b) != text.count(b)
+            if is_incorrect_html('&gt;', '>') or is_incorrect_html('&lt;', '<'):
+                raise FormatError('Incorrect html: {}'.format(text))
 
         if self.is_always_correct:
             if self.sample_size > len(self.options):

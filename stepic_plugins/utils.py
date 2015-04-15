@@ -128,9 +128,9 @@ ALLOWED_ATTRIBUTES = {
 ALLOWED_STYLES = []
 
 
-def clean_html(text):
+def clean_html(text, strip=True):
     return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
-                        styles=ALLOWED_STYLES, strip=True)
+                        styles=ALLOWED_STYLES, strip=strip)
 
 
 NUMBER_REPLACEMENTS = (
