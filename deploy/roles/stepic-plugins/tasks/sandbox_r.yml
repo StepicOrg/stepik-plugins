@@ -4,7 +4,7 @@
          creates=/etc/apt/sources.list.d/r-lang.list
 
 - name: import R language repo key
-  command: apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480
+  command: apt-key adv --keyserver hkp://keys.gnupg.net:80 --recv-key 381BA480
 
 - name: install R interpreter
   apt: name=r-base
