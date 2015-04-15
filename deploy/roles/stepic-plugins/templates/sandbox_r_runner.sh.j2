@@ -1,0 +1,2 @@
+#!/bin/bash
+exec env R_HOME=/usr/lib/R TMPDIR={{ sandbox_r_tmp_dir }} {{ sandbox_r_bin }} "$@"
