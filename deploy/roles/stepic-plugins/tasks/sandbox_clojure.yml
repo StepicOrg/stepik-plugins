@@ -1,0 +1,23 @@
+---
+- name: create Clojure sandbox directory
+  file: path={{ sandbox_clojure_dir }}
+        state=directory
+
+- name: check if Clojure is already installed
+  stat: path={{ sandbox_clojure_jar }}
+  register: sandbox_clojure_status
+
+- name: download Clojure archive
+  command: "wget http://repo1.maven.org/maven2/org/clojure/clojure/1.6.0/clojure-1.6.0.zip
+            -O {{ sandbox_clojure_dir }}/clojure.zip"
+  when: not sandbox_clojure_status.stat.exists
+
+- name: extract Clojure archive into sandbox directory
+  unarchive: src={{ sandbox_clojure_dir }}/clojure.zip
+             dest={{ sandbox_clojure_dir }}
+             copy=no
+  when: not sandbox_clojure_status.stat.exists
+
+- name: remove unpacked Clojure archive
+  file: path={{ sandbox_clojure_dir }}/clojure.zip
+        state=absent

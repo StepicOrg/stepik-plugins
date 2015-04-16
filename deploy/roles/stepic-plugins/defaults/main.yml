@@ -53,7 +53,7 @@ sandbox_oracle_jdk_url: http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk
 # Path to the extracted jdk home directory. Note that jdkX.X.X comes from the
 # oracle jdk tarball (sandbox_oracle_jdk_url), keep these variables in sync.
 sandbox_jdk_home: "{{ sandbox_java_dir }}/jdk1.7.0_67"
-sandbox_java_bin: "{{ sandbox_jdk_home }}/jre/bin/java"
+sandbox_java_bin: "{{ sandbox_jdk_home }}/bin/java"
 
 # Sandbox for Shell (Bash)
 sandbox_shell_dir: "{{ sandbox_dir }}/shell"
@@ -71,6 +71,10 @@ sandbox_r_dir: "{{ sandbox_dir }}/r"
 sandbox_r_tmp_dir: "{{ sandbox_r_dir }}/tmp"
 sandbox_r_bin: "{{ sandbox_r_dir }}/R"
 sandbox_r_runner_bin: "{{ sandbox_r_dir }}/R_runner.sh"
+
+# Sandbox for Clojure
+sandbox_clojure_dir: "{{ sandbox_dir }}/clojure"
+sandbox_clojure_jar: "{{ sandbox_clojure_dir }}/clojure-1.6.0/clojure-1.6.0.jar"
 
 apparmor_profiles:
   - template: apparmor_python.profile.j2

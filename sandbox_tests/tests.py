@@ -121,3 +121,8 @@ class TestOctave(SandboxTest):
 class TestR(SandboxTest):
     language = Languages.R
     extension = 'R'
+
+
+class TestClojure(SandboxTest):
+    language = Languages.CLOJURE
+    extension = 'clj'

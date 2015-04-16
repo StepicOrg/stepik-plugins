@@ -20,9 +20,10 @@ class Languages(object):
     SHELL = 'shell'
     RUST = 'rust'
     R = 'r'
-    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL, RUST, R]
+    CLOJURE = 'clojure'
+    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL, RUST, R, CLOJURE]
     compiled = [CPP, HASKELL, ASM32, ASM64, RUST]
-    interpreted = [PYTHON, OCTAVE, SHELL, R]
+    interpreted = [PYTHON, OCTAVE, SHELL, R, CLOJURE]
     default_templates = {
         PYTHON: "# put your python code here",
         CPP: "#include <iostream>\n\nint main() {\n  // put your code here\n  return 0;\n}",
@@ -34,6 +35,7 @@ class Languages(object):
         SHELL: "# put your shell (bash) code here",
         RUST: "fn main() {\n    // put your Rust code here\n}",
         R: "# put your R code here",
+        CLOJURE: ";; put your clojure code here",
     }
 
 
@@ -269,6 +271,14 @@ class CodeRunner(object):
             java_limits, args = get_limits_for_java(self.limits)
             return self.arena.run_code('run_java', command_argv=args + ['Main'],
                                        stdin=dataset, limits=java_limits)
+        elif self.language == Languages.CLOJURE:
+            #run `java -cp closure.jar closure.main self.source`
+            java_limits, args = get_limits_for_java(self.limits)
+            return self.arena.run_code('run_clojure',
+                                       command_argv=args + ['clojure.main'],
+                                       code=self.source,
+                                       stdin=dataset,
+                                       limits=java_limits)
         elif self.language in Languages.interpreted:
             #run `python self.source`
             limits = dict(self.limits)
