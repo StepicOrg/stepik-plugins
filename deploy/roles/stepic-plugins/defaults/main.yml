@@ -53,7 +53,7 @@ sandbox_oracle_jdk_url: http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk
 # Path to the extracted jdk home directory. Note that jdkX.X.X comes from the
 # oracle jdk tarball (sandbox_oracle_jdk_url), keep these variables in sync.
 sandbox_jdk_home: "{{ sandbox_java_dir }}/jdk1.7.0_67"
-sandbox_java_bin: "{{ sandbox_jdk_home }}/jre/bin/java"
+sandbox_java_bin: "{{ sandbox_jdk_home }}/bin/java"
 
 # Sandbox for Shell (Bash)
 sandbox_shell_dir: "{{ sandbox_dir }}/shell"

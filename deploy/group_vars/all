@@ -43,3 +43,9 @@ stepic_plugins_interpreters:
     limits:
       CAN_FORK: 1
     reserved_memory: 209715200
+  clojure:
+    bin: "{{ sandbox_java_bin }}"
+    args: [-cp, "{{ sandbox_clojure_jar }}", clojure.main]
+    limits:
+      CAN_FORK: 1
+      MEMORY: null
