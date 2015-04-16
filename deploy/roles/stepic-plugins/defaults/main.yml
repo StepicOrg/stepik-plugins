@@ -72,6 +72,10 @@ sandbox_r_tmp_dir: "{{ sandbox_r_dir }}/tmp"
 sandbox_r_bin: "{{ sandbox_r_dir }}/R"
 sandbox_r_runner_bin: "{{ sandbox_r_dir }}/R_runner.sh"
 
+# Sandbox for Clojure
+sandbox_clojure_dir: "{{ sandbox_dir }}/clojure"
+sandbox_clojure_jar: "{{ sandbox_clojure_dir }}/clojure-1.6.0/clojure-1.6.0.jar"
+
 apparmor_profiles:
   - template: apparmor_python.profile.j2
     name: "{{ sandbox_python_bin.strip('/') | regex_replace('/', '.') }}"
