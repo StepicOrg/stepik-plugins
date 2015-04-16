@@ -54,6 +54,8 @@
 - include: sandbox_octave.yml
 - include: sandbox_rust.yml
 - include: sandbox_r.yml tags=r
+- include: sandbox_clojure.yml tags=clojure
+  sudo_user: "{{ stepic_user }}"
 
 - name: run tests for sandboxes
   shell: source {{ stepic_plugins_venv_dir }}/bin/activate; make test-sandbox

@@ -9,7 +9,7 @@ SANDBOX_JAVA = '{{ sandbox_java_bin }}'
 ARENA_DIR = '{{ arena_dir }}'
 
 COMPILERS = {{ stepic_plugins_compilers | to_nice_json }}
-INTERPRETERS = {{ stepic_plugins_interpreters | to_nice_json }}
+INTERPRETERS = {{ stepic_plugins_interpreters | to_nice_json | regex_replace(': null', ': None') }}
 
 ROOTNROLL_API_URL = '{{ rootnroll_api_url }}'
 ROOTNROLL_USERNAME = '{{ rootnroll_username }}'
