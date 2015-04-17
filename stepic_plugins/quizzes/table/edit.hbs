@@ -26,12 +26,17 @@
 </table>
 
 
-<button {{action 'delete_row'}}>Delete row</button>
+<button {{action 'delete_row'}}>Delete last row</button>
 <button {{action 'add_row'}}>Add new row</button>
-<br>
-<button {{action 'delete_column'}}>Delete column</button>
+<button {{action 'delete_column'}}>Delete last column</button>
 <button {{action 'add_column'}}>Add new column</button>
 <br>
 <br>
 {{input type="checkbox" name="Multiple" checked=source.options.is_checkbox}}
 <span title="Make a poll" class="edit-tooltip">Multiple choices are possible</span>
+
+{{input type="checkbox" name="Random rows" checked=source.options.is_randomize_rows}}
+<span title="Make a poll" class="edit-tooltip">Shiffle rows</span>
+
+{{input type="checkbox" name="Random columns" checked=source.options.is_randomize_columns}}
+<span title="Make a poll" class="edit-tooltip">Shuffle columns</span>

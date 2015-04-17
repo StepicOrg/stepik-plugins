@@ -1,3 +1,4 @@
+import random
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
 
@@ -51,12 +52,25 @@ class TableQuiz(BaseQuiz):
         
 
     def generate(self):
+        def permutate(array, permutation):
+            return [array[permutation[i]] for i in range(len(array))]
+
+        permutate_row = list(range(len(self.rows)))
+        if self.options.is_randomize_rows:
+            random.shuffle(permutate_row)
+
+        permutate_column = list(range(len(self.columns)))
+        if self.options.is_randomize_columns:
+            random.shuffle(permutate_column)
+
+        
         dataset = {'description': self.description,
-                   'rows': [row.name for row in self.rows],
-                   'columns': self.columns,
+                   'rows': [row.name for row in permutate(self.rows, permutate_row)],
+                   'columns': permutate(self.columns, permutate_column),
                    'is_checkbox': self.options.is_checkbox}
 
-        clue = [[column.choice for column in row.columns] for row in self.rows]
+        clue = [[column.choice for column in permutate(row.columns, permutate_column)] 
+                    for row in permutate(self.rows, permutate_row)]
         
         return dataset, clue
 
