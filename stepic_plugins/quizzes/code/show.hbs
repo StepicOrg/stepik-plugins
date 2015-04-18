@@ -2,10 +2,9 @@
   {{#unless disabled}}
     <div class="clearfix">
       <label class="code-quiz__lang-select">
-        <b>Programming language:</b>
-
         <label class="s-select">
           <select class="s-select__select lang-selector" {{action 'setLang' on='change'}}>
+            <option disabled>Select programming language:</option>
             {{#each lang in langs}}
               <option value="{{unbound lang}}">{{lang}}</option>
             {{/each}}

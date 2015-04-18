@@ -20,7 +20,7 @@ App.CodeQuizComponent = Em.Component.extend
   ).on('didInsertElement')
 
   langs: (->
-    _.keys @get('content.options.code_templates')
+    _.keys(@get('content.options.code_templates')).sort()
   ).property('content')
 
   code_template: (->
