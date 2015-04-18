@@ -1,16 +1,14 @@
 <div class="edit-title">Add options. Mark correct ones.</div>
 <div class="edit-text">
   <div class="choice-options">
-    {{#with picker_view as picker_view}}
-      {{#each option in source.options}}
-        <div class="choice-option">
-          <span class="drag-area" draggable="true"></span>
-          {{input type="checkbox" checked=option.is_correct class="is_correct"}}
-          {{input type="text" value=option.text class="text"}}
-          <span class="remove" {{action "removeOption" option}}></span>
-        </div>
-      {{/each}}
-    {{/with}}
+    {{#each option in source.options}}
+      <div class="choice-option">
+        <span class="drag-area" draggable="true"></span>
+        {{input type="checkbox" checked=option.is_correct class="is_correct"}}
+        {{input type="text" value=option.text class="text"}}
+        <span class="remove" {{action "removeOption" option}}></span>
+      </div>
+    {{/each}}
   </div>
   <div class="add-option" {{action "addOption"}}></div>
 </div>

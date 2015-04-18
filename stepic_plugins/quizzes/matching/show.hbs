@@ -1,18 +1,18 @@
 <ol class="matching-quiz__second-items">
-  {{#each pairs}}
+  {{#each row in options}}
     <li draggable="true" class="matching-quiz__second-item">
-      <div class="matching-quiz__second-item_number">{{@index}}</div>
-      <span>{{this.second}}</span>
-      <span class="matching-quiz__arrow-up">&uarr;&uarr;&uarr;</span>
-      <span class="matching-quiz__arrow-down">&darr;&darr;&darr;</span>
+      <div class="matching-quiz__second-item_number">{{row.index}}</div>
+      <span>{{row.second}}</span>
+      <span class="matching-quiz__arrow-up" {{action 'moveIt' row -1}}>&uarr;&uarr;&uarr;</span>
+      <span class="matching-quiz__arrow-down"  {{action 'moveIt' row 1}}>&darr;&darr;&darr;</span>
     </li>
   {{/each}}
 </ol>
 
 <ol class="matching-quiz__first-items">
-  {{#each pairs}}
+  {{#each pair in dataset.pairs}}
     <li class="matching-quiz__first-item">
-      <span>{{this.first}}</span>
+      <span>{{pair.first}}</span>
     </li>
   {{/each}}
 </ol>

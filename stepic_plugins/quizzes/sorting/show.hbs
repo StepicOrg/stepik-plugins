@@ -1,10 +1,10 @@
 <div class="sorting-quiz__items">
-  {{#each options}}
+  {{#each row in options}}
     <li draggable="true" class="sorting-quiz__item">
-      <div class="sorting-quiz__item_number">{{@index}}</div>
-      <span class="sorting-quiz__arrow-up">&uarr;</span>
-      <span class="sorting-quiz__arrow-down">&darr;</span>
-      <span>{{this}}</span>
+      <div class="sorting-quiz__item_number">{{row.index}}</div>
+      <span class="sorting-quiz__arrow-up" {{action 'moveIt' row -1}}>&uarr;</span>
+      <span class="sorting-quiz__arrow-down" {{action 'moveIt' row 1}}>&darr;</span>
+      <span>{{row.text}}</span>
     </li>
   {{/each}}
 </div>

@@ -4,15 +4,15 @@
 </div>
 <div class="edit-text">
   <div class="sort-options">
-    {{#each options}}
+    {{#each option in options}}
       <div class="sort-option">
         <span class="drag-area" draggable="true"></span>
-        <input type="text" class="text" value="{{this}}"/>
-        <span class="remove"></span>
+        {{input type="text" value=option.text class="text"}}
+        <span class="remove" {{action "removeOption" option}}></span>
       </div>
     {{/each}}
   </div>
-  <div class="add-option"></div>
+  <div class="add-option" {{action "addOption"}}></div>
 </div>
 <hr>
 <div class="right">See <a href="/lesson/9178">Documentation: Sorting</a> for docs and examples.</div>
