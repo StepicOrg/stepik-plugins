@@ -4,7 +4,7 @@
       <div class="sorting-quiz__item_number">{{row.index}}</div>
       <span class="sorting-quiz__arrow-up" {{action 'moveIt' row -1}}>&uarr;</span>
       <span class="sorting-quiz__arrow-down" {{action 'moveIt' row 1}}>&darr;</span>
-      <span>{{row.text}}</span>
+      <span class="sorting-quiz__item_text">{{row.text}}</span>
     </li>
   {{/each}}
 </div>
