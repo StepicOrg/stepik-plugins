@@ -7,6 +7,9 @@ App.CodeQuizComponent = Em.Component.extend
       unless @get('is_multiple_langs')
        @set 'user_lang', @get('langs.firstObject')
        @setInitialCode()
+    @set 'previous_reply',
+      code: @get('reply').code
+      language: @get('reply').language
   ).on('init')
 
   user_lang: Em.computed.alias 'reply.language'
