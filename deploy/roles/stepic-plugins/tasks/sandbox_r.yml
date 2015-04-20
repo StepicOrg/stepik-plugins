@@ -3,8 +3,15 @@
   shell: echo "deb http://cran.gis-lab.info/bin/linux/debian wheezy-cran3/" > /etc/apt/sources.list.d/r-lang.list
          creates=/etc/apt/sources.list.d/r-lang.list
 
+- name: check if R language repo key is installed
+  shell: apt-key list | grep 381BA480
+  ignore_errors: true
+  changed_when: no
+  register: apt_key_installed
+
 - name: import R language repo key
   command: apt-key adv --keyserver hkp://keys.gnupg.net:80 --recv-key 381BA480
+  when: apt_key_installed | failed
 
 - name: install R interpreter
   apt: name=r-base
