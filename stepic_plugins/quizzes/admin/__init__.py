@@ -142,7 +142,7 @@ class AdminQuiz(BaseQuiz):
 
     def cleanup(self, clue):
         server_id = clue
-        print("CLeaning up admin quiz attempt, server_id:", server_id)
+        print("Cleaning up admin quiz attempt, server_id:", server_id)
         self._destroy_server(server_id)
 
     def _check_bootstrap_script(self, script):
