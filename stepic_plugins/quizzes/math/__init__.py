@@ -35,6 +35,10 @@ class MathQuiz(BaseQuiz):
         }
         reply = {'formula': str}
 
+    LIMITS = {
+        'TIME': 10,
+    }
+
     def __init__(self, source):
         super().__init__(source)
         self.answer = source.answer
@@ -68,7 +72,7 @@ class MathQuiz(BaseQuiz):
         answer = to_expr(answer)
         """)
         try:
-            safe_exec.safe_exec(code, global_dict)
+            safe_exec.safe_exec(code, global_dict, limits=self.LIMITS)
         except safe_exec.SafeExecException:
             raise FormatError('Failed to parse correct answer.')
 
@@ -141,7 +145,7 @@ class MathQuiz(BaseQuiz):
                     hint += '\\nCannot check answer. Perhaps syntax is wrong.'
         """)
         try:
-            safe_exec.safe_exec(code, global_dict)
+            safe_exec.safe_exec(code, global_dict, limits=self.LIMITS)
         except safe_exec.SafeExecException:
             return False, 'Cannot check answer. Perhaps syntax is wrong.'
 

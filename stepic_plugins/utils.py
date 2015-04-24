@@ -20,6 +20,8 @@ def configure_by_language(config_dict, prefix, limits, user=None, env=None):
             msg = "can't find {} binary for {}!"
             logger.warning(msg.format(binary, lang))
         else:
+            if 'limits' in options:
+                limits.update(options['limits'])
             jail_code.configure(prefix + lang, binary, limits,
                                 user=user,
                                 extra_args=options['args'],
@@ -128,9 +130,9 @@ ALLOWED_ATTRIBUTES = {
 ALLOWED_STYLES = []
 
 
-def clean_html(text):
+def clean_html(text, strip=True):
     return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
-                        styles=ALLOWED_STYLES, strip=True)
+                        styles=ALLOWED_STYLES, strip=strip)
 
 
 NUMBER_REPLACEMENTS = (

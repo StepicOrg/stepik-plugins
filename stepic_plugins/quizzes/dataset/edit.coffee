@@ -2,7 +2,7 @@ App.DatasetQuizEditorComponent = Em.Component.extend
   setInitial: (->
     default_source =
       code: """
-          #This is sample dataset quiz
+          #This is sample dataset challenge
           import random
 
           def generate():

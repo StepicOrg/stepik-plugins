@@ -75,8 +75,25 @@ class ChoiceQuizInitTest(ChoiceQuizTest):
 
         quiz = ChoiceQuiz(ChoiceQuiz.Source(self.default_source))
 
-        assert quiz.options[0].text == 'alert("XSS");'
+        assert quiz.options[0].text == '&lt;script&gt;alert("XSS");&lt;/script&gt;'
         assert quiz.options[1].text == '<p>correct</p>'
+
+    def test_incorrect_html_options(self):
+        self.default_source['options'] = [
+            {'is_correct': False, 'text': 'a<b'},
+            {'is_correct': True, 'text': 'b>a'},
+        ]
+        self.default_source['sample_size'] = 2
+        with self.assertRaises(FormatError):
+            ChoiceQuiz(ChoiceQuiz.Source(self.default_source))
+
+    def test_correct_html_options(self):
+        self.default_source['options'] = [
+            {'is_correct': False, 'text': 'a < b'},
+            {'is_correct': True, 'text': 'b > a'},
+        ]
+        self.default_source['sample_size'] = 2
+        ChoiceQuiz(ChoiceQuiz.Source(self.default_source))
 
 
 class ChoiceQuizCleanReplyTest(ChoiceQuizTest):
