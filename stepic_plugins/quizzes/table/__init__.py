@@ -14,7 +14,7 @@ class TableQuiz(BaseQuiz):
                 'name': str,
                 'columns': [{'choice': bool}]
             }],
-            'options': { 
+            'options': {
                 'is_checkbox': bool,
                 'is_randomize_rows': bool,
                 'is_randomize_columns': bool,
@@ -48,12 +48,22 @@ class TableQuiz(BaseQuiz):
             if possible_answer > 1 and not self.options.is_checkbox:
                 raise FormatError("Can't be multiple right answer in this mode")
             if possible_answer == 0:
-                raise FormatError("There no right answers")
+                raise FormatError("There are no right answers")
+
+        for i in range(len(self.rows)):
+            for j in range(i + 1, len(self.rows)):
+                if self.rows[i].name == self.rows[j].name:
+                    raise FormatError("There are two equivalent rows: {} and {}".format(i + 1, j + 1))
         
+        for i in range(len(self.columns)):
+            for j in range(i + 1, len(self.columns)):
+                if self.columns[i] == self.columns[j]:
+                    raise FormatError("There are two equivalent columns: {} and {}".format(i + 1, j + 1))
+
 
     def generate(self):
         def permutate(array, permutation):
-            return [array[permutation[i]] for i in range(len(array))]
+            return [array[i] for i in permutation]
 
         permutate_row = list(range(len(self.rows)))
         if self.options.is_randomize_rows:
@@ -63,15 +73,13 @@ class TableQuiz(BaseQuiz):
         if self.options.is_randomize_columns:
             random.shuffle(permutate_column)
 
-        
         dataset = {'description': self.description,
                    'rows': [row.name for row in permutate(self.rows, permutate_row)],
                    'columns': permutate(self.columns, permutate_column),
                    'is_checkbox': self.options.is_checkbox}
 
-        clue = [[column.choice for column in permutate(row.columns, permutate_column)] 
+        clue = [[column.choice for column in permutate(row.columns, permutate_column)]
                     for row in permutate(self.rows, permutate_row)]
-        
         return dataset, clue
 
     def clean_reply(self, reply, dataset):
