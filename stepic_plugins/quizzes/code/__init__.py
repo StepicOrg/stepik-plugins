@@ -62,6 +62,7 @@ class CodeQuiz(BaseQuiz):
         }
 
     FAILED_TEST_MESSAGE = "Failed test #{test_number}. {message}"
+    SAMPLE_TEST_MESSAGE = "\nInput:\n{dataset}\nYour output:\n{reply}\nCorrect output:\n{clue}"
     PASSED_TEST_MESSAGE = "Passed test #{test_number}. {message}"
 
     CE_MESSAGE = "Compilation error"
@@ -146,6 +147,12 @@ class CodeQuiz(BaseQuiz):
                         test_number=test_number,
                         message=result[1] or self.WA_MESSAGE
                     )
+                    if i < self.samples_count:
+                        hint += self.SAMPLE_TEST_MESSAGE.format(
+                            dataset=dataset,
+                            reply=reply,
+                            clue=clue
+                        )
                     return False, hint
 
                 if result[1]:

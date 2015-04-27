@@ -10,21 +10,11 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
       @get('source') || default_source
   ).on('init')
 
-  picker_view: (->
-    if @get('is_multiple_choice')
-      Em.Checkbox
-    else
-      Em.RadioButton
-  ).property('is_multiple_choice')
-
   get_source: ->
     @set 'source.sample_size', parseInt(@get('source.sample_size'), 10)
     @get('source')
 
-  didInsertElement: ->
-    @setBindings()
-
-  setBindings: ->
+  setBindings: (->
     dragSource = null
     component = @
     options = @$('.choice-option')
@@ -47,6 +37,7 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
         }
       component.set 'source.options', new_options
       Em.run.next -> component.setBindings()
+  ).on('didInsertElement')
 
   actions:
     addOption: ->
@@ -54,10 +45,11 @@ App.ChoiceQuizEditorComponent = Em.Component.extend
         is_correct: false
         text: ''
       )
+      @set 'source.sample_size', (@get('source.sample_size') + 1)
       Em.run.next => @setBindings()
 
     removeOption: (option)->
-      @set('source.options', @get('source.options').without(option))
+      @set 'source.options', @get('source.options').without(option)
       if @get('source.options.length') < @get('source.sample_size') and @get('source.sample_size') > 1
         @set 'source.sample_size', @get('source.options.length')
       Em.run.next => @setBindings()

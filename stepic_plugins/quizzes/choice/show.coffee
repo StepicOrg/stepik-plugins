@@ -8,10 +8,9 @@ App.ChoiceQuizComponent = Em.Component.extend
   ).on('init')
 
   selections: Em.computed 'dataset', 'reply', ->
-    selections = _(@get('dataset.options')).zip(@get('reply.choices'))
-      .map ([text, is_checked]) ->
-          text: text
-          is_checked: is_checked
+    _(@get('dataset.options')).zip(@get('reply.choices')).map([text, is_checked]) ->
+      text: text
+      is_checked: is_checked
 
   picker_view: Em.computed 'dataset.is_multiple_choice', ->
     if @get('dataset.is_multiple_choice')
