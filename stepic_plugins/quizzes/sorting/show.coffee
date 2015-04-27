@@ -12,10 +12,7 @@ App.SortingQuizComponent = Em.Component.extend
     @set 'reply',  ordering: (option.index for option in @get('options'))
   ).observes('options')
 
-  didInsertElement: ->
-    @setBindings()
-
-  setBindings: ->
+  setBindings: (->
     dragSource = null
     component = @
     options = @$('.sorting-quiz__item')
@@ -47,6 +44,7 @@ App.SortingQuizComponent = Em.Component.extend
           text: $(v).find('.sorting-quiz__item_text').text()
       component.set 'options', new_options
       Em.run.next -> component.setBindings()
+  ).on('didInsertElement')
 
   actions:
     moveIt: (row, shift)->

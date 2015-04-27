@@ -15,10 +15,7 @@ App.SortingQuizEditorComponent = Em.Component.extend
   get_source: ->
     @get('source')
 
-  didInsertElement: ->
-    @setBindings()
-
-  setBindings: ->
+  setBindings: (->
     dragSource = null
     component = @
     options = @$('.sort-option')
@@ -38,6 +35,7 @@ App.SortingQuizEditorComponent = Em.Component.extend
         new_options.push $(v).find('.text').val()
       component.set 'source.options', new_options
       Em.run.next -> component.setBindings()
+  ).on('didInsertElement')
 
   actions:
     addOption: ->

@@ -12,11 +12,7 @@ App.MatchingQuizComponent = Em.Component.extend
     @set 'reply',  ordering: (option.index for option in @get('options'))
   ).observes('options')
 
-
-  didInsertElement: ->
-    @setBindings()
-
-  setBindings: ->
+  setBindings: (->
     dragSource = null
     component = @
     options = @$('.matching-quiz__second-item')
@@ -48,6 +44,7 @@ App.MatchingQuizComponent = Em.Component.extend
           second: $(v).find('.matching-quiz__second-item_text').text()
       component.set 'options', new_options
       Em.run.next -> component.setBindings()
+  ).on('didInsertElement')
 
   actions:
     moveIt: (row, shift)->

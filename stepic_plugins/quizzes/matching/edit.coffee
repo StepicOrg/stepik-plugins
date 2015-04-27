@@ -10,10 +10,7 @@ App.MatchingQuizEditorComponent = Em.Component.extend
   get_source: ->
     @get('source')
 
-  didInsertElement: ->
-    @setBindings()
-
-  setBindings: ->
+  setBindings: (->
     dragSource = null
     component = @
     options = @$('.matching-pair')
@@ -35,6 +32,7 @@ App.MatchingQuizEditorComponent = Em.Component.extend
           second: $(v).find('.second').val()
       component.set 'source.pairs', new_options
       Em.run.next -> component.setBindings()
+  ).on('didInsertElement')
 
   actions:
     addPair: ->
