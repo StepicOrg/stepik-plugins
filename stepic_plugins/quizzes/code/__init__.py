@@ -38,7 +38,7 @@ class Languages(object):
         RUST: "fn main() {\n    // put your Rust code here\n}",
         R: "# put your R code here",
         CLOJURE: ";; put your clojure code here",
-        MONO_CS: "public class HelloWorld\n{\n    public static void Main()\n"
+        MONO_CS: "public class MainClass\n{\n    public static void Main()\n"
                  "    {\n        // put your c# code here\n    }\n}",
     }
 
