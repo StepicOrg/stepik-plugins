@@ -1,4 +1,14 @@
-<div class="edit-title">Enter your code below.</div>
+<div class="edit-title">
+  Enter your code below.
+  {{#if content.tests_archive}}
+    <span class="right">
+      <a href="{{content.tests_archive}}"
+         title="Download an archive with the latest generated tests"
+         data-outward=true
+         download>Download tests</a>
+    </span>
+  {{/if}}
+</div>
 <div class="edit-text">
 {{view App.CodeEditorView
     valueBinding='source.code'
