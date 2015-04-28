@@ -1,0 +1,21 @@
+---
+- name: install Mono repo
+  shell: echo "deb http://download.mono-project.com/repo/debian wheezy main" > /etc/apt/sources.list.d/mono.list
+         creates=/etc/apt/sources.list.d/mono.list
+
+- name: check if Mono repo key is installed
+  shell: apt-key list | grep D3D831EF
+  ignore_errors: true
+  changed_when: no
+  register: apt_key_installed
+
+- name: import Mono repo key
+  command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  when: apt_key_installed | failed
+
+- name: install Mono
+  apt: name={{ item }}
+       state=present
+  with_items:
+    - mono-devel
+    - mono-mcs

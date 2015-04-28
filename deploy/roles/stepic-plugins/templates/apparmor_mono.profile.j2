@@ -1,0 +1,10 @@
+#include <tunables/global>
+
+{{ sandbox_mono_bin }} {
+    #include <abstractions/base>
+
+    /etc/mono/**                         r,
+
+    {{ arena_dir }}**                    r,
+    {{ arena_dir }}/codejail-*/main.exe  w,
+}
