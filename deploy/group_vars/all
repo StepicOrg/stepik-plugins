@@ -26,6 +26,10 @@ stepic_plugins_compilers:
     bin: rustc
     ext: rs
     args: [-o, main]
+  "mono c#":
+    bin: /usr/bin/mcs
+    ext: cs
+    args: [-optimize+]
 
 stepic_plugins_interpreters:
   shell:
@@ -49,3 +53,8 @@ stepic_plugins_interpreters:
     limits:
       CAN_FORK: 1
       MEMORY: null
+  "mono c#":
+    bin: "{{ sandbox_mono_bin }}"
+    args: []
+    limits:
+      CAN_FORK: 1
