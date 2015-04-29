@@ -19,3 +19,14 @@
   with_items:
     - mono-devel
     - mono-mcs
+
+- name: create Mono sandbox directory
+  file: path={{ sandbox_mono_dir }}
+        state=directory
+        owner={{ stepic_user }}
+        group={{ stepic_user }}
+
+- name: copy system mono binary to Mono sandbox
+  shell: cp `which mono` {{ sandbox_mono_bin }}
+         creates={{ sandbox_mono_bin }}
+  sudo_user: "{{ stepic_user }}"

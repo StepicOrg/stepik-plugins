@@ -77,7 +77,8 @@ sandbox_clojure_dir: "{{ sandbox_dir }}/clojure"
 sandbox_clojure_jar: "{{ sandbox_clojure_dir }}/clojure-1.6.0/clojure-1.6.0.jar"
 
 # Sandbox for Mono
-sandbox_mono_bin: "/usr/bin/mono"
+sandbox_mono_dir: "{{ sandbox_dir }}/mono"
+sandbox_mono_bin: "{{ sandbox_mono_dir }}/mono"
 
 apparmor_profiles:
   - template: apparmor_python.profile.j2
