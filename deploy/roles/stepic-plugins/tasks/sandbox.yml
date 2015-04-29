@@ -31,8 +31,6 @@
   notify:
     - save iptables
 
-- include: sandbox_apparmor.yml tags=sandbox,apparmor
-
 - name: create sandbox base directory
   file: path={{ sandbox_dir }}
         state=directory
@@ -57,6 +55,8 @@
 - include: sandbox_clojure.yml tags=clojure
   sudo_user: "{{ stepic_user }}"
 - include: sandbox_mono.yml tags=mono
+
+- include: sandbox_apparmor.yml tags=sandbox,apparmor
 
 - name: run tests for sandboxes
   shell: source {{ stepic_plugins_venv_dir }}/bin/activate; make test-sandbox
