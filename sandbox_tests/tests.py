@@ -126,3 +126,8 @@ class TestR(SandboxTest):
 class TestClojure(SandboxTest):
     language = Languages.CLOJURE
     extension = 'clj'
+
+
+class TestMonoCS(SandboxTest):
+    language = Languages.MONO_CS
+    extension = 'cs'

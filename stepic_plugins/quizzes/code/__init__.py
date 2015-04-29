@@ -21,7 +21,9 @@ class Languages(object):
     RUST = 'rust'
     R = 'r'
     CLOJURE = 'clojure'
-    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL, RUST, R, CLOJURE]
+    MONO_CS = 'mono c#'
+    all = [PYTHON, CPP, HASKELL, JAVA, OCTAVE, ASM32, ASM64, SHELL, RUST, R,
+           CLOJURE, MONO_CS]
     compiled = [CPP, HASKELL, ASM32, ASM64, RUST]
     interpreted = [PYTHON, OCTAVE, SHELL, R, CLOJURE]
     default_templates = {
@@ -36,6 +38,8 @@ class Languages(object):
         RUST: "fn main() {\n    // put your Rust code here\n}",
         R: "# put your R code here",
         CLOJURE: ";; put your clojure code here",
+        MONO_CS: "public class MainClass\n{\n    public static void Main()\n"
+                 "    {\n        // put your c# code here\n    }\n}",
     }
 
 
@@ -286,6 +290,12 @@ class CodeRunner(object):
                                        code=self.source,
                                        stdin=dataset,
                                        limits=java_limits)
+        elif self.language == Languages.MONO_CS:
+            #run `mono main.exe`
+            return self.arena.run_code('run_mono c#',
+                                       command_argv=['main.exe'],
+                                       stdin=dataset,
+                                       limits=self.limits)
         elif self.language in Languages.interpreted:
             #run `python self.source`
             limits = dict(self.limits)
