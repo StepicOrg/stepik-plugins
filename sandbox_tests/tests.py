@@ -12,7 +12,7 @@ class SandboxTest(TestCase):
     extension = ''
     limits = {
         "TIME": 3,
-        "MEMORY": 128 * 1024 * 1024
+        "MEMORY": 256 * 1024 * 1024
     }
 
     def setUp(self):
