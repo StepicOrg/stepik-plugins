@@ -212,16 +212,17 @@ class AdminQuiz(BaseQuiz):
                 sandbox['exit_code'] != 0):
             stdout = base64.b64decode(sandbox['stdout']).decode(errors='replace')
             stderr = base64.b64decode(sandbox['stderr']).decode(errors='replace')
-            raise PluginError("Failed to bootstrap your virtual machine: {0}\n{1}"
-                              .format(stdout, stderr))
+            raise PluginError("Failed to bootstrap your virtual machine.\n\n"
+                              "{0}\n{1}".format(stdout, stderr))
         elif sandbox['status'] == SandboxStatus.FAILURE:
             raise PluginError("Failed to bootstrap your virtual machine: {0}"
                               .format(sandbox['error']))
 
     def _create_bootstrap_sandbox(self, server, script):
-        sandbox_cmd = ('fab bootstrap -f /bootstrap/fabfile.py '
-                       '-i /bootstrap/ssh-key -H {ip} -u root'
-                       .format(ip=server['private_ip']))
+        sandbox_cmd = (
+            'fab bootstrap -f /bootstrap/fabfile.py -i /bootstrap/ssh-key '
+            '-H {ip} -u root --hide=aborts,running,stdout'
+        ).format(ip=server['private_ip'])
         sandbox_body = {
             'profile': 'linux-bootstrap',
             'command': sandbox_cmd,
