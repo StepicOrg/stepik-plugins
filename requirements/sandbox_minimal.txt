@@ -1,1 +1,3 @@
 git+https://github.com/StepicOrg/stepic-utils.git
+
+sympy==0.7.5
