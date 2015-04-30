@@ -3,7 +3,8 @@ App.DatasetQuizComponent = Em.Component.extend
 
   placeholder: (->
     if @get('disabled')
-      'You can download your submission'
+      if @get('reply_url')
+        'You can download your submission'
     else
       if @get('dataset_not_downloaded')
         'Download dataset first'
