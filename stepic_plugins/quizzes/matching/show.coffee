@@ -33,24 +33,31 @@ App.MatchingQuizComponent = Em.Component.extend
     .on 'dragleave', (e) ->
       options.removeClass('matching-quiz__second-item-insert-before').removeClass 'matching-quiz__second-item-insert-after'
     .on 'drop', (e)->
-      if options.index(dragSource) > options.index(@)
-        $(@).before dragSource
-      else
-        $(@).after dragSource
-      new_options = []
-      component.$('.matching-quiz__second-item').each (i,v)->
-        new_options.push
-          index: $(v).find('.matching-quiz__second-item_number').text()
-          second: $(v).find('.matching-quiz__second-item_text').text()
-      component.set 'options', new_options
-      Em.run.next -> component.setBindings()
+      component.moveRow options.index(dragSource), options.index(@) - options.index(dragSource)
   ).on('didInsertElement')
+
+  moveItem: (list, position, shift)->
+    while (shift != 0)
+      delta = shift / Math.abs(shift)
+      row = list[position]
+      list[position] = list[position + delta]
+      list[position + delta] = row
+      position = position + delta
+      shift = shift - delta
+    list
+
+  moveRow: (position, shift)->
+    new_options = @get('options').slice()
+    new_options = @moveItem new_options, position, shift
+    @set 'options', new_options
+    Em.run.next =>
+      @setBindings()
+      element = @$('.matching-quiz__second-items')[0]
+      if MathJax? and element
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, element])
 
   actions:
     moveIt: (row, shift)->
       new_options = @get('options').slice()
       pos = new_options.indexOf(row)
-      new_options[pos] = new_options[pos + shift]
-      new_options[pos + shift] = row
-      @set 'options', new_options
-      Em.run.next => @setBindings()
+      @moveRow pos, shift

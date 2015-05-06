@@ -36,11 +36,19 @@ App.SortingQuizComponent = Em.Component.extend
       component.moveRow options.index(dragSource), options.index(@) - options.index(dragSource)
   ).on('didInsertElement')
 
-  moveRow: (pos, shift)->
+  moveItem: (list, position, shift)->
+    while (shift != 0)
+      delta = shift / Math.abs(shift)
+      row = list[position]
+      list[position] = list[position + delta]
+      list[position + delta] = row
+      position = position + delta
+      shift = shift - delta
+    list
+
+  moveRow: (position, shift)->
     new_options = @get('options').slice()
-    row = new_options[pos]
-    new_options[pos] = new_options[pos + shift]
-    new_options[pos + shift] = row
+    new_options = @moveItem new_options, position,  shift
     @set 'options', new_options
     Em.run.next =>
       @setBindings()
