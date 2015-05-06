@@ -53,4 +53,8 @@ App.SortingQuizComponent = Em.Component.extend
       new_options[pos] = new_options[pos + shift]
       new_options[pos + shift] = row
       @set 'options', new_options
-      Em.run.next => @setBindings()
+      Em.run.next =>
+        @setBindings()
+        element = @$('.sorting-quiz__items')[0]
+        if MathJax? and element
+          MathJax.Hub.Queue(["Typeset", MathJax.Hub, element])
