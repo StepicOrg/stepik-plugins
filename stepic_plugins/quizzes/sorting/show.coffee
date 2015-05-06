@@ -33,28 +33,24 @@ App.SortingQuizComponent = Em.Component.extend
     .on 'dragleave', (e) ->
       options.removeClass('sorting-quiz__item-insert-before').removeClass 'sorting-quiz__item-insert-after'
     .on 'drop', (e)->
-      if options.index(dragSource) > options.index(@)
-        $(@).before dragSource
-      else
-        $(@).after dragSource
-      new_options = []
-      component.$('.sorting-quiz__item').each (i,v)->
-        new_options.push
-          index: $(v).find('.sorting-quiz__item_number').text()
-          text: $(v).find('.sorting-quiz__item_text').text()
-      component.set 'options', new_options
-      Em.run.next -> component.setBindings()
+      component.moveRow options.index(dragSource), options.index(@) - options.index(dragSource)
   ).on('didInsertElement')
+
+  moveRow: (pos, shift)->
+    new_options = @get('options').slice()
+    row = new_options[pos]
+    new_options[pos] = new_options[pos + shift]
+    new_options[pos + shift] = row
+    @set 'options', new_options
+    Em.run.next =>
+      @setBindings()
+      element = @$('.sorting-quiz__items')[0]
+      if MathJax? and element
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, element])
 
   actions:
     moveIt: (row, shift)->
       new_options = @get('options').slice()
       pos = new_options.indexOf(row)
-      new_options[pos] = new_options[pos + shift]
-      new_options[pos + shift] = row
-      @set 'options', new_options
-      Em.run.next =>
-        @setBindings()
-        element = @$('.sorting-quiz__items')[0]
-        if MathJax? and element
-          MathJax.Hub.Queue(["Typeset", MathJax.Hub, element])
+      @moveRow pos, shift
+
