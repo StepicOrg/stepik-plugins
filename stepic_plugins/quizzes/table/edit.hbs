@@ -1,0 +1,46 @@
+<table border="0" align="center">
+  <tr>
+    <th>
+      {{input type="text" value=source.description class="text"}}
+    </th>
+
+    {{#each column in source.columns}}
+      <th>
+        {{input type="text" value=column class="text"}}
+      </th>
+    {{/each}}
+  </tr>
+
+  {{#each row in source.rows}}
+  <tr>
+    <td>
+      {{input type="text" value=row.name class="text"}}
+    </td>
+    {{#each cell in row.columns}}
+      <td>
+        {{input type="checkbox" checked=cell.choice class="is_correct"}}
+      </td>
+    {{/each}}
+  </tr>
+  {{/each}}
+</table>
+
+
+<button {{action 'deleteRow'}}>Delete last row</button>
+<button {{action 'addRow'}}>Add new row</button>
+<button {{action 'deleteColumn'}}>Delete last column</button>
+<button {{action 'addColumn'}}>Add new column</button>
+<br>
+<br>
+<label class="option">
+  {{input type="checkbox" name="Multiple" checked=source.options.is_checkbox}}
+  <span title="Multiple answers" class="edit-tooltip">Multiple choices are possible</span>
+</label>
+<label class="option">
+  {{input type="checkbox" name="Random rows" checked=source.options.is_randomize_rows}}
+  <span title="Make shuffle rows" class="edit-tooltip">Shuffle rows</span>
+</label>
+<label class="option">
+  {{input type="checkbox" name="Random columns" checked=source.options.is_randomize_columns}}
+  <span title="Make shuffle columns" class="edit-tooltip">Shuffle columns</span>
+</label>

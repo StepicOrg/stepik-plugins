@@ -1,0 +1,38 @@
+<table border="0" align="center">
+<tr>
+<th>
+{{simple-render
+      text=dataset.description
+      class="option__text"}}
+</th>
+
+{{#each column in dataset.columns}}
+  <th>
+  {{simple-render
+        text=column
+        class="option__text"}}
+  </th>
+{{/each}}
+</tr>
+
+{{#with picker_view as picker_view}}
+  {{#each row in reply.choices}}
+    <tr>
+    <td>
+    {{simple-render
+        text=row.name_row
+        class="option__text"}}
+    </td>
+    {{#each column in row.columns}}
+      <td>
+      {{view picker_view
+          name=row.name_row
+          checked=column.answer
+          disabledBinding="disabled"          
+          class="option__input"}}
+      </td>
+    {{/each}}
+    </tr>
+  {{/each}}
+{{/with}}
+</table>
