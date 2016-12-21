@@ -1,10 +1,34 @@
-This project provides sandbox for developing custom quizzes at [Stepik](https://stepik.org).
-
+This repository contains the code of quizzes at [Stepik](https://stepik.org).
 
 Requirements
 ===
 
 Python >=3.4 required.
+
+### Run tests
+
+Make sure you've initialized the development environment:
+```
+$ make init
+```
+Run both RPC functional and unit tests for all quizzes:
+```
+$ py.test
+```
+#### Unit tests
+```
+$ py.test stepic_plugins/quizzes              # test all quizzes
+$ py.test stepic_plugins/quizzes/<quiz_name>  # test only <quiz_name> quiz 
+```
+#### RPC functional tests
+Run RPC functional tests using a fake server (doesn't require any external services and broker communication):
+```
+$ py.test tests
+```
+Run RPC functional tests against a running stepic-plugins instance using a real RabbitMQ broker:
+```
+$ py.test --rpc-url=rabbit://guest:guest@localhost:5672// tests
+```
 
 Documentation
 ===
