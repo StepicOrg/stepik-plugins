@@ -1,3 +1,4 @@
+import base64
 import decimal
 import logging
 import os
@@ -8,6 +9,7 @@ import bleach
 from codejail import jail_code
 
 from stepic_plugins.exceptions import FormatError
+from stepic_plugins.schema import ATTACHMENT_HEADER
 
 
 logger = logging.getLogger(__name__)
@@ -20,12 +22,17 @@ def configure_by_language(config_dict, prefix, limits, user=None, env=None):
             msg = "can't find {} binary for {}!"
             logger.warning(msg.format(binary, lang))
         else:
+            lang_limits = dict(limits)
             if 'limits' in options:
-                limits.update(options['limits'])
-            jail_code.configure(prefix + lang, binary, limits,
+                lang_limits.update(options['limits'])
+            lang_env = env
+            if 'env' in options:
+                lang_env = env.copy() if env is not None else {}
+                lang_env.update(options['env'])
+            jail_code.configure(prefix + lang, binary, lang_limits,
                                 user=user,
                                 extra_args=options['args'],
-                                env=env)
+                                env=lang_env)
 
 
 def configure_jail_code(settings):
@@ -56,9 +63,17 @@ def configure_jail_code(settings):
                             extra_args=args,
                             user=settings.SANDBOX_USER,
                             env=settings.SANDBOX_ENV)
+    if settings.SANDBOX_JAVA8:
+        java_limits, args = get_limits_for_java(settings.USER_CODE_LIMITS)
+        jail_code.configure('run_java8',
+                            settings.SANDBOX_JAVA8,
+                            java_limits,
+                            extra_args=args,
+                            user=settings.SANDBOX_USER,
+                            env=settings.SANDBOX_ENV)
 
     compilers_env = settings.SANDBOX_ENV.copy()
-    compilers_env.update({"PATH": os.environ["PATH"]})
+    compilers_env.update({"PATH": os.environ["PATH"], "HOME": home})
     configure_by_language(settings.COMPILERS, 'compile_', settings.COMPILER_LIMITS,
                           env=compilers_env)
     if 'java' in settings.COMPILERS:
@@ -70,6 +85,28 @@ def configure_jail_code(settings):
                             java_limits,
                             extra_args=options['args'] + args,
                             env=compilers_env)
+        if 'java8' in settings.COMPILERS:
+            options = settings.COMPILERS['java8']
+            jail_code.configure('compile_java8',
+                                options['bin'],
+                                java_limits,
+                                extra_args=options['args'] + args,
+                                env=compilers_env)
+        if 'scala' in settings.COMPILERS:
+            options = settings.COMPILERS['scala']
+            jail_code.configure('compile_scala',
+                                options['bin'],
+                                java_limits,
+                                extra_args=options['args'] + args,
+                                env=dict(compilers_env,
+                                         JAVA_HOME=settings.SANDBOX_JAVA_HOME))
+            java_limits, args = get_limits_for_java(settings.USER_CODE_LIMITS)
+            jail_code.configure('run_scala',
+                                options['bin'][:-1],  # scalac -> scala
+                                java_limits,
+                                user=settings.SANDBOX_USER,
+                                env=dict(settings.SANDBOX_ENV,
+                                         JAVA_HOME=settings.SANDBOX_JAVA_HOME))
 
     configure_by_language(settings.INTERPRETERS, 'run_', settings.USER_CODE_LIMITS,
                           user=settings.SANDBOX_USER, env=settings.SANDBOX_ENV)
@@ -96,6 +133,7 @@ ALLOWED_TAGS = [
     'a',
     'abbr',
     'acronym',
+    'audio',
     'b',
     'blockquote',
     'br',
@@ -112,6 +150,7 @@ ALLOWED_TAGS = [
     'p',
     'pre',
     'span',
+    'strike',
     'strong',
     'ul',
 ]
@@ -120,6 +159,7 @@ ALLOWED_ATTRIBUTES = {
     'a': ['href', 'title', 'rel', 'target'],
     'abbr': ['title'],
     'acronym': ['title'],
+    'audio': ['src', 'controls'],
     'div': ['class'],
     'img': ['src', 'alt', 'class', 'title', 'width', 'height'],
     'span': ['class'],
@@ -130,9 +170,13 @@ ALLOWED_ATTRIBUTES = {
 ALLOWED_STYLES = []
 
 
-def clean_html(text, strip=True):
-    return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
+def clean_html(text, tags=ALLOWED_TAGS, strip=True):
+    return bleach.clean(text, tags=tags, attributes=ALLOWED_ATTRIBUTES,
                         styles=ALLOWED_STYLES, strip=strip)
+
+
+def normalize_text(text):
+    return os.linesep.join(text.splitlines()).strip()
 
 
 NUMBER_REPLACEMENTS = (
@@ -155,3 +199,23 @@ def parse_decimal(s, filed_name):
         return decimal.Decimal(s)
     except decimal.DecimalException:
         raise FormatError("Field `{}` should be a number".format(filed_name))
+
+
+def attachment_content(attachment):
+    content = (getattr(attachment, 'content') if hasattr(attachment, 'content')
+               else attachment['content'])
+    if not content:
+        return None
+    return base64.b64decode(content[len(ATTACHMENT_HEADER):])
+
+
+def create_attachment(filename, content):
+    if isinstance(content, str):
+        content = content.encode()
+    return {
+        'name': filename,
+        'type': 'application/octet-stream',
+        'size': len(content),
+        'content': ATTACHMENT_HEADER + base64.b64encode(content).decode(),
+        'url': '',
+    }

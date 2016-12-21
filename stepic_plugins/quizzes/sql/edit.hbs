@@ -1,0 +1,32 @@
+<div class="edit-title">
+  Init SQL script (optional)
+</div>
+<div class="edit-text">
+  {{view CodeEditorView
+         value=source.init_sql
+         lang="text/x-mysql"
+         placeholder="Type your SQL code here..."
+         disabled=disabled}}
+</div>
+<br>
+<div class="edit-title">
+  Solution SQL query
+</div>
+<div class="edit-text">
+  {{view CodeEditorView
+         value=source.solve_sql
+         lang="text/x-mysql"
+         placeholder="Type your SQL code here..."
+         disabled=disabled}}
+</div>
+<br>
+<div class="edit-title">
+  Check code
+</div>
+<div class="edit-text">
+  {{view CodeEditorView
+         value=source.check_code
+         lang="python"
+         placeholder="Type your code here..."
+         disabled=disabled}}
+</div>

@@ -1,0 +1,16 @@
+<div class="edit-block">
+  <div class="edit-title">Task ID:</div>
+  <div class="edit-text">
+    {{input value=source.task_id
+            class="ember-text-field"
+            type="number"
+            required="true"}}
+  </div>
+</div>
+
+<div class="edit-block linux-code-quiz-edit__options">
+  <label class="option">
+    {{input type="checkbox" name="is_makefile_required" checked=source.is_makefile_required}}
+    <span title="Learners are required to submit a Makefile file" class="edit-tooltip">Makefile is required</span>
+  </label>
+</div>

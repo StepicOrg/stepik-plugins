@@ -1,11 +1,11 @@
-{{#each selections}}
+{{#each selections as |selection|}}
   <label class="option">
     <input
             type="radio"
             name="options"
             class="option__input"
-        {{#if ../disabled}}disabled{{/if}}
-        {{#if is_checked}}checked{{/if}}>
-    <span class="option__text">{{ text }}</span>
+        {{if disabled "disabled"}}
+        {{if selection.is_checked "checked"}}>
+    <span class="option__text">{{ selection.text }}</span>
   </label>
 {{/each}}

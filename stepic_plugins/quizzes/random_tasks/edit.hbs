@@ -1,0 +1,52 @@
+<div>
+  <span>Task:</span>
+  {{textarea classNames="random-tasks-quiz-edit__textarea"
+             placeholder="Write text here"
+             value=source.task}}
+</div>
+
+<div>
+  <div class="random-tasks-edit__half-block">
+    <div class="edit-title">Solve</div>
+        {{textarea classNames="random-tasks-quiz-edit__textarea"
+                   placeholder="Write text here"
+                   value=source.solve}}
+  </div>
+  <div class="random-tasks-edit__half-block">
+    <div class="edit-title">Tolerated Error</div>
+      {{textarea classNames="random-tasks-quiz-edit__textarea"
+                 placeholder="Write text here"
+                 value=source.max_error}}
+  </div>
+</div>
+
+<div class="random-tasks-edit__block">
+  Total number of different tasks: {{source.combinations}}
+</div>
+
+{{#each source.ranges as |range|}}
+  <div>
+    <div class="edit-title">{{range.variable}}</div>
+    <div class="random-tasks-edit__small-block">
+      <div class="edit-title">From</div>
+      {{input value=range.num_from
+           class="random-tasks-quiz-edit__small-textarea"
+           required="true"}}
+    </div>
+    <div class="random-tasks-edit__small-block">
+     <div class="edit-title">To</div>
+     {{input value=range.num_to
+            class="random-tasks-quiz-edit__small-textarea"
+            required="true"}}
+    </div>
+    <div class="random-tasks-edit__small-block">
+     <div class="edit-title">Step</div>
+     {{input value=range.num_step
+            class="random-tasks-quiz-edit__small-textarea"
+            required="true"}}
+    </div>
+  </div>
+{{/each}}
+
+<hr>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/30156/step/1">Documentation: Random Tasks</a> for docs and examples.</div>

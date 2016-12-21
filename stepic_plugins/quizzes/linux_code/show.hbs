@@ -1,0 +1,19 @@
+<div>
+  <span title="Attach your solution.c file">solution.c:</span>
+  {{attachment-list attachments=reply.solution disabled=disabled is_title_hidden=true maxFiles=1 maxSize=1048576}}
+</div>
+
+{{#if dataset.is_makefile_required}}
+<div>
+  <span title="Attach your Makefile file">Makefile:</span>
+  {{attachment-list attachments=reply.makefile disabled=disabled is_title_hidden=true maxFiles=1 maxSize=1048576}}
+</div>
+{{/if}}
+
+<br>
+<div>
+  <b>Внимание!</b> Этот тип заданий на {{global_state.project_name}} является <b>экспериментальным</b>. Возможны неполадки
+  в работе и долгие задержки при проверке решений. Разработкой проверяющей системы занимаются авторы данного
+  курса, поэтому о всех проблемах просим писать на адрес <a href="mailto:linux-programming-info@googlegroups.com">
+  linux-programming-info@googlegroups.com</a> или в комментариях ниже. Спасибо за понимание и хорошего обучения!
+</div>

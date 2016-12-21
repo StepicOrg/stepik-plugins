@@ -1,0 +1,16 @@
+<div>
+  <label title="Choose image to upload">
+    <input type="file" class="puzzle-quiz-edit__input file-input" accept="image/*" {{action 'startUpload' on="change"}}>
+    <span class="button secondary">Upload image</span>
+  </label>
+  <img src={{source.image_src}} class=puzzle-quiz__image>
+</div>
+<br>
+<label class="s-select">
+  <span class="edit-tooltip" title="1 = simple and 7 = difficult">Difficulty:</span>
+  {{view "select" content=level_options
+                  value=source.level
+                  optionValuePath="content.value"
+                  optionLabelPath="content.label"
+                  classNames="s-select__select"}}
+</label>

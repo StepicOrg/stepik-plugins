@@ -36,8 +36,8 @@
 <div class="edit-text">
   Optional code with <code>solve()</code> and <code>check(reply)</code> functions. If specified, no previous options applied.
   Submission will be graded based of result of <code>check(reply)</code>.
-  {{view App.CodeEditorView
-    valueBinding='source.code'
+  {{view CodeEditorView
+    value=source.code
     required='false'
     lang='python'
     placeholder="Type your code here..."}}
@@ -45,4 +45,4 @@
   {{web-console code=source.code}}
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9179">Documentation: String</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9179/step/1">Documentation: String</a> for docs and examples.</div>

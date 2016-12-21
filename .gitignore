@@ -54,5 +54,5 @@ docs/_build/
 .idea
 .vagrant
 arena
-sandbox
+/sandbox
 stepic_plugins/settings/local.py

@@ -1,10 +1,10 @@
 Introduction
 ************
 
-`Stepic <https://stepic.org>`_ is an educational engine, focused on interactive 
+`Stepik <https://stepik.org>`_ is an educational engine, focused on interactive
 problems (quizzes).
 
-**Please note, that this documentation is a bit obsolete – Stepic Plugins become standalone
+**Please note, that this documentation is a bit obsolete – Stepik Plugins become standalone
 service in Feb 2015. We'll update this docs in Feb-March 2015.**
 
 Quiz is an interactive component, which can present task to the user,
@@ -13,8 +13,8 @@ gather user's solution, evaluate it and present the result back to the user.
 Common types of quizzes are choice quizzes, which ask user to select one or more options,
 Code quizzes, which involve writing some code or math quizzes, which check formulas.
 
-It is possible to extend Stepic engine with custom quizzes via plugins. Here you can find
-a general overview of what does it takes to create a Stepic plugin.
+It is possible to extend Stepik engine with custom quizzes via plugins. Here you can find
+a general overview of what does it takes to create a Stepik plugin.
 
 
 Quiz Architecture

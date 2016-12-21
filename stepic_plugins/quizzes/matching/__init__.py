@@ -31,15 +31,25 @@ class MatchingQuiz(BaseQuiz):
             raise FormatError("Empty pairs")
 
         first_parts = [pair.first for pair in self.pairs]
-        second_parts = [pair.second for pair in self.pairs]
-        if len(first_parts) != len(set(first_parts)) or len(second_parts) != len(set(second_parts)):
+        nonblank_second_parts = [pair.second for pair in self.pairs if pair.second]
+        if (len(first_parts) != len(set(first_parts)) or
+                len(nonblank_second_parts) != len(set(nonblank_second_parts))):
             raise FormatError("Ambiguous pairs")
 
     def clean_reply(self, reply, dataset):
+        if list(sorted(reply.ordering)) != list(range(len(reply.ordering))):
+            raise FormatError("Reply ordering is not a correct permutation")
         return reply.ordering
 
     def check(self, reply, clue):
-        return reply == clue
+        inverse_perm, blanks = clue
+        # there is only one correct permutation for non-blank unique elements
+        nonblank_perm = [image for i, image in enumerate(inverse_perm) if image not in blanks]
+        reply_nonblank_perm = [image for i, image in enumerate(reply) if image not in blanks]
+        # any permutation for blank elements is correct
+        blank_indexes = [i for i, image in enumerate(inverse_perm) if image in blanks]
+        reply_blank_indexes = [i for i, image in enumerate(reply) if image in blanks]
+        return nonblank_perm == reply_nonblank_perm and blank_indexes == reply_blank_indexes
 
     def generate(self):
         pairs = list(self.pairs)
@@ -55,5 +65,5 @@ class MatchingQuiz(BaseQuiz):
                 'second': pairs[permutation[i]].second
             })
         inverse_permutation, _ = zip(*sorted(enumerate(permutation), key=lambda x: x[1]))
-        return dataset, inverse_permutation
-
+        blanks = [i for i, pair in enumerate(dataset['pairs']) if not pair['second']]
+        return dataset, (inverse_permutation, blanks)

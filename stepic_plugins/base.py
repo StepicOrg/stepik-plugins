@@ -1,8 +1,12 @@
-from importlib import import_module
 import os
 
-from . import schema
+from importlib import import_module
+
+from voluptuous import Schema
+
+from . import schema, settings
 from .exceptions import UnknownPluginError
+from .schema import ParsedJSON
 
 
 QUIZZES_DIR = os.path.join(os.path.dirname(__file__), 'quizzes')
@@ -18,6 +22,7 @@ class BaseQuiz(object):
 
     def __init__(self, source):
         assert self.name, '`name` attribute should be overridden in subclass'
+        self.source = source
 
     def clean_reply(self, reply, dataset):
         return reply
@@ -54,27 +59,46 @@ def quiz_wrapper_factory(quiz_class):
         wrapped_class = quiz_class
 
         def __init__(self, source, supplementary=None):
-            source = quiz_class.Source(source)
+            if isinstance(quiz_class.Schemas.source, Schema):
+                # new voluptuous schema
+                source = quiz_class.Schemas.source(source)
+            else:
+                source = quiz_class.Source(source)
             if supplementary is None:
                 self.quiz = quiz_class(source)
             else:
                 self.quiz = quiz_class(source, supplementary)
 
         def clean_reply(self, reply, dataset=None):
+            # TODO: Fix this workaround for backward compatibility of old reply schema
+            #       in string quiz.
+            if (self.wrapped_class.name == 'string' and isinstance(reply, dict) and
+                    'files' not in reply):
+                reply['files'] = []
             reply = quiz_class.Reply(reply)
             if dataset:
                 dataset = quiz_class.Dataset(dataset)
-            return self.quiz.clean_reply(reply, dataset)
+            cleaned_reply = self.quiz.clean_reply(reply, dataset)
+            if self.name in settings.OLD_STYLE_CLEAN_REPLY_QUIZZES:
+                return cleaned_reply
+            if isinstance(cleaned_reply, ParsedJSON):
+                cleaned_reply = cleaned_reply._original
+            # `clean_reply` return value should be a valid reply
+            return quiz_class.Reply(cleaned_reply)
 
         def check(self, reply, clue=None):
             ret = self.quiz.check(reply, clue)
-            if isinstance(ret, bool):
+            if isinstance(ret, (bool, int, float)):
                 score = ret
                 hint = ''
             else:
                 score, hint = ret
             assert 0 <= score <= 1, 'Score should be True or False instead of {}'.format(score)
-            assert isinstance(hint, str), 'hint should be a string instead of {}'.format(hint)
+            hint_assert_msg = '`feedback` should be a string or a dict instead of {}'.format(hint)
+            assert isinstance(hint, (str, dict)), hint_assert_msg
+            if isinstance(hint, dict):
+                message_assert_msg = "'message' value in the feedback dict should be a string"
+                assert isinstance(hint.get('message', ""), str), message_assert_msg
             return score, hint
 
         def generate(self):
@@ -89,6 +113,9 @@ def quiz_wrapper_factory(quiz_class):
 
         def cleanup(self, clue=None):
             self.quiz.cleanup(clue)
+
+        def __getattr__(self, name):
+            return getattr(self.quiz, name)
 
     return QuizWrapper
 

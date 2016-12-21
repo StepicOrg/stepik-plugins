@@ -2,7 +2,6 @@ import os
 
 from setuptools import find_packages, setup
 
-
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 
 # allow setup.py to be run from any path
@@ -14,15 +13,11 @@ setup(
     version=version,
     packages=find_packages(include=['stepic_plugins*']),
     include_package_data=True,
-    author='Stepic Team',
-    description='A collection of plugins for Stepic',
+    author='Stepik Team',
+    description='A collection of plugins for Stepik',
     long_description=README,
-    url='https://stepic.org',
+    url='https://stepik.org',
     install_requires=[
-        'oslo.messaging==1.9.0',
-    ],
-    data_files=[
-        ('stepic_plugins_data', ['Makefile']),
-        ('stepic_plugins_data/requirements', ['requirements/sandbox_minimal.txt']),
+        'oslo.messaging==4.3.0',
     ],
 )

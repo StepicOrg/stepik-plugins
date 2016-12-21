@@ -36,3 +36,9 @@ arena:
 
 test-sandbox:
 	@$(PYTHON) -m unittest -v $(PROJECT_ROOT)/sandbox_tests/tests.py
+
+epicbox-init:
+	@docker pull stepik/epicbox-base:alpine
+	@docker pull stepik/epicbox-gcc:5.3.0
+	@docker pull stepic/epicbox-python:latest
+	@docker pull stepic/epicbox-trik:20151217

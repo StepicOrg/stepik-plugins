@@ -73,10 +73,21 @@ class QuizAPI(BaseAPI):
 
     topic = 'plugins'
     namespace = 'quiz'
-    version = '0.1'
+    version = '0.2'
 
     def ping(self, msg):
         return self.client.call({}, 'ping', msg=msg)
+
+    def call(self, quiz_ctxt, name, args=None, kwargs=None):
+        """Invoke an arbitrary method or get an attribute of a quiz instance.
+
+        :param name: an attribute or a method name
+        :param args: positional arguments to pass on to the method (a list or tuple)
+        :param kwargs: keyword arguments to pass on to the method (a dict)
+
+        """
+        return self.client.call(quiz_ctxt, 'call', name=name,
+                                args=args, kwargs=kwargs)
 
     def validate_source(self, quiz_ctxt):
         """Validate source from the quiz context.

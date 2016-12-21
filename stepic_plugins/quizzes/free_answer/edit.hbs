@@ -1,5 +1,23 @@
 <div class="edit-title">
   Any text response will be graded as correct.<br>
 </div>
+<div class="options">
+  <label class="s-checkbox">
+    {{input type="checkbox" checked=source.is_html_enabled class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Enable HTML and WYSIWYG editor for responses"
+          class="edit-tooltip s-checkbox__label">HTML</span>
+  </label>
+  <label class="s-checkbox">
+    {{input type="checkbox" checked=source.is_attachments_enabled class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Allow attachments in responses"
+          class="edit-tooltip s-checkbox__label">Attachments</span>
+  </label>
+</div>
 <hr>
-<div class="right">See <a href="/lesson/9174">Documentation: Free Response</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9174/step/1">Documentation: Free Response</a> for docs and examples.</div>

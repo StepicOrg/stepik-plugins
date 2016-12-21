@@ -1,0 +1,21 @@
+.number-quiz__buttons-block {
+  width: 100%;
+  float: left;
+  padding: 0 .7em;
+}
+
+.number-quiz__options-button {
+  cursor: pointer;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.number-quiz__options-button_add {
+  background: #6C6 url(/static/frontend/common_icons/add.svg) no-repeat center center;
+}
+
+.number-quiz__options-button_delete {
+  background: #6C6 url(/static/frontend/common_icons/delete.svg) no-repeat center center;
+}

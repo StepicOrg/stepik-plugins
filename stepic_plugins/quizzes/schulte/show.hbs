@@ -1,0 +1,28 @@
+<div class="schulte-quiz__wrapper">
+  <div>Time seconds: {{reply.time_seconds}}</div>
+  {{#unless disabled}}
+    <div class="schulte-quiz__table">
+      {{#if dataset.is_grid}}
+        {{#each table as |row|}}
+          <div class="schulte-quiz__table-row">
+            {{#each row as |cell|}}
+              <div class="schulte-quiz__table-cell {{if is_cell_small 'schulte-quiz__table-cell_small'}}"
+                   style="color: {{cell.color}}"
+                   data-cell-id="{{cell.id}}">
+                {{cell.number}}
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+      {{else}}
+        {{#each cells_sequence as |cell|}}
+          <div class="schulte-quiz__table-float-cell"
+               style="color: {{cell.color}}; font-size: {{cell.font_size}}em"
+               data-cell-id="{{cell.id}}">
+            {{cell.number}}
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+  {{/unless}}
+</div>

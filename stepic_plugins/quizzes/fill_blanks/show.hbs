@@ -1,0 +1,17 @@
+{{#each components as |component|}}
+  {{#if (eq component.type 'text')}}
+    <span>{{{component.text}}}</span>
+  {{/if}}
+  {{#if (eq component.type 'input')}}
+    {{input type="text"
+            class="st-input fill-blanks-quiz__input"
+            value=component.text
+            disabled=disabled}}
+  {{/if}}
+  {{#if (eq component.type 'select')}}
+    {{view "select" classNames="st-select st-select_font_normal st-select_margin_none fill-blanks-quiz__select"
+                    content=component.options
+                    value=component.text
+                    disabled=disabled}}
+  {{/if}}
+{{/each}}

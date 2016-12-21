@@ -1,7 +1,19 @@
-{{wysi-textarea
-	value=reply.text
-	is_disabled=disabled
-	toolbar='bottom-right'
-	placeholder="Type your answer here..."}}
-
-{{attachment-list attachments=reply.attachments disabled=disabled maxFiles=3 maxSize=5242880}}
+{{#unless has_only_files}}
+  {{#if dataset.is_html_enabled}}
+    {{wysi-textarea value=reply.text
+                    is_disabled=disabled
+                    toolbar='bottom-right'
+                    placeholder="Type your answer here..."}}
+    <div class="free-answer-quiz-edit__wysiwyg-gap"></div>
+  {{else}}
+    {{textarea classNames="textarea"
+               value=reply.text
+               required="true"
+               disabled=disabled
+               autoresize=(not is_embedded)
+               placeholder="Type your answer here..."}}
+  {{/if}}
+{{/unless}}
+{{#if dataset.is_attachments_enabled}}
+  {{attachment-list attachments=reply.attachments disabled=disabled maxFiles=3 maxSize=5242880}}
+{{/if}}

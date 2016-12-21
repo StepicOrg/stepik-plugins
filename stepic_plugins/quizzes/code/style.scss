@@ -1,0 +1,35 @@
+.code-quiz__load {
+	margin-top: .5em;
+}
+
+.code-quiz__load-input{
+  position: absolute;
+  opacity: 0;
+}
+
+.code-quiz__lang-select {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.code-quiz__lang-selected {
+  text-align: right;
+  display: flex;
+}
+
+.code-quiz__limits {
+  text-align: left;
+  display: inline-block;
+  float: left;
+  margin-right: auto;
+}
+
+.code-quiz__upload-tests {
+  margin-top: 1.7em;
+}
+
+.code-quiz__upload-tests .attachment-list__title {
+  display: none;
+}

@@ -1,2 +1,12 @@
-Please open this problem in your
-<a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>.
+<p>Please open this problem in your
+<a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>.</p>
+{{#if is_submission_view}}
+  {{#each reply.solution as |solution|}}
+    <div>
+      <span>{{solution.name}}:</span>
+      {{view CodeEditorView value=solution.text
+                            lang="python3"
+                            disabled=true}}
+    </div>
+  {{/each}}
+{{/if}}

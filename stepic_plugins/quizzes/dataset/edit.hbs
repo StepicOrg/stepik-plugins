@@ -1,12 +1,12 @@
 <div class="edit-title">Enter your code below.</div>
 <div class="edit-text">
 
-{{view App.CodeEditorView
-    valueBinding='source.code'
+{{view CodeEditorView
+    value=source.code
     lang='python'
     placeholder="Type your code here..."}}
 
 {{web-console code=source.code}}
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9172">Documentation: Data</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9172/step/1">Documentation: Data</a> for docs and examples.</div>

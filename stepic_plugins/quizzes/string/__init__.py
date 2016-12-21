@@ -6,6 +6,8 @@ from codejail import safe_exec
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
 from stepic_plugins.executable_base import JailedCodeFailed, run
+from stepic_plugins.schema import attachment
+from stepic_plugins.utils import attachment_content, create_attachment, normalize_text
 
 
 class StringQuiz(BaseQuiz):
@@ -19,8 +21,12 @@ class StringQuiz(BaseQuiz):
             'match_substring': bool,
             'code': str  # TODO: make solve() optional
         }
+        # TODO: Use voluptuous library for schema definition and validation.
+        #       Make `files` optional with the default value to not break
+        #       quiz submissions in the mobile apps.
         reply = {
-            'text': str
+            'text': str,
+            'files': [attachment],
         }
 
     def __init__(self, source):
@@ -30,7 +36,7 @@ class StringQuiz(BaseQuiz):
         self.use_re = source.use_re
         self.match_substring = source.match_substring
         self.code = source.code
-        self.use_code = bool(source.code.strip())
+        self.use_code = self._is_code_used()
         if self.use_re:
             try:
                 r = re.compile(self.pattern)
@@ -45,10 +51,14 @@ class StringQuiz(BaseQuiz):
     def async_init(self):
         if self.use_code:
             try:
-                reply = self.run_edyrun('solve', data={})
-                score, hint = self.check(reply, '', throw=True)
+                answer = self.run_edyrun('solve', data={})
             except JailedCodeFailed as e:
                 raise FormatError(str(e))
+            reply = {
+                'text': answer,
+                'files': [],
+            }
+            score, hint = self.check(reply, '', throw=True)
             if score != 1:
                 hint = '\nHint: {}'.format(hint) if hint else ''
                 raise FormatError('score of answer is {score} instead of 1.{hint}'.format(
@@ -57,16 +67,33 @@ class StringQuiz(BaseQuiz):
         return None
 
     def clean_reply(self, reply, dataset):
-        return reply.text
+        if len(reply.files) > 1:
+            raise FormatError("More than one file is submitted")
+        # TODO: Add file content normalization here after download links on attachments in
+        # reply is implemented. Currently normalization is performed only on check. Learners
+        # download their original attached files.
+        return reply
 
     def check(self, reply, clue, throw=False):
-        text = reply.strip()
+        if reply['files']:
+            file_content = attachment_content(reply['files'][0])
+            text = normalize_text(file_content.decode(errors='replace'))
+        else:
+            # Text here comes normalized by the serializer in raid app
+            text = reply['text']
         if self.use_code:
             return self.check_using_code(text, clue, throw=throw)
         elif self.use_re:
             return self.check_re(text)
         else:
             return self.check_simple(text)
+
+    def _is_code_used(self):
+        for line in self.code.splitlines():
+            line = line.strip()
+            if line and not line.startswith('#'):
+                return True
+        return False
 
     def check_using_code(self, text, clue, throw=False):
         try:

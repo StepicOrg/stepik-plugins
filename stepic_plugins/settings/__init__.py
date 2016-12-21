@@ -1,9 +1,9 @@
 import importlib
-import logging
 import logging.config
 import os
 import sys
 
+import epicbox
 import structlog
 
 from .. import log
@@ -47,5 +47,9 @@ structlog.configure(
     wrapper_class=structlog.stdlib.BoundLogger,
     cache_logger_on_first_use=True,
 )
+
+epicbox.configure(dict(EPICBOX_BASE_PROFILES, **EPICBOX_PROFILES),
+                  base_workdir=EPICBOX_BASE_WORKDIR,
+                  docker_url=EPICBOX_DOCKER_URL)
 
 configure_jail_code(sys.modules[__name__])

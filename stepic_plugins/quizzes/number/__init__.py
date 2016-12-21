@@ -14,8 +14,10 @@ class NumberQuiz(BaseQuiz):
 
     class Schemas:
         source = {
-            'answer': str,
-            'max_error': str,
+            'options': [{
+                'answer': str,
+                'max_error': str,
+            }]
         }
         reply = {
             'number': str
@@ -23,9 +25,12 @@ class NumberQuiz(BaseQuiz):
 
     def __init__(self, source):
         super().__init__(source)
-        self.answer = parse_decimal(source.answer, 'answer')
-        self.max_error = parse_decimal(source.max_error, 'max_error')
-        if self.max_error < 0:
+        if not source.options:
+            raise FormatError("At least one answer option should be provided")
+        self.options = [{'answer': parse_decimal(o.answer, 'answer'),
+                         'max_error': parse_decimal(o.max_error, 'max_error')}
+                        for o in source.options]
+        if any(o['max_error'] < 0 for o in self.options):
             raise FormatError("`max_error` should be non-negative")
 
     def clean_reply(self, reply, dataset):
@@ -42,7 +47,8 @@ class NumberQuiz(BaseQuiz):
                 score = False
                 hint = 'Only numbers, please'
             else:
-                score = abs(decimal_reply - self.answer) <= self.max_error
+                score = any(abs(decimal_reply - o['answer']) <= o['max_error']
+                            for o in self.options)
                 hint = ''
 
         return score, hint

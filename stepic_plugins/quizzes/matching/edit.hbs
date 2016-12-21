@@ -1,14 +1,26 @@
 <div class="edit-title">Please specify items. Users will need to put them in pairs as below:</div>
 <div class="edit-text">
   <div class="matching-pairs">
-    {{#each pair in source.pairs}}
-      <div class="matching-pair">
-        <span class="drag-area" draggable="true"></span><!--
-        -->{{input type="text" value=pair.first class="first"}}
-        {{input type="text" value=pair.second class="second"}}<!--
-        --><span class="remove" {{action "removePair" pair}}></span>
+    {{#sortable-list list=source.pairs draggable=false as |item index sortable_context|}}
+      <div>
+        <div class="sortable-item__inner-box sortable-item__small-box matching-quiz__half-item-edit">
+          <span draggable="true" class="sortable-item__dots sortable-item__control">{{svg-icon name='dragndrop'}}</span>
+          <div class="sortable-item__input-container matching-quiz-edit__first-input-container">
+            {{input type="text" value=item.first class="text"}}
+          </div>
+        </div>
+        <div class="matching-quiz__gap">&nbsp;</div>
+        <div class="sortable-item__inner-box sortable-item__small-box matching-quiz__half-item-edit">
+          <span class="sortable-item__remove sortable-item__control" {{action "removePair" item}}>{{svg-icon name='close'}}</span>
+          <span class="sortable-item__arrow-down sortable-item__control" {{action 'moveItem' index 1 target=sortable_context}}>{{svg-icon name='down_arrow'}}</span>
+          <span class="sortable-item__arrow-up sortable-item__control"  {{action 'moveItem' index -1 target=sortable_context}}>{{svg-icon name='up_arrow'}}</span>
+          <div class="sortable-item__input-container matching-quiz-edit__second-input-container">
+            {{input type="text" value=item.second class="text"}}
+          </div>
+        </div>
+        <div class="matching-quiz__clearfix"></div>
       </div>
-    {{/each}}
+    {{/sortable-list}}
   </div>
   <div class="add-pair" {{action "addPair"}}></div>
 </div>
@@ -19,4 +31,4 @@
   </label>
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9175">Documentation: Matching</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9175/step/1">Documentation: Matching</a> for docs and examples.</div>

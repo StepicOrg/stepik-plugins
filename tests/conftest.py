@@ -30,11 +30,17 @@ def code_rpcapi(rpc_transport_url):
 @pytest.fixture
 def choice_quiz_ctxt():
     return {
-        'name': 'simple-choice',
+        'name': 'choice',
         'source': {
+            'is_multiple_choice': False,
+            'is_always_correct': False,
+            'sample_size': 2,
+            'preserve_order': False,
+            'is_html_enabled': True,
+            'is_options_feedback': False,
             'options': [
-                {'text': 'one', 'is_correct': True},
-                {'text': 'two', 'is_correct': False},
-            ]
+                {'is_correct': True, 'text': 'one', 'feedback': ''},
+                {'is_correct': False, 'text': 'two', 'feedback': ''},
+            ],
         }
     }

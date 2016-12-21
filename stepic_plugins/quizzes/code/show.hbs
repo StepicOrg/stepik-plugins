@@ -1,30 +1,39 @@
-{{#if is_multiple_langs}}
-  {{#unless disabled}}
-    <div class="clearfix">
-      <label class="code-quiz__lang-select">
-        <label class="s-select">
-          <select class="s-select__select lang-selector" {{action 'setLang' on='change'}}>
-            <option disabled>Select programming language:</option>
-            {{#each lang in langs}}
-              <option value="{{unbound lang}}">{{lang}}</option>
-            {{/each}}
-          </select>
-        </label>
+{{#unless disabled}}
+  <div class="code-quiz__lang-select {{if user_lang 'code-quiz__lang-selected'}}">
+    {{#if user_lang}}
+      <div class="code-quiz__limits">
+        <div>
+          <strong>Time Limit:</strong>
+          <samp>{{limits.time}} seconds</samp>
+        </div>
+        <div>
+          <strong>Memory Limit:</strong>
+          <samp>{{limits.memory}} MB</samp>
+        </div>
+      </div>
+    {{/if}}
+    {{#if is_multiple_langs}}
+      <label class="s-select">
+        <select class="s-select__select lang-selector" {{action 'setLang' on='change'}}>
+          <option disabled selected>Select programming language:</option>
+          {{#each langs as |lang|}}
+            <option value="{{unbound lang.id}}">{{lang.label}}</option>
+          {{/each}}
+        </select>
       </label>
-    </div>
-  {{/unless}}
-{{/if}}
+    {{/if}}
+  </div>
+{{/unless}}
 
 {{#if user_lang}}
-  {{view App.CodeEditorView
+  {{view CodeEditorView
       value=user_code
       lang=user_lang
       placeholder="Type your code here..."
       disabled=disabled}}
   {{#unless disabled}}
     <label class="code-quiz__load" title="Choose file to upload as a solution">
-      {{input type="file" class="code-quiz__load-input"
-        value=file_value}}
+      <input type="file" class="code-quiz__load-input file-input" {{action 'startUpload' on="change"}}>
       <span class="button secondary">Upload file</span>
     </label>
   {{/unless}}

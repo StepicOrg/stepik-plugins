@@ -1,0 +1,35 @@
+<div class="table-quiz">
+  <table class="table-quiz__table">
+    <tr>
+      <th>
+      {{simple-render text=dataset.description
+                      class="option__text"}}
+      </th>
+      {{#each dataset.columns as |column|}}
+        <th>
+        {{simple-render text=column
+                        class="option__text"}}
+        </th>
+      {{/each}}
+    </tr>
+    <tbody>
+      {{#each reply.choices as |row|}}
+        <tr>
+          <td>
+          {{simple-render text=row.name_row
+                          class="option__text"}}
+          </td>
+          {{#each row.columns as |column|}}
+            <td>
+            {{view picker_view
+                   name=row.name_row
+                   checked=column.answer
+                   disabled=disabled
+                   class="option__input"}}
+            </td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

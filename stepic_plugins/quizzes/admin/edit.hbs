@@ -2,7 +2,7 @@
   <label class="option">
     <span title="Image that is used to create a new virtual machine instance" class="edit-tooltip">Image:</span>
     {{view Ember.Select
-      content=source.images
+      content=images
       optionValuePath="content.id"
       optionLabelPath="content.name"
       value=source.image_id}}
@@ -17,11 +17,11 @@
   </label>
 </div>
 
-<div {{bind-attr class=":quiz-editor__bootstrap-script source.is_bootstrap::quiz-editor__bootstrap-script_hidden"}}>
+<div class="quiz-editor__bootstrap-script {{if source.is_bootstrap '' 'quiz-editor__bootstrap-script_hidden'}}">
   <div class="edit-title">Enter your bootstrap Bash script below.</div>
   <div class="edit-text">
-  {{view App.CodeEditorView
-    valueBinding='source.bootstrap_script'
+  {{view CodeEditorView
+    value=source.bootstrap_script
     lang='shell'
     placeholder="Type your bootstrap Bash script here..."}}
   </div>
@@ -29,10 +29,10 @@
 
 <div class="edit-title">Enter your test scenario code below.</div>
 <div class="edit-text">
-{{view App.CodeEditorView
-  valueBinding='source.test_scenario'
+{{view CodeEditorView
+  value=source.test_scenario
   lang='python'
   placeholder="Type your test scenario code here..."}}
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9180">Documentation: Linux</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9180/step/1">Documentation: Linux</a> for docs and examples.</div>

@@ -15,7 +15,9 @@ from stepic_plugins.executable_base import jail_code_wrapper
 
 logger = logging.getLogger(__name__)
 
-MAX_MEMORY_LIMIT = 1024
+DEFAULT_TIMEOUT = 15
+MIN_MEMORY_LIMIT = 64
+MAX_MEMORY_LIMIT = 256
 
 RNR_AUTH = (settings.ROOTNROLL_USERNAME, settings.ROOTNROLL_PASSWORD)
 RNR_IMAGE_URL = '{}/images/{{image_id}}'.format(settings.ROOTNROLL_API_URL)
@@ -80,7 +82,7 @@ class AdminQuiz(BaseQuiz):
 
     def async_init(self):
         r = requests.get(RNR_IMAGE_URL.format(image_id=self.image_id),
-                         auth=RNR_AUTH)
+                         auth=RNR_AUTH, timeout=DEFAULT_TIMEOUT)
         if r.status_code != 200:
             if r.status_code == 404:
                 raise FormatError("Image not found with ID: {}"
@@ -90,6 +92,9 @@ class AdminQuiz(BaseQuiz):
         if self.memory > MAX_MEMORY_LIMIT:
             raise FormatError("Maximum value for memory limit is {} MB"
                               .format(MAX_MEMORY_LIMIT))
+        if self.memory < MIN_MEMORY_LIMIT:
+            raise FormatError("Minimum value for memory limit is {} MB"
+                              .format(MIN_MEMORY_LIMIT))
         # Check bootstrap script syntax
         self._check_bootstrap_script(self.bootstrap_script)
         # Check pytest scenario (try to collect tests, but don't execute them)
@@ -131,11 +136,11 @@ class AdminQuiz(BaseQuiz):
         server_id = clue
         job = self._create_checker_job(server_id, self.test_scenario)
         try:
-            job = self._wait_checker_job_ready(job['id'])
+            job = self._wait_checker_job_ready(job['id'], timeout=270)
         except TimeoutError:
-            raise PluginError("Check system timeout")
+            raise PluginError("Check system ran too long")
         if job['status'] == CheckerJobResult.FAILED:
-            raise PluginError("Check system internal error")
+            raise PluginError("Check system failed")
 
         assert job['status'] == CheckerJobStatus.COMPLETED
         return job['result'] == CheckerJobResult.PASSED, job['hint']
@@ -171,18 +176,22 @@ class AdminQuiz(BaseQuiz):
             'image_id': image_id,
             'memory': memory,
         }
-        r = requests.post(RNR_SERVERS_URL, data=server_body, auth=RNR_AUTH)
+        r = requests.post(RNR_SERVERS_URL, data=server_body, auth=RNR_AUTH,
+                          timeout=DEFAULT_TIMEOUT)
         print("Create server response:", r.status_code, r.content)
         if r.status_code != 201:
             raise PluginError("Failed to create new virtual machine instance")
         return r.json()
 
-    def _wait_server_status(self, server_id, until_status, timeout=180):
+    def _wait_server_status(self, server_id, until_status, timeout=110):
         """Wait for server status to become `until_status`."""
         start_time = time.time()
         while time.time() - start_time < timeout:
-            r = requests.get(RNR_SERVER_URL.format(server_id=server_id),
-                             auth=RNR_AUTH)
+            try:
+                r = requests.get(RNR_SERVER_URL.format(server_id=server_id),
+                                 auth=RNR_AUTH, timeout=DEFAULT_TIMEOUT)
+            except requests.exceptions.Timeout:
+                continue
             if r:
                 server = r.json()
                 if server['status'] == until_status:
@@ -204,7 +213,7 @@ class AdminQuiz(BaseQuiz):
 
         sandbox = self._create_bootstrap_sandbox(server, script)
         try:
-            sandbox = self._wait_sandbox_terminated(sandbox, timeout=300)
+            sandbox = self._wait_sandbox_terminated(sandbox, timeout=150)
         except TimeoutError:
             raise PluginError("Failed to bootstrap your virtual machine: "
                               "took too much time")
@@ -238,7 +247,7 @@ class AdminQuiz(BaseQuiz):
         }
         headers = {'content-type': 'application/json'}
         r = requests.post(RNR_SANDBOXES_URL, data=json.dumps(sandbox_body),
-                          headers=headers, auth=RNR_AUTH)
+                          headers=headers, auth=RNR_AUTH, timeout=DEFAULT_TIMEOUT)
         print("Create bootstrap sandbox response:", r.status_code, r.content)
         if r.status_code != 201:
             raise PluginError("Failed to bootstrap your virtual machine")
@@ -247,8 +256,11 @@ class AdminQuiz(BaseQuiz):
     def _wait_sandbox_terminated(self, sandbox, timeout=60):
         start_time = time.time()
         while time.time() - start_time < timeout:
-            r = requests.get(RNR_SANDBOX_URL.format(sandbox_id=sandbox['id']),
-                             auth=RNR_AUTH)
+            try:
+                r = requests.get(RNR_SANDBOX_URL.format(sandbox_id=sandbox['id']),
+                                 auth=RNR_AUTH, timeout=DEFAULT_TIMEOUT)
+            except requests.exceptions.Timeout:
+                continue
             if r:
                 sandbox = r.json()
                 if sandbox['timeout']:
@@ -264,7 +276,8 @@ class AdminQuiz(BaseQuiz):
         terminal_body = {
             'server_id': server_id,
         }
-        r = requests.post(RNR_TERMINALS_URL, data=terminal_body, auth=RNR_AUTH)
+        r = requests.post(RNR_TERMINALS_URL, data=terminal_body, auth=RNR_AUTH,
+                          timeout=DEFAULT_TIMEOUT)
         if r.status_code != 201:
             raise PluginError("Failed to create a terminal for your virtual "
                               "machine instance")
@@ -275,7 +288,8 @@ class AdminQuiz(BaseQuiz):
             'server': server_id,
             'test_scenario': test_scenario,
         }
-        r = requests.post(RNR_CHECKER_JOBS_URL, data=job_body, auth=RNR_AUTH)
+        r = requests.post(RNR_CHECKER_JOBS_URL, data=job_body, auth=RNR_AUTH,
+                          timeout=DEFAULT_TIMEOUT)
         print("Create checker job response:", r.status_code, r.content)
         if r.status_code != 201:
             raise PluginError("Failed to create new checker job for server_id:"
@@ -285,18 +299,21 @@ class AdminQuiz(BaseQuiz):
     def _wait_checker_job_ready(self, job_id, timeout=120):
         start_time = time.time()
         while time.time() - start_time < timeout:
-            r = requests.get(RNR_CHECKER_JOB_URL.format(job_id=job_id),
-                             auth=RNR_AUTH)
+            try:
+                r = requests.get(RNR_CHECKER_JOB_URL.format(job_id=job_id),
+                                 auth=RNR_AUTH, timeout=DEFAULT_TIMEOUT)
+            except requests.exceptions.Timeout:
+                continue
             if r:
                 server_status = r.json().get('status')
                 if server_status in CheckerJobStatus.READY_SET:
                     return r.json()
             time.sleep(1)
-        raise PluginError("Timed out waiting for checker job readiness")
+        raise TimeoutError("Timed out waiting for checker job readiness")
 
     def _destroy_server(self, server_id):
         r = requests.delete(RNR_SERVER_URL.format(server_id=server_id),
-                            auth=RNR_AUTH)
+                            auth=RNR_AUTH, timeout=DEFAULT_TIMEOUT)
         if r.status_code not in [204, 404]:
             raise PluginError("Failed to destroy the virtual machine: {0}"
                               .format(server_id))

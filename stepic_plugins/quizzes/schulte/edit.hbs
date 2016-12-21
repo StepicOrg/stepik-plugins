@@ -1,0 +1,24 @@
+<label class="s-select">
+  <span>Table size:</span>
+  {{view "select" content=table_size_options
+                  value=source.table_size
+                  optionValuePath="content.value"
+                  optionLabelPath="content.label"
+                  classNames="s-select__select"}}
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.is_grid}}
+  <span>Show grid</span>
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.is_gorbov_table}}
+  <span>Schulte-Gorbov table</span>
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.is_font_randomized disabled=source.is_grid}}
+  <span>Randomize font size</span>
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.is_color_randomized}}
+  <span>Randomize color</span>
+</label>

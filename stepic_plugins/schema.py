@@ -1,9 +1,13 @@
 import base64
+import datetime
 import inspect
 import keyword
 import re
+import time
 
-from oslo import messaging
+import oslo_messaging as messaging
+
+from decimal import Decimal
 
 from .exceptions import FormatError
 
@@ -40,8 +44,18 @@ def build(scheme, obj):
     def ensure_type(obj, t):
         if not isinstance(obj, t):
             # if integer passed as string (EDY-1668)
-            if not (t == int and isinstance(obj, str) and obj.isdecimal()):
+            if not (t == int and is_int_as_string(obj)):
                 raise FormatError('Expected {}, got {}'.format(t.__name__, obj))
+
+    def is_int_as_string(obj):
+        if isinstance(obj, str):
+            try:
+                int(obj)
+            except ValueError:
+                pass
+            else:
+                return True
+        return False
 
     if inspect.isfunction(scheme):
         scheme = scheme()
@@ -49,7 +63,7 @@ def build(scheme, obj):
     if _is_primitive(scheme):
         ensure_type(obj, scheme)
         # if integer passed as string (EDY-1668)
-        if scheme == int and isinstance(obj, str) and obj.isdecimal():
+        if scheme == int and is_int_as_string(obj):
             return int(obj)
         else:
             return obj
@@ -57,7 +71,7 @@ def build(scheme, obj):
         ensure_type(obj, list)
         return [build(scheme[0], x) for x in obj]
     else:
-        assert isinstance(scheme, dict)
+        assert isinstance(scheme, dict), "Scheme should be dict"
         ensure_type(obj, dict)
         return ParsedJSON(scheme, obj)
 
@@ -79,9 +93,10 @@ class SchemeError(ValueError):
 
 
 def _is_primitive(obj):
-    return obj in [str, int, float, bool]
+    return obj in [str, bytes, int, float, bool]
 
 
+ATTACHMENT_HEADER = 'attachment$base64$'
 attachment = lambda: {
     'name': str,
     'type': str,
@@ -95,12 +110,21 @@ class RPCSerializer(messaging.NoOpSerializer):
     def serialize_entity(self, ctxt, entity):
         if isinstance(entity, (tuple, list)):
             return [self.serialize_entity(ctxt, v) for v in entity]
-        elif isinstance(entity, dict):
+        if isinstance(entity, dict):
             return {k: self.serialize_entity(ctxt, v)
                     for k, v in entity.items()}
-        elif isinstance(entity, bytes):
+        if isinstance(entity, bytes):
             return {'_serialized.bytes': base64.b64encode(entity).decode()}
-        elif isinstance(entity, ParsedJSON):
+        if isinstance(entity, Decimal):
+            return {'_serialized.decimal': str(entity)}
+        if isinstance(entity, datetime.datetime):
+            # doesn't preserve timezone
+            return {'_serialized.datetime': entity.timestamp()}
+        if isinstance(entity, datetime.date):
+            return {'_serialized.date': int(time.mktime(entity.timetuple()))}
+        if isinstance(entity, datetime.timedelta):
+            return {'_serialized.timedelta': entity.total_seconds()}
+        if isinstance(entity, ParsedJSON):
             return self.serialize_entity(ctxt, entity._original)
         return entity
 
@@ -108,8 +132,18 @@ class RPCSerializer(messaging.NoOpSerializer):
         if isinstance(entity, dict):
             if '_serialized.bytes' in entity:
                 return base64.b64decode(entity['_serialized.bytes'])
+            if '_serialized.decimal' in entity:
+                return Decimal(entity['_serialized.decimal'])
+            if '_serialized.datetime' in entity:
+                return datetime.datetime.fromtimestamp(
+                    entity['_serialized.datetime'])
+            if '_serialized.date' in entity:
+                return datetime.date.fromtimestamp(entity['_serialized.date'])
+            if '_serialized.timedelta' in entity:
+                return datetime.timedelta(
+                    seconds=entity['_serialized.timedelta'])
             return {k: self.deserialize_entity(ctxt, v)
                     for k, v in entity.items()}
-        elif isinstance(entity, list):
+        if isinstance(entity, list):
             return [self.deserialize_entity(ctxt, v) for v in entity]
         return entity

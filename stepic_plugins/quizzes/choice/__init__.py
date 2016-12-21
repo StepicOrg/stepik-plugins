@@ -1,3 +1,4 @@
+import html
 import random
 import collections
 
@@ -15,9 +16,12 @@ class ChoiceQuiz(BaseQuiz):
             'is_always_correct': bool,
             'sample_size': int,
             'preserve_order': bool,
+            'is_html_enabled': bool,
+            'is_options_feedback': bool,
             'options': [{
                 'is_correct': bool,
-                'text': str
+                'text': str,
+                'feedback': str,
             }]
         }
 
@@ -39,19 +43,27 @@ class ChoiceQuiz(BaseQuiz):
         self.options = source.options
 
         for option in self.options:
-            text = option.text
-            option.text = clean_html(option.text, strip=False)
-            is_incorrect_html = lambda a, b: option.text.replace(a, b).count(b) != text.count(b)
-            if is_incorrect_html('&gt;', '>') or is_incorrect_html('&lt;', '<'):
-                raise FormatError('Incorrect html: {}'.format(text))
+            if self.source.is_html_enabled:
+                def is_incorrect_html(a, b):
+                    return option.text.replace(a, b).count(b) != text.count(b)
+                text = option.text
+                option.text = clean_html(option.text, strip=False)
+                if is_incorrect_html('&gt;', '>') or is_incorrect_html('&lt;', '<'):
+                    raise FormatError('Incorrect html: {}'.format(text))
+            else:
+                option.text = html.escape(option.text)
 
-        if self.is_always_correct:
-            if self.sample_size > len(self.options):
-                raise FormatError('Sample size is greater then the number of available options')
-        else:
+        if self.sample_size < 1:
+            raise FormatError('Sample size should be at least 1')
+        if self.sample_size > len(self.options):
+            raise FormatError('Sample size is greater than the number of available options')
+        if not self.is_always_correct:
             min_correct, max_correct = self.get_min_max_correct()
-            if min_correct > max_correct:
-                raise FormatError('Not enough answers')
+            if not self.is_multiple_choice and min_correct > max_correct:
+                if max_correct == 0:
+                    raise FormatError('No correct options selected')
+                else:
+                    raise FormatError('Too many correct options selected')
 
         results = collections.defaultdict(set)
         for option in self.options:
@@ -71,12 +83,21 @@ class ChoiceQuiz(BaseQuiz):
 
     def check(self, reply, clue):
         if self.is_always_correct:
-            score = True
+            return True
+        # Backward compatibility code that works for `clue` that is a list of booleans
+        if clue and isinstance(clue[0], bool):
+            return sum(x ^ y for x, y in zip(reply, clue)) == 0
+        # End of backward compatibility code
+        sample_options = [self.options[index] for index in clue]
+        if sum(x ^ o.is_correct for x, o in zip(reply, sample_options)) == 0:
+            return True
+        options_feedback = [o.feedback.strip() if x != o.is_correct else ""
+                            for x, o in zip(reply, sample_options)]
+        if not self.source.is_options_feedback:
+            feedback = '\n'.join(filter(None, options_feedback))
         else:
-            wrong = sum(x ^ y for x, y in zip(clue, reply))
-            score = (wrong == 0)
-
-        return score
+            feedback = {'options_feedback': options_feedback}
+        return False, feedback
 
     def generate(self):
         correct = [(i, o) for (i, o) in enumerate(self.options) if o.is_correct]
@@ -95,13 +116,11 @@ class ChoiceQuiz(BaseQuiz):
             sample = sorted(sample)
         else:
             random.shuffle(sample)
-
-        sample = [o for (i, o) in sample]
         dataset = {
             'is_multiple_choice': self.is_multiple_choice,
-            'options': [option.text for option in sample]
+            'options': [option.text for _, option in sample]
         }
-        clue = [option.is_correct for option in sample]
+        clue = [index for index, _ in sample]
         return dataset, clue
 
     def partition_options(self):
@@ -115,6 +134,6 @@ class ChoiceQuiz(BaseQuiz):
             max_correct = min(len(correct), self.sample_size)
             min_correct = max(1 if len(correct) else 0, self.sample_size - len(wrong))
         else:
-            max_correct = min(len(correct), 1)
+            max_correct = min(len(correct), 1)  # 0 or 1
             min_correct = max(1, self.sample_size - len(wrong))
         return min_correct, max_correct

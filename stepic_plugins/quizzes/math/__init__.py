@@ -1,3 +1,4 @@
+import re
 import textwrap
 
 from codejail import safe_exec
@@ -5,6 +6,19 @@ from codejail import safe_exec
 from stepic_plugins.base import BaseQuiz
 from stepic_plugins.exceptions import FormatError
 from stepic_plugins.utils import parse_decimal
+
+
+SYMPY_NOTATION_MAP = {
+    'e': 'E',
+    'tg': 'tan',
+    'ctg': 'cot',
+    'arccos': 'acos',
+    'arcsin': 'asin',
+    'arctg': 'atan',
+    'atg': 'atan',
+    'arcctg': 'acot',
+    'actg': 'acot',
+}
 
 
 def is_math_quiz_enabled():
@@ -36,7 +50,7 @@ class MathQuiz(BaseQuiz):
         reply = {'formula': str}
 
     LIMITS = {
-        'TIME': 10,
+        'TIME': 120,
     }
 
     def __init__(self, source):
@@ -64,10 +78,17 @@ class MathQuiz(BaseQuiz):
     def async_init(self):
         global_dict = {'answer': self.answer}
         code = textwrap.dedent("""
+        from sympy.core.compatibility import exec_
         from sympy.parsing.sympy_parser import parse_expr
 
+        exclude_symbols = ['N']
+
         def to_expr(s):
-            return parse_expr(s.replace("^", "**"))
+            global_dict = {}
+            exec_('from sympy import *', global_dict)
+            for symbol in exclude_symbols:
+                global_dict.pop(symbol)
+            return parse_expr(s.replace("^", "**"), global_dict=global_dict)
 
         answer = to_expr(answer)
         """)
@@ -90,13 +111,22 @@ class MathQuiz(BaseQuiz):
                        'max_error': self.max_error,
                        'integer_only': self.integer_only,
                        'reply': reply}
+
+        # Below we use our own test_numerically function, because the original function
+        # sympy.utilities.randtest.test_numerically has the following problems:
+        # (1) it uses the relative error for comparison, that does not work well for very large values;
+        # (2) it uses random real numbers, that does not work well some formulas.
+        # see https://vyahhi.myjetbrains.com/youtrack/issue/EDY-4078 for more details.
+
         code = textwrap.dedent("""
         from random import randint, uniform
 
-        from sympy import I, Tuple, Symbol
+        from sympy import I, Tuple, Symbol, latex
+        from sympy.core.compatibility import exec_
         from sympy.parsing.sympy_parser import parse_expr
         from sympy.utilities.randtest import comp
-        from sympy import latex
+
+        exclude_symbols = ['N']
 
         def random_number():
             if integer_only:
@@ -114,17 +144,39 @@ class MathQuiz(BaseQuiz):
             return comp(z1 - z2, 0, max_error)
 
         def compare(reply, answer):
+            if answer.is_Relational:
+                if not reply.is_Relational:
+                    return False, "The answer must be an inequality"
+                return compare_inequalities(reply, answer)
+            if reply.is_Relational:
+                return False, "The answer must not be an inequality"
+            return compare_expressions(reply, answer)
+
+        def compare_expressions(reply, answer):
             if (reply - answer).simplify() == 0:
                 return True
 
             if reply.is_Number and answer.is_Number:
-                return abs(reply - answer) <= max_error
+                return bool(abs(reply - answer) <= max_error)
 
             n_tries = 10
             return all(test_numerically(reply, answer) for _ in range(n_tries))
 
+        def compare_inequalities(reply, answer):
+            # Compare two single inequalities
+            reversed_rel_op = {'<': '>', '<=': '>=', '>': '<', '>=': '<='}
+            if reply.rel_op == answer.rel_op:
+                return compare_expressions(reply.lhs - reply.rhs, answer.lhs - answer.rhs)
+            elif reversed_rel_op.get(reply.rel_op) == answer.rel_op:
+                return compare_expressions(reply.rhs - reply.lhs, answer.lhs - answer.rhs)
+            return False
+
         def to_expr(s):
-            return parse_expr(s.replace("^", "**"))
+            global_dict = {}
+            exec_('from sympy import *', global_dict)
+            for symbol in exclude_symbols:
+                global_dict.pop(symbol)
+            return parse_expr(s.replace("^", "**"), global_dict=global_dict)
 
 
         answer = to_expr(answer)
@@ -143,14 +195,27 @@ class MathQuiz(BaseQuiz):
                 except Exception:
                     matched = False
                     hint += '\\nCannot check answer. Perhaps syntax is wrong.'
+                else:
+                    if isinstance(matched, tuple):
+                        matched, feedback = matched
+                        hint += '\\n' + feedback
         """)
         try:
             safe_exec.safe_exec(code, global_dict, limits=self.LIMITS)
         except safe_exec.SafeExecException:
-            return False, 'Cannot check answer. Perhaps syntax is wrong.'
+            return False, ('Timed out while checking the answer. '
+                           'Perhaps it is wrong or too complex.')
 
         score = bool(global_dict['matched'])
         hint = ''
         if score == 0:
             hint = str(global_dict['hint'])
+            notation_feedback = []
+            for symbol, correct_symbol in SYMPY_NOTATION_MAP.items():
+                if re.search(r'\b{symbol}\b'.format(symbol=symbol), reply):
+                    notation_feedback.append('You wrote "{}", maybe you meant to write "{}".'
+                                             .format(symbol, correct_symbol))
+            if hint and notation_feedback:
+                hint += '\n'
+            hint += '\n'.join(notation_feedback)
         return score, hint

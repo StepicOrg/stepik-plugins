@@ -1,18 +1,22 @@
-<ol class="matching-quiz__second-items">
-  {{#each row in options}}
-    <li draggable="true" class="matching-quiz__second-item">
-      <div class="matching-quiz__second-item_number">{{row.index}}</div>
-      <span class="matching-quiz__second-item_text">{{row.second}}</span>
-      <span class="matching-quiz__arrow-up" {{action 'moveIt' row -1}}>&uarr;&uarr;&uarr;</span>
-      <span class="matching-quiz__arrow-down" {{action 'moveIt' row 1}}>&darr;&darr;&darr;</span>
-    </li>
-  {{/each}}
-</ol>
+<div class="matching-quiz__second-items">
+{{#sortable-list list=options disabled=disabled as |item index sortable_context|}}
+  <div class="sortable-item__inner-box" style="min-height: {{min_height}}px;">
+    {{#unless disabled}}
+      {{svg-icon name='dragndrop'}}
+      <span class="sortable-item__arrow-down" {{action 'moveItem' index 1 target=sortable_context}}>{{svg-icon name='down_arrow'}}</span>
+      <span class="sortable-item__arrow-up"  {{action 'moveItem' index -1 target=sortable_context}}>{{svg-icon name='up_arrow'}}</span>
+    {{/unless}}
+    <span class="sortable-item__text">{{item.second}}</span>
+  </div>
+{{/sortable-list}}
+</div>
 
-<ol class="matching-quiz__first-items">
-  {{#each pair in dataset.pairs}}
-    <li class="matching-quiz__first-item">
-      <span>{{pair.first}}</span>
-    </li>
-  {{/each}}
-</ol>
+<div class="matching-quiz__first-items">
+  {{#sortable-list list=dataset.pairs disabled=true as |item index sortable_context|}}
+    <div class="sortable-item__inner-box" style="min-height: {{min_height}}px;">
+      <span class="matching-quiz__first_text">{{item.first}}</span>
+      <span>&nbsp;</span>
+    </div>
+  {{/sortable-list}}
+</div>
+<div class="clearfix"/>

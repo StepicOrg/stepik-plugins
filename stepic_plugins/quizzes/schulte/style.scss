@@ -1,0 +1,65 @@
+.schulte-quiz__table {
+  background-color: white;
+  transition: background-color .2s;
+  display: table;
+  border-collapse: collapse;
+  margin: 0 auto;
+  border: 1px solid #aaa;
+  position: relative;
+}
+
+.schulte-quiz__table-row {
+  display: table-row;
+}
+
+.schulte-quiz__table-cell {
+  display: table-cell;
+  border: 1px solid #aaa;
+  width: 6em;
+  height: 6em;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.schulte-quiz__table-cell_small {
+  width: 4em;
+  height: 4em;
+}
+
+.schulte-quiz__table-cell_red {
+  color: red;
+}
+
+.schulte-quiz__table-cell:hover {
+  background-color: #fafafa;
+  cursor: pointer;
+}
+
+.schulte-quiz__table-cell_correct{
+  background-color: #7BCF69 !important;
+  transition-duration: .1s;
+}
+
+.schulte-quiz__table-cell_wrong{
+  background-color: #EA6658 !important;
+  transition-duration: .1s;
+}
+
+.schulte-quiz__table-cell:active {
+  font-weight: bold;
+}
+
+.schulte-quiz__table-float-cell {
+  display: inline-block;
+  position: absolute;
+  font-size: 1.5em;
+}
+
+.schulte-quiz__table-float-cell:hover {
+  cursor: pointer;
+}
+
+.schulte-quiz__next-cell {
+  text-align: center;
+  margin: 1em 0;
+}

@@ -1,5 +1,9 @@
-{{textarea classNames="textarea"
-           value=reply.text
-           required="true"
-           disabledBinding="disabled"
-           placeholder="Type your answer here..."}}
+{{#unless reply.files.length}}
+  {{textarea classNames="textarea"
+             value=reply.text
+             required="true"
+             disabled=disabled
+             autoresize=(not is_embedded)
+             placeholder="Type your answer here..."}}
+{{/unless}}
+{{attachment-list attachments=reply.files disabled=disabled is_title_hidden=true maxFiles=1 maxSize=10485760}}

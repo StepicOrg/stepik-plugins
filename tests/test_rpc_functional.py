@@ -34,10 +34,13 @@ class TestQuizApi(object):
             quiz_rpcapi.validate_source(choice_quiz_ctxt)
 
     def test_generate(self, quiz_rpcapi, choice_quiz_ctxt):
+        source_options = choice_quiz_ctxt['source']['options']
+        options_index = {o['text']: i for i, o in enumerate(source_options)}
+
         dataset, clue = quiz_rpcapi.generate(choice_quiz_ctxt)
 
         assert sorted(dataset['options']) == ['one', 'two']
-        assert clue == [x == 'one' for x in dataset['options']]
+        assert clue == [options_index[o] for o in dataset['options']]
 
     def test_async_init(self, quiz_rpcapi):
         quiz_ctxt = {
@@ -71,7 +74,10 @@ tests = [
         assert supplementary['options']['time_limit']
 
     def test_clean_reply(self, quiz_rpcapi, choice_quiz_ctxt):
-        dataset = {'options': ['one', 'two']}
+        dataset = {
+            'is_multiple_choice': choice_quiz_ctxt['source']['is_multiple_choice'],
+            'options': ['one', 'two'],
+        }
         reply = {'choices': [True, False]}
 
         clean_reply = quiz_rpcapi.clean_reply(choice_quiz_ctxt, reply,
@@ -85,9 +91,14 @@ tests = [
             'source': {
                 'code': '',
                 'execution_time_limit': 1,
-                'execution_memory_limit': 1,
+                'execution_memory_limit': 32,
                 'samples_count': 0,
                 'templates_data': '',
+                'is_time_limit_scaled': False,
+                'is_memory_limit_scaled': False,
+                'manual_time_limits': [],
+                'manual_memory_limits': [],
+                'test_archive': [],
             }
         }
         reply = {
@@ -109,7 +120,7 @@ tests = [
 
     def test_check(self, quiz_rpcapi, choice_quiz_ctxt):
         reply = [True, False]
-        clue = [True, False]
+        clue = [0, 1]
 
         assert quiz_rpcapi.check(choice_quiz_ctxt, reply, clue)
 
@@ -124,16 +135,15 @@ tests = [
         assert 'code' in hard_quizzes
         assert 'dataset' in hard_quizzes
 
-    def test_get_static(self, quiz_rpcapi):
-        tarball = quiz_rpcapi.get_static()
+    def test_call_attribute(self, quiz_rpcapi, choice_quiz_ctxt):
+        assert quiz_rpcapi.call(choice_quiz_ctxt, 'name') == 'choice'
 
-        assert isinstance(tarball, tarfile.TarFile)
-        assert all(f.startswith('stepic_plugins') for f in tarball.getnames())
-        assert 'stepic_plugins/code/show.js' in tarball.getnames()
-        code_show_js_member = tarball.getmember('stepic_plugins/code/show.js')
-        assert code_show_js_member.size > 0
-        code_show_js = tarball.extractfile(code_show_js_member)
-        assert b'function()' in code_show_js.read()
+    def test_call_method(self, quiz_rpcapi, choice_quiz_ctxt):
+        reply = [True, False]
+        clue = [True, False]
+
+        assert quiz_rpcapi.call(choice_quiz_ctxt, 'check',
+                                args=(reply,), kwargs=dict(clue=clue))
 
 
 class TestCodeJailApi(object):

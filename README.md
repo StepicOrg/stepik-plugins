@@ -1,4 +1,4 @@
-This project provides sandbox for developing custom quizzes at [Stepic](http://stepic.org).
+This project provides sandbox for developing custom quizzes at [Stepik](https://stepik.org).
 
 
 Requirements

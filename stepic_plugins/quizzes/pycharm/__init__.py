@@ -1,47 +1,28 @@
+from voluptuous import ALLOW_EXTRA, Schema
+
 from stepic_plugins.base import BaseQuiz
+from stepic_plugins.exceptions import FormatError
 
 
 class PycharmQuiz(BaseQuiz):
     name = 'pycharm'
 
     class Schemas:
-        source = {
-            'title': str,
-            'files': [{'name': str,
-                       'text': str,
-                       'placeholders': [{
-                                           'line': int,
-                                           'start': int,
-                                           'length': int,
-                                           'hint': str,
-                                           'possible_answer': str
-                                       }]
-                      }],
-            'test': [{'name': str, 'text': str}],
-        }
+        source = Schema(dict, extra=ALLOW_EXTRA)
         reply = {
             'score': str,
-            'solution': [{'name': str, 'text': str}]
+            'solution': [{'name': str, 'text': str}],
         }
-
-    def __init__(self, source):
-        super().__init__(source)
-        self.title = source.title
-        self.files = source.files
-        self.test = source.test
 
     def async_init(self):
-        return {
-            'options': {
-                'title': self.title,
-                'files': self.files,
-                'test': self.test
-            }
-        }
+        return {'options': self.source}
 
     def clean_reply(self, reply, dataset):
-        return float(reply.score)
+        try:
+            float(reply.score)
+        except ValueError:
+            raise FormatError("score string is not convertible to float")
+        return reply
 
-    def check(self, reply, clue, throw=False):
-        return reply, ''
-
+    def check(self, reply, clue):
+        return float(reply['score'])

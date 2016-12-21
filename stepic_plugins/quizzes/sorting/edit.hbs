@@ -4,15 +4,19 @@
 </div>
 <div class="edit-text">
   <div class="sort-options">
-    {{#each option in options}}
-      <div class="sort-option">
-        <span class="drag-area" draggable="true"></span>
-        {{input type="text" value=option.text class="text"}}
-        <span class="remove" {{action "removeOption" option}}></span>
+    {{#sortable-list list=options draggable=false as |item index sortable_context|}}
+      <div class="sortable-item__inner-box sortable-item__small-box">
+        <span draggable="true" class="sortable-item__dots sortable-item__control">{{svg-icon name='dragndrop'}}</span>
+        <span class="sortable-item__remove sortable-item__control" {{action "removeOption" item}}>{{svg-icon name='close'}}</span>
+        <span class="sortable-item__arrow-down sortable-item__control" {{action 'moveItem' index 1 target=sortable_context}}>{{svg-icon name='down_arrow'}}</span>
+        <span class="sortable-item__arrow-up sortable-item__control"  {{action 'moveItem' index -1 target=sortable_context}}>{{svg-icon name='up_arrow'}}</span>
+        <div class="sortable-item__input-container sorting-quiz-edit__input-container">
+          {{input type="text" value=item.text class="text"}}
+        </div>
       </div>
-    {{/each}}
+    {{/sortable-list}}
   </div>
   <div class="add-option" {{action "addOption"}}></div>
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9178">Documentation: Sorting</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9178/step/1">Documentation: Sorting</a> for docs and examples.</div>

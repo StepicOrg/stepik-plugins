@@ -1,0 +1,66 @@
+{{#sortable-list list=source.components draggable=false as |component index sortable_context|}}
+  <div class="sortable-item__inner-box sortable-item__small-box">
+    <span class="sortable-item__remove sortable-item__control" {{action "removeComponent" component}}>{{svg-icon name='close'}}</span>
+    <span class="sortable-item__arrow-down sortable-item__control" {{action 'moveItem' index 1 target=sortable_context}}>{{svg-icon name='down_arrow'}}</span>
+    <span class="sortable-item__arrow-up sortable-item__control"  {{action 'moveItem' index -1 target=sortable_context}}>{{svg-icon name='up_arrow'}}</span>
+    <div class="sortable-item__input-container fill-blanks-quiz-edit__component-container">
+      {{#if (eq component.type 'text')}}
+        <span title="HTML is allowed" class="edit-tooltip">Text:</span>
+        {{textarea classNames="fill-blanks-quiz-edit__textarea"
+                   placeholder="Write text here (HTML is allowed)"
+                   value=component.text}}
+      {{else}}
+        <div>
+          <span>Blank type:</span>
+          {{view "select" classNames="st-select st-select_font_normal st-select_margin_none"
+                          content=blank_types
+                          optionValuePath="content.value"
+                          optionLabelPath="content.label"
+                          value=component.type}}
+        </div>
+        <div class="fill-blanks-quiz-edit__options-container">
+          {{#if (eq component.type 'input')}}
+            Add correct options:
+          {{else}}
+            Add options (mark correct ones):
+          {{/if}}
+          <ul class="fill-blanks-quiz-edit__options-list">
+            {{#each component.options as |option|}}
+              {{#if (eq component.type 'input')}}
+                <li class="fill-blanks-quiz-edit__option">
+                  {{input type="text" class="st-input" value=option.text}}
+                  <span class="fill-blanks-quiz-edit__option-remove" {{action "removeOption" option component}}>{{svg-icon name='close'}}</span>
+                </li>
+              {{/if}}
+              {{#if (eq component.type 'select')}}
+                <li class="fill-blanks-quiz-edit__option">
+                  <label class="s-checkbox fill-blanks-quiz-edit__checkbox">
+                    {{input type="checkbox" checked=option.is_correct class="s-checkbox__input"}}
+                    <span class="s-checkbox__border"><span class="s-checkbox__circle"></span></span>
+                  </label>
+                  {{input type="text" class="st-input" value=option.text}}
+                  <span class="fill-blanks-quiz-edit__option-remove" {{action "removeOption" option component}}>{{svg-icon name='close'}}</span>
+                </li>
+              {{/if}}
+            {{/each}}
+          </ul>
+        </div>
+        <div class="add-option" {{action "addOption" component.options (eq component.type 'input')}}></div>
+      {{/if}}
+    </div>
+  </div>
+{{/sortable-list}}
+
+<button {{action 'addText'}}>Add text</button>
+<button {{action 'addBlank'}}>Add blank</button>
+
+<div class="options">
+  <label class="s-checkbox">
+    {{input type="checkbox" checked=source.is_case_sensitive class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Check to differ 'A' from 'a'"
+          class="edit-tooltip s-checkbox__label">Case sensitive</span>
+  </label>
+</div>

@@ -1,43 +1,80 @@
 <div class="edit-title">Add options. Mark correct ones.</div>
 <div class="edit-text">
   <div class="choice-options">
-    {{#each option in source.options}}
-      <div class="choice-option">
-        <span class="drag-area" draggable="true"></span>
-        {{input type="checkbox" checked=option.is_correct class="is_correct"}}
-        {{input type="text" value=option.text class="text"}}
-        <span class="remove" {{action "removeOption" option}}></span>
+    {{#sortable-list list=source.options draggable=false as |item index sortable_context|}}
+      <div class="sortable-item__inner-box sortable-item__small-box">
+        <span draggable="true" class="sortable-item__dots sortable-item__control">{{svg-icon name='dragndrop'}}</span>
+        <label class="s-checkbox choice-quiz-edit__checkbox choice-quiz-edit__checkbox-answer">
+          {{input type="checkbox" checked=item.is_correct class="s-checkbox__input"}}
+          <span class="s-checkbox__border"><span class="s-checkbox__circle"></span></span>
+        </label>
+        {{#if (gt source.options.length 1)}}
+          <span class="sortable-item__remove sortable-item__control" {{action "removeOption" item}}>{{svg-icon name='close'}}</span>
+        {{/if}}
+        <span class="sortable-item__arrow-down sortable-item__control" {{action 'moveItem' index 1 target=sortable_context}}>{{svg-icon name='down_arrow'}}</span>
+        <span class="sortable-item__arrow-up sortable-item__control"  {{action 'moveItem' index -1 target=sortable_context}}>{{svg-icon name='up_arrow'}}</span>
+        {{#unless is_feedback_mode}}
+          <div class="sortable-item__input-container choice-quiz-edit__input-container">
+            {{input type="text" value=item.text class="text"}}
+          </div>
+        {{else}}
+          <div class="sortable-item__input-container choice-quiz-edit__input-container">
+            {{input type="text" value=item.feedback class="text"
+                    placeholder="Option explanation, it will be shown when wrong option is selected or correct option is not."}}
+          </div>
+        {{/unless}}
       </div>
-    {{/each}}
+    {{/sortable-list}}
   </div>
+  <a class="choice-quiz-edit__toggle-explanations" {{action "toggleFeedbackMode"}}>
+    {{#unless is_feedback_mode}}
+      {{i18n 'quiz__locales.choice.show-explanations'}}
+    {{else}}
+      {{i18n 'quiz__locales.choice.show-options'}}
+    {{/unless}}
+  </a>
   <div class="add-option" {{action "addOption"}}></div>
 </div>
 <div class="options">
-  <label class="option">
-    {{input
-        type="checkbox"
-        name="is_multiple_choice"
-        checked=source.is_multiple_choice}}
-    <span title="Enable multiple choice. If unchecked: one choice only." class="edit-tooltip">Checkboxes</span>
+  <label class="s-checkbox choice-quiz-edit__checkbox choice-quiz-edit__checkbox-option">
+    {{input type="checkbox" checked=source.is_multiple_choice class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Enable multiple choice. If unchecked: one choice only." class="edit-tooltip s-checkbox__label">{{i18n 'quiz__locales.choice.checkboxes'}}</span>
   </label>
-  <label class="option">
-    {{input
-        type="checkbox"
-        name="is_always_correct"
-        checked=source.is_always_correct}}
-    <span title="Make a poll" class="edit-tooltip">Any response is correct</span>
+  <label class="s-checkbox choice-quiz-edit__checkbox choice-quiz-edit__checkbox-option">
+    {{input type="checkbox" checked=source.is_always_correct class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Make a poll" class="edit-tooltip s-checkbox__label">{{i18n 'quiz__locales.choice.any-correct'}}</span>
   </label>
-  <label class="option">
-    {{input
-        type="checkbox"
-        name="preserve_order"
-        checked=source.preserve_order}}
-    <span title="Preserve options order as above" class="edit-tooltip">Do not randomize order</span>
+  <label class="s-checkbox choice-quiz-edit__checkbox choice-quiz-edit__checkbox-option">
+    {{input type="checkbox" checked=source.preserve_order class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Preserve options order as above" class="edit-tooltip s-checkbox__label">{{i18n 'quiz__locales.choice.do-not-randomize'}}</span>
+  </label>
+  <label class="s-checkbox choice-quiz-edit__checkbox choice-quiz-edit__checkbox-option">
+    {{input type="checkbox" checked=source.is_html_enabled class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Enable HTML tags in options" class="edit-tooltip s-checkbox__label">HTML</span>
   </label>
   <label class="option option_right">
     <span title="Number of options which will be shown to user. Should not be less than number of available options above." class="edit-tooltip">Sample size</span>
-    {{input type="number" name="sample_size" value=source.sample_size}}
+    {{input type="number" name="sample_size" value=source.sample_size min="1"}}
+  </label>
+  <label class="s-checkbox choice-quiz-edit__checkbox choice-quiz-edit__checkbox-option">
+    {{input type="checkbox" checked=source.is_options_feedback class="s-checkbox__input"}}
+    <span class="s-checkbox__border">
+      <span class="s-checkbox__circle"></span>
+    </span>
+    <span title="Explanations will be shown next to corresponding options" class="edit-tooltip s-checkbox__label">{{i18n 'quiz__locales.choice.explanations-options'}}</span>
   </label>
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9171">Documentation: Multiple Choice</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9171/step/1">Documentation: Multiple Choice</a> for docs and examples.</div>

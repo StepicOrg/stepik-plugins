@@ -35,4 +35,3 @@ class SortingQuiz(BaseQuiz):
         permutation, dataset = zip(*options)
         inverse_permutation, _ = zip(*sorted(enumerate(permutation), key=lambda x: x[1]))
         return {'options': list(dataset)}, list(inverse_permutation)
-

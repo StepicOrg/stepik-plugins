@@ -1,0 +1,18 @@
+.table-quiz {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+.table-quiz .iScrollHorizontalScrollbar {
+  bottom: 8px;
+}
+.table-quiz__table {
+  min-width: 100%;
+  border: none;
+}
+.table-quiz__table td, .table-quiz__table th {
+  text-align: center;
+}
+.table-quiz__table td:first-child, .table-quiz__table th:first-child {
+  text-align: left;
+}

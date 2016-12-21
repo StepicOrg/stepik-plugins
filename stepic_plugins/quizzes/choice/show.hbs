@@ -1,15 +1,38 @@
-{{#with picker_view as picker_view}}
-  {{#each option in selections}}
-<label class="option">
-    {{view picker_view
-             name="id"
-             checkedBinding="option.is_checked"
-             valueBinding="option.text"
-             disabledBinding="disabled"
-             class="option__input"}}
-    {{simple-render
-             text=option.text
-             class="option__text"}}
-</label>
+{{#each selections as |option index|}}
+  <label class="option">
+    {{#if dataset.is_multiple_choice}}
+    {{/if}}
+  </label>
+    {{#if dataset.is_multiple_choice}}
+      <label class="s-checkbox ">
+        <input type="checkbox"
+               disabled={{disabled}}
+               data-index={{index}}
+               class="s-checkbox__input"
+               {{action "optionChecked" index on="change"}}
+               checked={{option.is_checked}} />
+        <span class="s-checkbox__border">
+          <span class="s-checkbox__circle"></span>
+        </span>
+        <span class="s-checkbox__label">
+          {{simple-render text=option.text class="option__text"}}
+        </span>
+      </label>
+    {{else}}
+      <label class="s-radio">
+        {{radio-button name=_uuid
+          value=index
+          checked=checked
+          disabled=disabled}}
+        <span class="s-radio__border">
+          <span class="s-radio__circle"></span>
+        </span>
+        <span class="s-radio__label">
+          {{simple-render text=option.text class="option__text"}}
+        </span>
+      </label>
+    {{/if}}
+    {{#if option.feedback}}
+      <div class="smart-hints__feedback smart-hints__feedback-options choice-quiz-show__option-feedback">{{option.feedback}}</div>
+    {{/if}}
 {{/each}}
-{{/with}}

@@ -2,6 +2,7 @@ import random
 
 from stepic_plugins import settings
 from stepic_plugins.base import BaseQuiz
+from stepic_plugins.constants import WARNING_NEWLINE, WARNING_SPLIT_LINES
 from stepic_plugins.exceptions import PluginError, FormatError
 from stepic_plugins.executable_base import JailedCodeFailed, run
 
@@ -44,8 +45,9 @@ class DatasetQuiz(BaseQuiz):
                 raise FormatError('score of answer is {score} instead of 1.{hint}'.format(
                     score=score,
                     hint=hint))
+            return dataset
 
-        check_random()
+        random_dataset = check_random()
         check_sample()
 
         try:
@@ -60,8 +62,21 @@ class DatasetQuiz(BaseQuiz):
             'options': {
                 'time_limit': 5 * 60,
                 'samples': samples,
-            }
+            },
+            'warnings': self._generate_warnings(samples, random_dataset['file']),
         }
+
+    def _generate_warnings(self, samples, random_dataset):
+        warnings = []
+        for dataset, _ in samples + [(random_dataset, None)]:
+            if dataset and not dataset.endswith('\n'):
+                warnings.append(WARNING_NEWLINE)
+                break
+        for pattern in [r".split('\n')", r'.split("\n")']:
+            if pattern in self.code:
+                warnings.append(WARNING_SPLIT_LINES)
+                break
+        return warnings
 
     def clean_reply(self, reply, dataset):
         return reply.file.strip()

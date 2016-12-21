@@ -3,7 +3,7 @@ Nitrous.IO
 
 `Nitrous.IO <https://nitrous.io>`_ is a cloud application platform that helps you create and configure the infrastructure in just seconds.
 
-You can spin up server side for Stepic plugins in Nitrous.IO for free. Just follow this link_. A minute later, when your Nitrous.IO box is ready just run this commands:
+You can spin up server side for Stepik plugins in Nitrous.IO for free. Just follow this link_. A minute later, when your Nitrous.IO box is ready just run this commands:
 
     * ``virtualenv hack-stepic -p python3.3``
     * ``source hack-stepic/bin/activate``

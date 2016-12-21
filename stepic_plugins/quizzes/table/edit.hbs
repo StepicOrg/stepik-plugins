@@ -1,0 +1,58 @@
+<div class="table-quiz">
+  <table border="0">
+    <tr>
+      <th>
+        {{input type="text" value=source.description class="text"}}
+      </th>
+
+      {{#each source.columns as |column|}}
+        <th>
+          {{input type="text" value=column.name class="text"}}
+        </th>
+      {{/each}}
+    </tr>
+    <tbody>
+      {{#each source.rows as |row|}}
+        <tr>
+          <td>
+            {{input type="text" value=row.name class="text"}}
+          </td>
+          {{#each row.columns as |cell|}}
+            <td>
+              {{input type="checkbox" checked=cell.choice class="is_correct"}}
+            </td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<button {{action 'addRow'}}>Add new row</button>
+<button {{action 'deleteRow'}}>Delete last row</button>
+<button {{action 'addColumn'}}>Add new column</button>
+<button {{action 'deleteColumn'}}>Delete last column</button>
+<br>
+<br>
+<label class="s-select">
+  <span class="edit-tooltip" title="Single column choice per row is represented by radio buttons. Multiple choice is represented by checkboxes">Choice type:</span>
+  {{view "select" content=choice_type_options
+                  value=choice_type
+                  optionValuePath="content.value"
+                  optionLabelPath="content.label"
+                  classNames="s-select__select"}}
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.options.is_randomize_rows}}
+  <span>Randomize rows order</span>
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.options.is_randomize_columns}}
+  <span>Randomize columns order</span>
+</label>
+<label class="option">
+  {{input type="checkbox" checked=source.is_always_correct class="s-checkbox__input"}}
+  <span title="Make a poll">Any response is correct</span>
+</label>
+<hr>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/12054/step/1">Documentation: Table</a> for docs and examples.</div>

@@ -1,21 +1,37 @@
-<div class="edit-block">
-    <div class="edit-title">Correct Answer</div>
-    <div class="edit-text">
-        {{input value=source.answer
-              class="ember-text-field"
-              required="true"}}
+{{#each source.options as |option|}}
+  <div>
+    <div class="edit-block">
+      <div class="edit-title">Correct answer</div>
+      <div class="edit-text">
+        {{input value=option.answer
+                class="ember-text-field"
+                required="true"}}
+      </div>
     </div>
+    <div class="edit-block">
+      <div class="edit-title">Tolerated error</div>
+      <div class="edit-text">
+        {{input value=option.max_error
+                class="ember-text-field"
+                required="true"}}
+      </div>
+    </div>
+  </div>
+  <hr>
+{{/each}}
+<div class="number-quiz__buttons-block edit-block">
+  <div class="edit-title">Add/Remove a correct answers</div>
+  <div title="Add one more answer option" class="number-quiz__options-button
+    number-quiz__options-button_add" {{action "addOption"}}>
+  </div>
+  {{#if (gt source.options.length 1)}}
+    <div title="Delete the last answer option" class="number-quiz__options-button
+      number-quiz__options-button_delete" {{action "removeOption"}}>
+    </div>
+  {{/if}}
 </div>
 <div class="edit-block">
-    <div class="edit-title">Tolerated Error</div>
-    <div class="edit-text">
-        {{input value=source.max_error
-              class="ember-text-field"
-              required="true"}}
-    </div>
-</div>
-<div class="edit-block">
-  <div class="edit-title">Answer ± Error will be accepted</div>
+  Any of the specified Correct answer ± Error will be accepted
 </div>
 <hr>
-<div class="right">See <a href="/lesson/9177">Documentation: Number</a> for docs and examples.</div>
+<div class="right">See <a target="_blank" href="{{st_config.project_main_instance_url}}lesson/9177/step/1">Documentation: Number</a> for docs and examples.</div>

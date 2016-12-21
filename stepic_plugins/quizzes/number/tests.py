@@ -6,22 +6,32 @@ from stepic_plugins.quizzes.number import NumberQuiz
 
 class NumberQuizTest(unittest.TestCase):
     def setUp(self):
-        self.default_source = {
+        self.default_option = {
             'answer': '42',
-            'max_error': '1'
+            'max_error': '1',
+        }
+        self.default_source = {
+            'options': [self.default_option],
         }
 
         self.quiz = NumberQuiz(NumberQuiz.Source(self.default_source))
 
 
 class NumberQuizInitTest(NumberQuizTest):
+    def test_invalid_options_number(self):
+        with self.assertRaises(FormatError):
+            self.default_source = {'options': []}
+            NumberQuiz(NumberQuiz.Source(self.default_source))
+
     def test_negative_error(self):
         with self.assertRaises(FormatError):
-            NumberQuiz(NumberQuiz.Source(dict(self.default_source, max_error='-1')))
+            self.default_option['max_error'] = '-1'
+            NumberQuiz(NumberQuiz.Source(self.default_source))
 
     def test_different_formats(self):
         for answer in ['42', '42.1', '42,1', '.42', ',42']:
-            NumberQuiz(NumberQuiz.Source(dict(self.default_source, answer=answer)))
+            self.default_option['answer'] = answer
+            NumberQuiz(NumberQuiz.Source(self.default_source))
 
 
 class NumberQuizCleanReplyTest(NumberQuizTest):
@@ -46,8 +56,10 @@ class NumberQuizCheckTest(NumberQuizTest):
 class NumberQuizReplyFormatTest(unittest.TestCase):
     def get_quiz(self, answer, max_error):
         return NumberQuiz(NumberQuiz.Source({
-            'answer': answer,
-            'max_error': max_error,
+            'options': [{
+                'answer': answer,
+                'max_error': max_error,
+            }]
         }))
 
     def get_reply(self, quiz, number):

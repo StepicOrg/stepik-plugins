@@ -2,6 +2,7 @@ import base64
 import fnmatch
 import io
 import os
+import signal
 import socket
 import tarfile
 import threading
@@ -27,6 +28,10 @@ logger = structlog.get_logger()
 
 class LoggedEndpointMetaclass(type):
     def __new__(mcs, name, bases, dct):
+        def init(self, timeout_killer=None):
+            self.timeout_killer = timeout_killer
+
+        dct['__init__'] = init
         for name, method in dct.items():
             if not name.startswith('_') and callable(method):
                 dct[name] = mcs.log_method_wrapper(method)
@@ -44,6 +49,7 @@ class LoggedEndpointMetaclass(type):
             return value
 
         @wraps(method)
+        @messaging.expected_exceptions(PluginError)
         def wrapper(self, *args, **kwargs):
             call_id = str(uuid.uuid4())[:8]
             log = logger.bind(method=method.__name__, args=compact(args), kwargs=compact(kwargs),
@@ -52,33 +58,67 @@ class LoggedEndpointMetaclass(type):
                 log = log.bind(namespace=self.target.namespace)
             log.info("RPC method call started")
             start_time = time.time()
+            if self.timeout_killer:
+                self.timeout_killer.start_countdown()
             try:
                 result = method(self, *args, **kwargs)
                 log.debug("RPC method call result", result=result)
                 return result
+            except PluginError:
+                raise
+            except Exception as e:
+                log.exception("Unexpected exception in plugin")
+                raise PluginError("RPC method failed badly ({}): {}"
+                                  .format(e.__class__.__name__, e))
             finally:
+                if self.timeout_killer:
+                    self.timeout_killer.reset_countdown()
                 duration = int((time.time() - start_time) * 1000) / 1000
                 log.info("RPC method call finished", duration=duration)
 
         return wrapper
 
 
-def expected_exceptions(*exceptions):
-    def outer(func):
-        @wraps(func)
-        @messaging.expected_exceptions(*exceptions)
-        def inner(*args, **kwargs):
-            return func(*args, **kwargs)
+class TimeoutKillerThread(threading.Thread):
+    """A thread to kill the RPC server process and its children on timeout."""
 
-        return inner
+    def __init__(self, timeout=300):
+        super(TimeoutKillerThread, self).__init__()
+        self.timeout = timeout
+        self._is_active = True
+        self._is_countdown_on = False
 
-    return outer
+    def start_countdown(self):
+        self._is_countdown_on = True
+
+    def reset_countdown(self):
+        self._is_countdown_on = False
+
+    def stop(self):
+        self._is_active = False
+
+    def run(self):
+        logger.info("Starting RPC timeout killer thread...")
+        while self._is_active:
+            if not self._is_countdown_on:
+                time.sleep(1)
+                continue
+            start = time.time()
+            while time.time() - start < self.timeout:
+                if not self._is_active or not self._is_countdown_on:
+                    break
+                time.sleep(0.25)
+            else:
+                pgid = os.getpgid(os.getpid())
+                logger.warning("Killing RPC server process group (%s), ran "
+                               "too long: %.1fs", pgid, time.time() - start)
+                os.killpg(pgid, signal.SIGKILL)
+        logger.info("RPC timeout killer thread stopped")
 
 
 class QuizEndpoint(metaclass=LoggedEndpointMetaclass):
-    target = messaging.Target(namespace='quiz', version='0.1')
+    target = messaging.Target(namespace='quiz', version='0.2')
 
-    @expected_exceptions(KeyError, FormatError)
     def _quiz_instance(self, ctxt):
         quiz_class = load_by_name(ctxt['name'])
         return quiz_class(ctxt['source'],
@@ -90,15 +130,12 @@ class QuizEndpoint(metaclass=LoggedEndpointMetaclass):
     def validate_source(self, ctxt):
         self._quiz_instance(ctxt)
 
-    @expected_exceptions(PluginError)
     def async_init(self, ctxt):
         return self._quiz_instance(ctxt).async_init()
 
-    @expected_exceptions(PluginError)
     def generate(self, ctxt):
         return self._quiz_instance(ctxt).generate()
 
-    @expected_exceptions(FormatError)
     def clean_reply(self, ctxt, reply, dataset):
         return self._quiz_instance(ctxt).clean_reply(reply, dataset=dataset)
 
@@ -169,6 +206,14 @@ class QuizEndpoint(metaclass=LoggedEndpointMetaclass):
                     self._collect_quiz_static(quiz_directory, tarball)
         return base64.b64encode(tarball_fileobj.getvalue()).decode()
 
+    def call(self, ctxt, name, args, kwargs):
+        attr = getattr(self._quiz_instance(ctxt), name)
+        if callable(attr):
+            args = args or ()
+            kwargs = kwargs or {}
+            return attr(*args, **kwargs)
+        return attr
+
 
 class CodeJailEndpoint(metaclass=LoggedEndpointMetaclass):
     target = messaging.Target(namespace='codejail', version='0.1')
@@ -189,7 +234,7 @@ _fake_transport = messaging.get_transport(cfg.CONF, 'fake:')
 _fake_server = None
 
 
-def get_server(transport_url, fake=False):
+def get_server(transport_url, fake=False, timeout_killer=None):
     if not fake:
         transport = messaging.get_transport(cfg.CONF, transport_url)
         server_name = socket.gethostname()
@@ -197,9 +242,10 @@ def get_server(transport_url, fake=False):
         transport = _fake_transport
         server_name = 'fake_server'
     target = messaging.Target(topic='plugins', server=server_name)
+    # noinspection PyArgumentList
     endpoints = [
-        QuizEndpoint(),
-        CodeJailEndpoint(),
+        QuizEndpoint(timeout_killer=timeout_killer),
+        CodeJailEndpoint(timeout_killer=timeout_killer),
     ]
     return messaging.get_rpc_server(transport, target, endpoints,
                                     executor='threading',
