@@ -12,7 +12,7 @@ raven==5.1.1
 # required by Code, TRIK challenges
 git+https://github.com/StepicOrg/epicbox.git@0.3.1
 # required by Linux challenge
-requests==2.5.1
+requests==2.20.1
 # required by Chemical problem
 https://github.com/StepicOrg/edx-chem/archive/d72c895ed4fb673fd17f3b4148f17b21e3c3bba5.zip#egg=chem==0.1.1
 # required by SQL challenge
