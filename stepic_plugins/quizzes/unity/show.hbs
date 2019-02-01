@@ -1,0 +1,30 @@
+<object id="UnityObject"
+        classid="clsid:444785F1-DE89-4295-863A-D46C3A781394"
+        width="90"
+        height="90"
+        codebase="http://webplayer.unity3d.com/download_webplayer/UnityWebPlayer.cab#version=2,0,0,0">
+  <param name="testing.unity3d"
+         value="testing.unity3d"/>
+  <embed id="UnityEmbed"
+         {{bind-attr src=quiz_file_url}}
+         width="190"
+         height="90"
+         type="application/vnd.unity"
+         pluginspage="http://www.unity3d.com/unity-web-player-2.x"/>
+</object>
+<div>
+{{input type="number"
+        valueBinding="reply.score"
+        value=reply.score
+        id="score"
+        readonly="readonly"}}
+</div>
+<script type="text/javascript">
+  <!--
+  function set_score(arg)
+  {
+    document.getElementById("score").value = arg;
+    document.getElementById("score").focus();
+  }
+  -->
+</script>
