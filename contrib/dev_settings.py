@@ -11,7 +11,7 @@ EPICBOX_PROFILES = {
     },
     'trik': {
         'command': '/trikStudio-checker/bin/check-solution.sh main.qrs',
-        'docker_image': 'stepic/epicbox-trik:20151217',
+        'docker_image': 'trikset/checker-stepik:2019.5',
     }
 }
 

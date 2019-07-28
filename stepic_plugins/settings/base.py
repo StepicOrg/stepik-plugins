@@ -83,7 +83,7 @@ EPICBOX_COMPILE_LIMITS = {
 EPICBOX_TRIK_LIMITS = {
     'cputime': 60,
     'realtime': 120,
-    'memory': 128,
+    'memory': 512,
 }
 
 #: Specify epicbox configs for languages. Epicbox sandboxes are used
