@@ -3,7 +3,7 @@ git+https://github.com/StepicOrg/codejail.git
 git+https://github.com/StepicOrg/stepic-utils.git
 
 git+https://github.com/StepicOrg/oslo.messaging.git@acks_late
-bleach==1.4.1
+bleach==3.1.4
 # later versions of html5lib requires to change sanitizer imports
 html5lib==0.999
 structlog==15.0.0
