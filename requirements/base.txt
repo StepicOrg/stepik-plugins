@@ -5,7 +5,7 @@ git+https://github.com/StepicOrg/stepic-utils.git
 git+https://github.com/StepicOrg/oslo.messaging.git@acks_late
 bleach==1.4.1
 # later versions of html5lib requires to change sanitizer imports
-html5lib==0.999
+html5lib==0.999999999
 structlog==15.0.0
 raven==5.1.1
 
